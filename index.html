@@ -19,34 +19,27 @@
     --border: #e2e8f0;
     --danger: #ef4444;
     --success: #10b981;
+    --wa: #25D366;
     --sidebar: #0f2e2b;
     --sidebar-hover: #134e4a;
   }
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; overflow-x: hidden;
   }
   .app { display: flex; min-height: 100vh; }
 
   /* SIDEBAR */
   .sidebar {
-    width: 250px;
-    background: var(--sidebar);
-    color: #e2e8f0;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 100;
-    transition: transform .3s;
+    width: 250px; background: var(--sidebar); color: #e2e8f0;
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0;
+    z-index: 100; transition: transform .3s;
   }
   .brand {
     display: flex; align-items: center; gap: 12px;
-    padding: 20px 18px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,.08);
   }
   .brand-logo {
     font-size: 28px;
@@ -60,21 +53,15 @@
   nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
   .nav-item {
     display: flex; align-items: center; gap: 12px;
-    padding: 11px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-bottom: 3px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #cbd5e1;
-    transition: all .2s;
-    user-select: none;
+    padding: 11px 14px; border-radius: 10px;
+    cursor: pointer; margin-bottom: 3px;
+    font-size: 14px; font-weight: 500;
+    color: #cbd5e1; transition: all .2s; user-select: none;
   }
   .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
   .nav-item.active {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(13,148,136,.35);
+    color: #fff; box-shadow: 0 4px 12px rgba(13,148,136,.35);
   }
   .nav-item .ico { font-size: 18px; width: 22px; text-align: center; }
   .sidebar-footer {
@@ -85,25 +72,23 @@
   /* MAIN */
   .main { flex: 1; margin-left: 250px; display: flex; flex-direction: column; min-width: 0; }
   .topbar {
-    background: #fff;
-    padding: 14px 22px;
+    background: #fff; padding: 14px 22px;
     display: flex; align-items: center; gap: 14px;
     border-bottom: 1px solid var(--border);
     position: sticky; top: 0; z-index: 50;
   }
   .menu-btn {
-    display: none; background: none; border: none; font-size: 22px; cursor: pointer;
-    color: var(--text);
+    display: none; background: none; border: none;
+    font-size: 22px; cursor: pointer; color: var(--text);
   }
   .topbar h1 { font-size: 18px; font-weight: 700; flex: 1; }
   .topbar-actions { display: flex; align-items: center; gap: 10px; }
   .icon-btn {
-    position: relative;
-    background: var(--bg); border: 1px solid var(--border);
+    position: relative; background: var(--bg);
+    border: 1px solid var(--border);
     width: 40px; height: 40px; border-radius: 10px;
     font-size: 18px; cursor: pointer;
-    display: grid; place-items: center;
-    transition: all .2s;
+    display: grid; place-items: center; transition: all .2s;
   }
   .icon-btn:hover { background: var(--primary-light); border-color: var(--primary); }
   .icon-btn .badge {
@@ -121,11 +106,14 @@
     font-size: 13px; font-weight: 600;
     transition: all .2s;
     display: inline-flex; align-items: center; gap: 6px;
+    text-decoration: none;
   }
   .btn-primary { background: var(--primary); color: #fff; }
   .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
   .btn-outline { background: #fff; color: var(--text); border: 1px solid var(--border); }
   .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-wa { background: var(--wa); color: #fff; }
+  .btn-wa:hover { background: #128C7E; transform: translateY(-1px); }
   .btn-danger { background: #fee2e2; color: var(--danger); }
   .btn-danger:hover { background: var(--danger); color: #fff; }
   .btn-sm { padding: 6px 10px; font-size: 12px; }
@@ -134,43 +122,37 @@
 
   /* CARDS */
   .card {
-    background: var(--card);
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    padding: 20px;
+    background: var(--card); border-radius: 14px;
+    border: 1px solid var(--border); padding: 20px;
     margin-bottom: 18px;
     box-shadow: 0 1px 3px rgba(0,0,0,.04);
   }
   .card-head {
     display: flex; align-items: center; gap: 10px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
+    margin-bottom: 16px; padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
   }
   .card-head h2 { font-size: 16px; font-weight: 700; flex: 1; }
   .card-head .ico { font-size: 20px; }
 
   /* GRID */
   .grid { display: grid; gap: 16px; }
-  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-  .grid-4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 
-  /* STAT CARDS */
+  /* STAT */
   .stat {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 18px;
-    border: 1px solid var(--border);
+    background: var(--card); border-radius: 14px;
+    padding: 18px; border: 1px solid var(--border);
     display: flex; align-items: center; gap: 14px;
     transition: transform .2s, box-shadow .2s;
   }
   .stat:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.07); }
   .stat-ico {
     width: 48px; height: 48px; border-radius: 12px;
-    display: grid; place-items: center;
-    font-size: 22px;
-    flex-shrink: 0;
+    display: grid; place-items: center; font-size: 22px; flex-shrink: 0;
   }
   .stat-ico.green { background: var(--primary-light); }
   .stat-ico.amber { background: var(--accent-light); }
@@ -190,16 +172,12 @@
     text-transform: uppercase; letter-spacing: .4px;
   }
   input[type="text"], input[type="number"], input[type="time"], input[type="date"],
-  select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    font-size: 14px;
-    font-family: inherit;
-    background: #fff;
+  input[type="tel"], select, textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: 9px;
+    font-size: 14px; font-family: inherit;
+    background: #fff; color: var(--text);
     transition: border .2s, box-shadow .2s;
-    color: var(--text);
   }
   input:focus, select:focus, textarea:focus {
     outline: none; border-color: var(--primary);
@@ -215,8 +193,7 @@
     padding: 11px 12px; font-weight: 700;
     font-size: 12px; color: var(--muted);
     text-transform: uppercase; letter-spacing: .3px;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
+    border-bottom: 1px solid var(--border); white-space: nowrap;
   }
   td {
     padding: 10px 12px;
@@ -225,9 +202,7 @@
   }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #f8fafc; }
-  td input, td select {
-    padding: 6px 8px; font-size: 13px; border-radius: 7px;
-  }
+  td input, td select { padding: 7px 9px; font-size: 13px; border-radius: 7px; }
   .td-actions { display: flex; gap: 6px; }
   .mini-btn {
     background: none; border: none; cursor: pointer;
@@ -236,10 +211,13 @@
   }
   .mini-btn:hover { background: var(--bg); }
 
-  /* BADGE */
+  /* Kolom Nama yang lebih lebar */
+  .col-nama { min-width: 200px; }
+  .col-nama input { min-width: 180px; }
+
+  /* TAG */
   .tag {
-    display: inline-block;
-    padding: 3px 9px; border-radius: 20px;
+    display: inline-block; padding: 3px 9px; border-radius: 20px;
     font-size: 11px; font-weight: 700;
     background: var(--primary-light); color: var(--primary-dark);
   }
@@ -247,20 +225,17 @@
   .tag.blue { background: #dbeafe; color: #1e40af; }
   .tag.pink { background: #fce7f3; color: #9d174d; }
   .tag.red { background: #fee2e2; color: #991b1b; }
+  .tag.wa { background: #dcfce7; color: #166534; }
 
-  /* REMINDER LIST */
+  /* REMINDER */
   .rem-item {
     display: flex; align-items: center; gap: 14px;
-    padding: 13px 15px;
-    border-radius: 11px;
-    background: #fff;
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
-    transition: all .2s;
+    padding: 13px 15px; border-radius: 11px;
+    background: #fff; border: 1px solid var(--border);
+    margin-bottom: 10px; transition: all .2s;
   }
   .rem-item:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(13,148,136,.1); }
   .rem-item.soon { border-color: var(--accent); background: #fffbeb; }
-  .rem-item.past { opacity: .55; }
   .rem-ico {
     width: 42px; height: 42px; border-radius: 11px;
     display: grid; place-items: center; font-size: 20px;
@@ -283,16 +258,15 @@
     max-width: 360px;
   }
   .toast {
-    background: #fff;
-    border-left: 4px solid var(--primary);
-    border-radius: 12px;
-    padding: 14px 16px;
+    background: #fff; border-left: 4px solid var(--primary);
+    border-radius: 12px; padding: 14px 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,.15);
     display: flex; gap: 12px; align-items: flex-start;
     animation: slideIn .35s ease;
   }
   .toast.warn { border-left-color: var(--accent); }
   .toast.danger { border-left-color: var(--danger); }
+  .toast.wa { border-left-color: var(--wa); }
   .toast .t-ico { font-size: 22px; }
   .toast .t-title { font-weight: 700; font-size: 13px; }
   .toast .t-msg { font-size: 12px; color: var(--muted); margin-top: 2px; }
@@ -301,54 +275,32 @@
     to { transform: translateX(0); opacity: 1; }
   }
 
-  /* PROGRESS BAR */
-  .progress {
-    height: 8px; background: #e2e8f0; border-radius: 5px; overflow: hidden;
-    margin-top: 6px;
-  }
+  /* PROGRESS */
+  .progress { height: 8px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin-top: 6px; }
   .progress > div {
     height: 100%; border-radius: 5px;
     background: linear-gradient(90deg, var(--primary), var(--accent));
     transition: width .5s;
   }
 
-  /* CHART */
-  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .bar-lbl { width: 100px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
-  .bar-track { flex: 1; height: 22px; background: #f1f5f9; border-radius: 6px; overflow: hidden; position: relative; }
-  .bar-fill {
-    height: 100%; border-radius: 6px;
-    background: linear-gradient(90deg, var(--primary), #14b8a6);
-    display: flex; align-items: center; padding-left: 8px;
-    color: #fff; font-size: 11px; font-weight: 700;
-    transition: width .6s;
-  }
-  .bar-fill.amber { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-  .bar-fill.blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-  .bar-fill.pink { background: linear-gradient(90deg, #ec4899, #f472b6); }
-
   /* MODAL */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(15,23,42,.55);
     display: none; align-items: center; justify-content: center;
-    z-index: 9998; padding: 20px;
-    backdrop-filter: blur(3px);
+    z-index: 9998; padding: 20px; backdrop-filter: blur(3px);
   }
   .modal-overlay.show { display: flex; }
   .modal {
     background: #fff; border-radius: 16px;
-    max-width: 520px; width: 100%;
+    max-width: 560px; width: 100%;
     max-height: 90vh; overflow-y: auto;
-    padding: 24px;
-    animation: popIn .25s ease;
+    padding: 24px; animation: popIn .25s ease;
   }
   @keyframes popIn { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .modal h3 { font-size: 17px; margin-bottom: 16px; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
 
-  .empty {
-    text-align: center; padding: 40px 20px; color: var(--muted);
-  }
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
   .empty .e-ico { font-size: 46px; margin-bottom: 10px; opacity: .55; }
   .empty p { font-size: 13px; }
 
@@ -359,12 +311,42 @@
   .section-head h2 { font-size: 20px; font-weight: 800; }
   .section-head .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
-  /* MUTABAAH TABLE */
+  /* MUTABAAH */
   .mut-table td input { width: 100%; text-align: center; padding: 4px; font-size: 12px; }
   .mut-table th { text-align: center; font-size: 11px; padding: 8px 4px; }
   .mut-table td:first-child { text-align: left; font-weight: 600; }
-  .mut-table th:first-child, .mut-table td:first-child { position: sticky; left: 0; background: #fff; z-index: 2; min-width: 200px; }
+  .mut-table th:first-child, .mut-table td:first-child {
+    position: sticky; left: 0; background: #fff; z-index: 2; min-width: 200px;
+  }
   .mut-table th:first-child { background: #f8fafc; }
+
+  /* REPORT MENU */
+  .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .report-card {
+    background: #fff; border-radius: 14px; border: 1px solid var(--border);
+    padding: 22px; cursor: pointer; transition: all .25s;
+    text-align: center;
+  }
+  .report-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.1);
+    border-color: var(--primary);
+  }
+  .report-card .r-ico { font-size: 38px; margin-bottom: 12px; display: block; }
+  .report-card .r-title { font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+  .report-card .r-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* PRINT */
+  @media print {
+    body * { visibility: hidden; }
+    #printArea, #printArea * { visibility: visible; }
+    #printArea {
+      position: absolute; left: 0; top: 0; width: 100%;
+      background: #fff; padding: 20px;
+    }
+    .no-print { display: none !important; }
+  }
+  #printArea { display: none; }
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
@@ -376,6 +358,11 @@
     .content { padding: 14px; }
     .topbar h1 { font-size: 15px; }
     .btn .btn-text { display: none; }
+    .btn.btn-wa .btn-text, .btn.btn-primary .btn-text { display: inline; }
+  }
+  @media (max-width: 500px) {
+    .btn .btn-text { display: none !important; }
+    .topbar-actions .btn { padding: 8px 10px; }
   }
 </style>
 </head>
@@ -391,7 +378,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v1.0 • 2026/2027</div>
+    <div class="sidebar-footer">v2.0 • 2026/2027</div>
   </aside>
 
   <main class="main">
@@ -402,7 +389,9 @@
         <button class="icon-btn" id="bellBtn" title="Reminder">
           🔔<span class="badge hidden" id="bellBadge">0</span>
         </button>
-        <button class="btn btn-primary" id="notifBtn">🔔 <span class="btn-text">Notifikasi</span></button>
+        <button class="btn btn-wa" id="waReportBtn" title="Laporan WhatsApp">
+          <span>📱</span><span class="btn-text">WA</span>
+        </button>
       </div>
     </header>
     <div class="content" id="content"></div>
@@ -410,17 +399,17 @@
 </div>
 
 <div class="toast-container" id="toasts"></div>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalBox"></div>
-</div>
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalBox"></div></div>
+<div id="printArea"></div>
 
 <script>
 /* ============================================================
-   DATA & STATE
+   STATE & STORAGE
 ============================================================ */
-const LS_KEY = 'raker_upa_ah_nasution_v1';
+const LS_KEY = 'raker_upa_ah_nasution_v2';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+function uid() { return Math.random().toString(36).slice(2, 10); }
 
 const DEFAULT_STATE = {
   identitas: {
@@ -433,14 +422,18 @@ const DEFAULT_STATE = {
     kMadya: '0', kPratama: '0', kMuda: '0',
     allIkhwan: '0', dewasa: '0', madya: '0', pratama: '0', muda: '0'
   },
+  wa: {
+    groupName: 'Tim UPA A.H Nasution',
+    defaultNumber: '' // nomor default untuk reminder (format 62xxxx)
+  },
   anggota: [
-    { id: uid(), nama: '', amanah: 'Amin', idSik: '100173', email: '', hp: '' },
-    { id: uid(), nama: '', amanah: 'Suun Maal', idSik: '', email: '', hp: '' },
-    { id: uid(), nama: '', amanah: 'Suun Maal', idSik: '', email: '', hp: '' },
-    { id: uid(), nama: '', amanah: 'Suun Tarbawi', idSik: '100172', email: '', hp: '' },
-    { id: uid(), nama: '', amanah: 'Suun Daawi', idSik: '', email: '', hp: '' },
-    { id: uid(), nama: '', amanah: 'Suun Daawi', idSik: '', email: '', hp: '' },
-    { id: uid(), nama: '', amanah: 'Suun Ailiyah', idSik: '', email: '', hp: '' }
+    { id: uid(), nama: 'Ahmad Fauzi', amanah: 'Amin', idSik: '100173', hp: '6281234567890' },
+    { id: uid(), nama: 'Budi Santoso', amanah: 'Suun Maal', idSik: '', hp: '' },
+    { id: uid(), nama: 'Candra Wijaya', amanah: 'Suun Maal', idSik: '', hp: '' },
+    { id: uid(), nama: 'Dedi Kurniawan', amanah: 'Suun Tarbawi', idSik: '100172', hp: '' },
+    { id: uid(), nama: 'Eko Prasetyo', amanah: 'Suun Daawi', idSik: '', hp: '' },
+    { id: uid(), nama: 'Fajar Ramadhan', amanah: 'Suun Daawi', idSik: '', hp: '' },
+    { id: uid(), nama: 'Gunawan Saputra', amanah: 'Suun Ailiyah', idSik: '', hp: '' }
   ],
   progja: [
     { id: uid(), pic:'AMIN : ATS', nama:'Kegiatan Usroh Pekanan', periode:'Pekanan', jadwal:'Setiap Rabu Malam', hari:'Rabu', jam:'19:30', ico:'📖' },
@@ -456,9 +449,9 @@ const DEFAULT_STATE = {
     { id: uid(), pic:'MAAL', nama:'Tabungan Usroh', periode:'Bulanan', jadwal:'Sebulan Sekali', hari:'', jam:'', ico:'🐖' },
     { id: uid(), pic:'TARBAWI', nama:'PPS Pelopor', periode:'2 Bulan Sekali', jadwal:'Semester', hari:'', jam:'', ico:'🎯' },
     { id: uid(), pic:'TARBAWI', nama:'Tahfiz Hadits', periode:'2 Pekan Sekali', jadwal:'Minggu keempat', hari:'Ahad', jam:'08:00', ico:'📜' },
-    { id: uid(), pic:'TARBAWI', nama:'Tahfiz Qur\'an', periode:'2 Pekan Sekali', jadwal:'Setiap Minggu', hari:'Ahad', jam:'07:00', ico:'📕' },
+    { id: uid(), pic:'TARBAWI', nama:"Tahfiz Qur'an", periode:'2 Pekan Sekali', jadwal:'Setiap Minggu', hari:'Ahad', jam:'07:00', ico:'📕' },
     { id: uid(), pic:'TARBAWI', nama:'Lap. Mutabaah Yaumiah', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Sabtu', jam:'20:00', ico:'✅' },
-    { id: uid(), pic:'TARBAWI', nama:'Iftor Jam\'i / UPA', periode:'1x Sebulan', jadwal:'Pekan I', hari:'', jam:'', ico:'🍽️' },
+    { id: uid(), pic:'TARBAWI', nama:"Iftor Jam'i / UPA", periode:'1x Sebulan', jadwal:'Pekan I', hari:'', jam:'', ico:'🍽️' },
     { id: uid(), pic:'AILIYAH', nama:'Rihla Qubro', periode:'Tahunan', jadwal:'Tahunan', hari:'', jam:'', ico:'🚌' },
     { id: uid(), pic:'AILIYAH', nama:'Hash', periode:'2 Bulan Sekali', jadwal:'September, Pekan III', hari:'', jam:'', ico:'🏃' },
     { id: uid(), pic:'MUDARRIB', nama:'Riyadhoh Usroh', periode:'Bulanan', jadwal:'Sebulan Sekali', hari:'Ahad', jam:'06:00', ico:'💪' },
@@ -473,10 +466,10 @@ const DEFAULT_STATE = {
     { id: uid(), periode:'Pekanan 2 (Fiqih Dakwah)', nama:'1. Risalah Nizhamul Usroh', pemateri:'' },
     { id: uid(), periode:'Pekanan 2 (Fiqih Dakwah)', nama:'2. Risalah Al-Ikhwan Wal Intikhabat', pemateri:'' },
     { id: uid(), periode:'Pekanan 2 (Fiqih Dakwah)', nama:'3. Al-Ikhtilaf Wa Adabuhu', pemateri:'' },
-    { id: uid(), periode:'Pekanan 2 (Fiqih Dakwah)', nama:'4. Teori Maqoshid Syar\'iyah', pemateri:'' },
+    { id: uid(), periode:'Pekanan 2 (Fiqih Dakwah)', nama:"4. Teori Maqoshid Syar'iyah", pemateri:'' },
     { id: uid(), periode:'Pekanan 2 (Fiqih Dakwah)', nama:'5. Mazhab Empat Dan Manhajnya', pemateri:'' },
     { id: uid(), periode:'Pekanan 3 (Siroh)', nama:'1. Perang Khaibar', pemateri:'' },
-    { id: uid(), periode:'Pekanan 3 (Siroh)', nama:'2. Perang Mu\'tah', pemateri:'' },
+    { id: uid(), periode:'Pekanan 3 (Siroh)', nama:"2. Perang Mu'tah", pemateri:'' },
     { id: uid(), periode:'Pekanan 3 (Siroh)', nama:'3. Fathu Makkah', pemateri:'' },
     { id: uid(), periode:'Pekanan 3 (Siroh)', nama:'4. Perang Hunain', pemateri:'' },
     { id: uid(), periode:'Pekanan 3 (Siroh)', nama:'5. Perang Tabuk', pemateri:'' },
@@ -494,9 +487,9 @@ const DEFAULT_STATE = {
       { id: uid(), naqib:'', mustawa:'Tamhidi', jumlah:5 }
     ],
     target: [
-      { id: uid(), mustawa:'Muntasib', kader:7, beban:10, target:70 },
-      { id: uid(), mustawa:'Muayyid', kader:17, beban:5, target:85 },
-      { id: uid(), mustawa:'Tamhidi', kader:23, beban:0, target:0 }
+      { id: uid(), mustawa:'Muntasib', kader:7, beban:10 },
+      { id: uid(), mustawa:'Muayyid', kader:17, beban:5 },
+      { id: uid(), mustawa:'Tamhidi', kader:23, beban:0 }
     ]
   },
   mutabaah: {
@@ -522,12 +515,9 @@ const DEFAULT_STATE = {
   },
   settings: {
     reminderEnabled: true,
-    reminderMinutes: 30,
-    notifPermission: false
+    reminderMinutes: 30
   }
 };
-
-function uid() { return Math.random().toString(36).slice(2, 10); }
 
 let state = loadState();
 
@@ -535,24 +525,45 @@ function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
-    const parsed = JSON.parse(raw);
-    return deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
-  } catch (e) {
-    return JSON.parse(JSON.stringify(DEFAULT_STATE));
-  }
+    return deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), JSON.parse(raw));
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
 }
 function deepMerge(base, over) {
   for (const k in over) {
     if (over[k] && typeof over[k] === 'object' && !Array.isArray(over[k])) {
       base[k] = deepMerge(base[k] || {}, over[k]);
-    } else {
-      base[k] = over[k];
-    }
+    } else { base[k] = over[k]; }
   }
   return base;
 }
-function saveState() {
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
+function saveState() { localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function toast(title, msg, type='') {
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<div class="t-ico">${type==='warn'?'⏰':type==='danger'?'❗':type==='wa'?'📱':'🔔'}</div>
+    <div style="flex:1"><div class="t-title">${esc(title)}</div><div class="t-msg">${esc(msg)}</div></div>`;
+  c.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateX(120%)'; el.style.transition='all .35s'; }, 5000);
+  setTimeout(() => el.remove(), 5500);
+}
+function openModal(html) {
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+document.getElementById('modalOverlay').onclick = e => { if (e.target.id === 'modalOverlay') closeModal(); };
+
+function formatDateID(d) {
+  const bln = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return `${d.getDate()} ${bln[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /* ============================================================
@@ -568,23 +579,22 @@ const MENU = [
   { id:'statistik', ico:'📊', label:'Statistik' },
   { id:'mutabaah',  ico:'✅', label:'Mutabaah Yaumiah' },
   { id:'reminder',  ico:'🔔', label:'Reminder & Jadwal' },
+  { id:'laporan',   ico:'📤', label:'Laporan & Export' },
   { id:'pengaturan',ico:'⚙️', label:'Pengaturan' }
 ];
 
 let currentPage = 'dashboard';
 
 function renderNav() {
-  const nav = document.getElementById('nav');
-  nav.innerHTML = MENU.map(m => `
+  document.getElementById('nav').innerHTML = MENU.map(m => `
     <div class="nav-item ${m.id === currentPage ? 'active' : ''}" data-page="${m.id}">
       <span class="ico">${m.ico}</span><span>${m.label}</span>
     </div>
   `).join('');
-  nav.querySelectorAll('.nav-item').forEach(el => {
+  document.querySelectorAll('.nav-item').forEach(el => {
     el.onclick = () => {
       currentPage = el.dataset.page;
-      renderNav();
-      renderPage();
+      renderNav(); renderPage();
       document.getElementById('sidebar').classList.remove('open');
     };
   });
@@ -595,97 +605,47 @@ function renderPage() {
   document.getElementById('pageTitle').textContent = menu ? menu.label : 'Dashboard';
   const c = document.getElementById('content');
   c.innerHTML = '';
-  const fn = {
-    dashboard: renderDashboard,
-    identitas: renderIdentitas,
-    anggota: renderAnggota,
-    progja: renderProgja,
-    materi: renderMateri,
-    kader: renderKader,
-    statistik: renderStatistik,
-    mutabaah: renderMutabaah,
-    reminder: renderReminder,
-    pengaturan: renderPengaturan
-  }[currentPage];
-  if (fn) fn(c);
+  ({
+    dashboard: renderDashboard, identitas: renderIdentitas, anggota: renderAnggota,
+    progja: renderProgja, materi: renderMateri, kader: renderKader,
+    statistik: renderStatistik, mutabaah: renderMutabaah, reminder: renderReminder,
+    laporan: renderLaporan, pengaturan: renderPengaturan
+  }[currentPage] || (()=>{}))(c);
 }
 
-/* ============================================================
-   HELPERS
-============================================================ */
-function esc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-function toast(title, msg, type='') {
-  const c = document.getElementById('toasts');
-  const el = document.createElement('div');
-  el.className = 'toast ' + type;
-  el.innerHTML = `
-    <div class="t-ico">${type === 'warn' ? '⏰' : type === 'danger' ? '❗' : '🔔'}</div>
-    <div style="flex:1">
-      <div class="t-title">${esc(title)}</div>
-      <div class="t-msg">${esc(msg)}</div>
-    </div>
-  `;
-  c.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(120%)'; el.style.transition = 'all .35s'; }, 5000);
-  setTimeout(() => el.remove(), 5500);
-}
-
-function openModal(html) {
-  document.getElementById('modalBox').innerHTML = html;
-  document.getElementById('modalOverlay').classList.add('show');
-}
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('show');
-}
-document.getElementById('modalOverlay').onclick = (e) => {
-  if (e.target.id === 'modalOverlay') closeModal();
-};
+function goPage(p) { currentPage = p; renderNav(); renderPage(); }
+window.goPage = goPage;
+window.closeModal = closeModal;
 
 /* ============================================================
    DASHBOARD
 ============================================================ */
 function renderDashboard(c) {
-  const totalAnggota = state.anggota.length;
-  const totalProgja = state.progja.length;
-  const totalMateri = state.materi.length;
-  const totalKader = state.kader.length;
-
   const upcoming = getUpcomingActivities().slice(0, 5);
-
   c.innerHTML = `
     <div class="section-head">
       <div>
         <h2>Assalamu'alaikum 👋</h2>
-        <div class="sub">Selamat datang di sistem manajemen UPA <b>${esc(state.identitas.nama)}</b></div>
+        <div class="sub">Sistem manajemen UPA <b>${esc(state.identitas.nama)}</b></div>
       </div>
+      <button class="btn btn-wa" onclick="sendWADashboard()">📱 <span class="btn-text">Kirim Ringkasan WA</span></button>
     </div>
 
     <div class="grid grid-4" style="margin-bottom:18px">
-      <div class="stat">
-        <div class="stat-ico green">🧑‍🤝‍🧑</div>
-        <div><div class="stat-val">${totalAnggota}</div><div class="stat-lbl">Anggota Struktur</div></div>
-      </div>
-      <div class="stat">
-        <div class="stat-ico amber">📋</div>
-        <div><div class="stat-val">${totalProgja}</div><div class="stat-lbl">Program Kerja</div></div>
-      </div>
-      <div class="stat">
-        <div class="stat-ico blue">📚</div>
-        <div><div class="stat-val">${totalMateri}</div><div class="stat-lbl">Materi Tarbiyah</div></div>
-      </div>
-      <div class="stat">
-        <div class="stat-ico purple">👥</div>
-        <div><div class="stat-val">${totalKader}</div><div class="stat-lbl">Data Kader</div></div>
-      </div>
+      <div class="stat"><div class="stat-ico green">🧑‍🤝‍🧑</div>
+        <div><div class="stat-val">${state.anggota.length}</div><div class="stat-lbl">Anggota Struktur</div></div></div>
+      <div class="stat"><div class="stat-ico amber">📋</div>
+        <div><div class="stat-val">${state.progja.length}</div><div class="stat-lbl">Program Kerja</div></div></div>
+      <div class="stat"><div class="stat-ico blue">📚</div>
+        <div><div class="stat-val">${state.materi.length}</div><div class="stat-lbl">Materi Tarbiyah</div></div></div>
+      <div class="stat"><div class="stat-ico purple">👥</div>
+        <div><div class="stat-val">${state.kader.length}</div><div class="stat-lbl">Data Kader</div></div></div>
     </div>
 
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head">
-          <span class="ico">🔔</span>
-          <h2>Agenda Terdekat</h2>
+          <span class="ico">🔔</span><h2>Agenda Terdekat</h2>
           <button class="btn btn-outline btn-sm" onclick="goPage('reminder')">Lihat Semua</button>
         </div>
         ${upcoming.length ? upcoming.map(a => `
@@ -697,16 +657,11 @@ function renderDashboard(c) {
             </div>
             <div class="rem-count">${a.label}</div>
           </div>
-        `).join('') : `
-          <div class="empty"><div class="e-ico">📭</div><p>Belum ada agenda dengan jadwal hari & jam.</p></div>
-        `}
+        `).join('') : `<div class="empty"><div class="e-ico">📭</div><p>Belum ada agenda terjadwal.</p></div>`}
       </div>
 
       <div class="card">
-        <div class="card-head">
-          <span class="ico">🎯</span>
-          <h2>Visi & Misi</h2>
-        </div>
+        <div class="card-head"><span class="ico">🎯</span><h2>Visi & Misi</h2></div>
         <div style="margin-bottom:14px">
           <div class="tag" style="margin-bottom:6px">VISI</div>
           <div style="font-size:13px; line-height:1.6">${esc(state.identitas.visi)}</div>
@@ -719,13 +674,6 @@ function renderDashboard(c) {
     </div>
   `;
 }
-
-function goPage(p) {
-  currentPage = p;
-  renderNav();
-  renderPage();
-}
-window.goPage = goPage;
 
 /* ============================================================
    IDENTITAS
@@ -803,20 +751,27 @@ function renderIdentitas(c) {
 }
 
 /* ============================================================
-   ANGGOTA (Struktur)
+   ANGGOTA (Email DIHAPUS, Nama lebih lebar)
 ============================================================ */
 function renderAnggota(c) {
   c.innerHTML = `
     <div class="section-head">
       <div><h2>Struktur Anggota</h2><div class="sub">Daftar pengurus & amanah UPA</div></div>
-      <button class="btn btn-primary" id="addAnggota">➕ Tambah Anggota</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-wa" onclick="sendWAStruktur()">📱 <span class="btn-text">Kirim ke WA</span></button>
+        <button class="btn btn-primary" id="addAnggota">➕ Tambah</button>
+      </div>
     </div>
     <div class="card">
       <div class="tbl-wrap">
         <table>
           <thead><tr>
-            <th style="width:50px">No</th><th>Nama</th><th>Amanah</th><th>ID</th>
-            <th>Email</th><th>No HP</th><th>ID SIK</th><th style="width:80px">Aksi</th>
+            <th style="width:50px">No</th>
+            <th class="col-nama">Nama</th>
+            <th>Amanah</th>
+            <th>ID SIK</th>
+            <th>No HP</th>
+            <th style="width:70px">Aksi</th>
           </tr></thead>
           <tbody id="anggotaBody"></tbody>
         </table>
@@ -827,17 +782,15 @@ function renderAnggota(c) {
   tb.innerHTML = state.anggota.map((a, i) => `
     <tr>
       <td>${i+1}</td>
-      <td><input type="text" data-id="${a.id}" data-f="nama" value="${esc(a.nama)}" placeholder="Nama..."></td>
+      <td class="col-nama"><input type="text" data-id="${a.id}" data-f="nama" value="${esc(a.nama)}" placeholder="Nama lengkap..." style="min-width:180px"></td>
       <td>
-        <select data-id="${a.id}" data-f="amanah">
+        <select data-id="${a.id}" data-f="amanah" style="min-width:120px">
           ${['Amin','Suun Maal','Suun Tarbawi','Suun Daawi','Suun Ailiyah','Mudarrib','Anggota']
             .map(v => `<option ${a.amanah===v?'selected':''}>${v}</option>`).join('')}
         </select>
       </td>
-      <td><input type="text" data-id="${a.id}" data-f="idSik" value="${esc(a.idSik)}" style="width:80px"></td>
-      <td><input type="email" data-id="${a.id}" data-f="email" value="${esc(a.email)}" placeholder="email@.."></td>
-      <td><input type="text" data-id="${a.id}" data-f="hp" value="${esc(a.hp)}" placeholder="08xx"></td>
-      <td><input type="text" data-id="${a.id}" data-f="id" value="${esc(a.idSik)}" style="width:80px" disabled></td>
+      <td><input type="text" data-id="${a.id}" data-f="idSik" value="${esc(a.idSik)}" style="width:90px"></td>
+      <td><input type="tel" data-id="${a.id}" data-f="hp" value="${esc(a.hp)}" placeholder="628..." style="width:130px"></td>
       <td><button class="mini-btn" data-del="${a.id}" title="Hapus">🗑️</button></td>
     </tr>
   `).join('');
@@ -850,12 +803,13 @@ function renderAnggota(c) {
   });
   tb.querySelectorAll('[data-del]').forEach(b => {
     b.onclick = () => {
+      if (!confirm('Hapus anggota ini?')) return;
       state.anggota = state.anggota.filter(x => x.id !== b.dataset.del);
       saveState(); renderAnggota(c);
     };
   });
   document.getElementById('addAnggota').onclick = () => {
-    state.anggota.push({ id: uid(), nama:'', amanah:'Anggota', idSik:'', email:'', hp:'' });
+    state.anggota.push({ id: uid(), nama:'', amanah:'Anggota', idSik:'', hp:'' });
     saveState(); renderAnggota(c);
   };
 }
@@ -874,9 +828,12 @@ function renderProgja(c) {
         <table>
           <thead><tr>
             <th style="width:45px">No</th>
-            <th style="width:70px">Ikon</th>
-            <th>PIC</th><th>Nama Program</th><th>Periode</th><th>Jadwal</th>
-            <th>Hari</th><th>Jam</th><th style="width:80px">Aksi</th>
+            <th style="width:60px">Ikon</th>
+            <th>PIC</th>
+            <th style="min-width:180px">Nama Program</th>
+            <th>Periode</th><th>Jadwal</th>
+            <th>Hari</th><th>Jam</th>
+            <th style="width:70px">Aksi</th>
           </tr></thead>
           <tbody id="progBody"></tbody>
         </table>
@@ -887,18 +844,18 @@ function renderProgja(c) {
   tb.innerHTML = state.progja.map((p, i) => `
     <tr>
       <td>${i+1}</td>
-      <td><input type="text" data-id="${p.id}" data-f="ico" value="${esc(p.ico)}" style="width:55px; text-align:center; font-size:18px"></td>
-      <td><input type="text" data-id="${p.id}" data-f="pic" value="${esc(p.pic)}" style="width:120px"></td>
-      <td><input type="text" data-id="${p.id}" data-f="nama" value="${esc(p.nama)}"></td>
+      <td><input type="text" data-id="${p.id}" data-f="ico" value="${esc(p.ico)}" style="width:50px; text-align:center; font-size:18px"></td>
+      <td><input type="text" data-id="${p.id}" data-f="pic" value="${esc(p.pic)}" style="width:130px"></td>
+      <td><input type="text" data-id="${p.id}" data-f="nama" value="${esc(p.nama)}" style="min-width:180px"></td>
       <td><input type="text" data-id="${p.id}" data-f="periode" value="${esc(p.periode)}" style="width:110px"></td>
-      <td><input type="text" data-id="${p.id}" data-f="jadwal" value="${esc(p.jadwal)}" style="width:150px"></td>
+      <td><input type="text" data-id="${p.id}" data-f="jadwal" value="${esc(p.jadwal)}" style="width:140px"></td>
       <td>
-        <select data-id="${p.id}" data-f="hari">
+        <select data-id="${p.id}" data-f="hari" style="width:95px">
           <option value="">—</option>
           ${DAYS.map(d => `<option ${p.hari===d?'selected':''}>${d}</option>`).join('')}
         </select>
       </td>
-      <td><input type="time" data-id="${p.id}" data-f="jam" value="${esc(p.jam)}" style="width:105px"></td>
+      <td><input type="time" data-id="${p.id}" data-f="jam" value="${esc(p.jam)}" style="width:100px"></td>
       <td><button class="mini-btn" data-del="${p.id}" title="Hapus">🗑️</button></td>
     </tr>
   `).join('');
@@ -927,9 +884,7 @@ function renderProgja(c) {
 ============================================================ */
 function renderMateri(c) {
   const groups = {};
-  state.materi.forEach(m => {
-    (groups[m.periode] = groups[m.periode] || []).push(m);
-  });
+  state.materi.forEach(m => { (groups[m.periode] = groups[m.periode] || []).push(m); });
 
   c.innerHTML = `
     <div class="section-head">
@@ -942,8 +897,8 @@ function renderMateri(c) {
           <div class="card-head"><span class="ico">📚</span><h2>${esc(periode)}</h2></div>
           ${items.map(m => `
             <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px">
-              <input type="text" data-id="${m.id}" data-f="nama" value="${esc(m.nama)}" style="flex:1">
-              <input type="text" data-id="${m.id}" data-f="pemateri" value="${esc(m.pemateri)}" placeholder="Pemateri" style="width:140px">
+              <input type="text" data-id="${m.id}" data-f="nama" value="${esc(m.nama)}" style="flex:1; min-width:0">
+              <input type="text" data-id="${m.id}" data-f="pemateri" value="${esc(m.pemateri)}" placeholder="Pemateri" style="width:130px">
               <button class="mini-btn" data-del="${m.id}" title="Hapus">🗑️</button>
             </div>
           `).join('')}
@@ -985,7 +940,6 @@ function renderMateri(c) {
     };
   };
 }
-window.closeModal = closeModal;
 
 /* ============================================================
    KADER
@@ -994,16 +948,22 @@ function renderKader(c) {
   c.innerHTML = `
     <div class="section-head">
       <div><h2>Data Kader</h2><div class="sub">Total ${state.kader.length} kader</div></div>
-      <button class="btn btn-primary" id="addKader">➕ Tambah Kader</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-wa" onclick="sendWAKader()">📱 <span class="btn-text">Kirim ke WA</span></button>
+        <button class="btn btn-primary" id="addKader">➕ Tambah</button>
+      </div>
     </div>
     <div class="card">
       <div class="tbl-wrap">
         <table>
           <thead><tr>
-            <th style="width:45px">No</th><th>Nama</th><th>Naqib/Murabbi</th><th>Jenjang</th>
-            <th>TTL</th><th>Gol Darah</th><th>No HP</th><th>Alamat</th>
-            <th>Kelurahan</th><th>Kecamatan</th><th>Pendidikan</th><th>Kepakaran/Pekerjaan</th>
-            <th>Marital</th><th>Penghasilan</th><th style="width:70px">Aksi</th>
+            <th style="width:45px">No</th>
+            <th class="col-nama">Nama</th>
+            <th>Naqib/Murabbi</th><th>Jenjang</th>
+            <th>TTL</th><th>Gol</th><th>No HP</th><th>Alamat</th>
+            <th>Kelurahan</th><th>Kecamatan</th><th>Pendidikan</th>
+            <th>Kepakaran/Pekerjaan</th><th>Marital</th><th>Penghasilan</th>
+            <th style="width:60px">Aksi</th>
           </tr></thead>
           <tbody id="kaderBody"></tbody>
         </table>
@@ -1017,24 +977,24 @@ function renderKader(c) {
     tb.innerHTML = state.kader.map((k, i) => `
       <tr>
         <td>${i+1}</td>
-        <td><input type="text" data-id="${k.id}" data-f="nama" value="${esc(k.nama)}" style="min-width:130px"></td>
-        <td><input type="text" data-id="${k.id}" data-f="naqib" value="${esc(k.naqib)}" style="width:110px"></td>
+        <td class="col-nama"><input type="text" data-id="${k.id}" data-f="nama" value="${esc(k.nama)}" style="min-width:180px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="naqib" value="${esc(k.naqib)}" style="width:120px"></td>
         <td>
-          <select data-id="${k.id}" data-f="jenjang">
+          <select data-id="${k.id}" data-f="jenjang" style="width:110px">
             ${['','Muntazhim','Muntasib','Muayyid','Tamhidi','Madya','Pratama','Muda']
               .map(v => `<option ${k.jenjang===v?'selected':''}>${v}</option>`).join('')}
           </select>
         </td>
         <td><input type="text" data-id="${k.id}" data-f="ttl" value="${esc(k.ttl)}" style="width:150px"></td>
         <td><input type="text" data-id="${k.id}" data-f="goldar" value="${esc(k.goldar)}" style="width:50px"></td>
-        <td><input type="text" data-id="${k.id}" data-f="hp" value="${esc(k.hp)}" style="width:110px"></td>
+        <td><input type="tel" data-id="${k.id}" data-f="hp" value="${esc(k.hp)}" style="width:120px"></td>
         <td><input type="text" data-id="${k.id}" data-f="alamat" value="${esc(k.alamat)}" style="width:140px"></td>
         <td><input type="text" data-id="${k.id}" data-f="kelurahan" value="${esc(k.kelurahan)}" style="width:100px"></td>
         <td><input type="text" data-id="${k.id}" data-f="kecamatan" value="${esc(k.kecamatan)}" style="width:100px"></td>
         <td><input type="text" data-id="${k.id}" data-f="pend" value="${esc(k.pend)}" style="width:100px"></td>
-        <td><input type="text" data-id="${k.id}" data-f="kepakaran" value="${esc(k.kepakaran)}" style="width:120px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="kepakaran" value="${esc(k.kepakaran)}" style="width:130px"></td>
         <td>
-          <select data-id="${k.id}" data-f="marital">
+          <select data-id="${k.id}" data-f="marital" style="width:120px">
             ${['','Belum Menikah','Menikah','Duda/Janda'].map(v => `<option ${k.marital===v?'selected':''}>${v}</option>`).join('')}
           </select>
         </td>
@@ -1072,36 +1032,35 @@ function renderKader(c) {
 function renderStatistik(c) {
   const usroh = state.statistik.usroh;
   const totalKader = usroh.reduce((s, x) => s + (Number(x.jumlah) || 0), 0);
-
-  // Data chart statis dari file (bisa diubah nanti)
   const chartData = [
-    { lbl: 'Muntazhim', ideal: 1, real: 1, cls: '' },
-    { lbl: 'Muntasyib', ideal: 5, real: 7, cls: 'blue' },
-    { lbl: 'Muayyid', ideal: 25, real: 13, cls: 'amber' },
-    { lbl: 'Tamhidi', ideal: 125, real: 13, cls: 'pink' }
+    { lbl: 'Muntazhim', ideal: 1, real: 1 },
+    { lbl: 'Muntasyib', ideal: 5, real: 7 },
+    { lbl: 'Muayyid', ideal: 25, real: 13 },
+    { lbl: 'Tamhidi', ideal: 125, real: 13 }
   ];
 
   c.innerHTML = `
     <div class="section-head">
       <div><h2>Statistik Usroh</h2><div class="sub">Ringkasan data kader & target</div></div>
+      <button class="btn btn-wa" onclick="sendWAStatistik()">📱 <span class="btn-text">Kirim ke WA</span></button>
     </div>
 
     <div class="grid grid-4" style="margin-bottom:18px">
       <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${totalKader}</div><div class="stat-lbl">Total Kader</div></div></div>
       <div class="stat"><div class="stat-ico blue">🏅</div><div><div class="stat-val">${usroh.length}</div><div class="stat-lbl">Mustawa</div></div></div>
-      <div class="stat"><div class="stat-ico amber">🎯</div><div><div class="stat-val">${state.statistik.target.reduce((s,t)=>s+(Number(t.target)||0),0)}</div><div class="stat-lbl">Total Target</div></div></div>
+      <div class="stat"><div class="stat-ico amber">🎯</div><div><div class="stat-val">${state.statistik.target.reduce((s,t)=>s+((+t.kader||0)*(+t.beban||0)),0)}</div><div class="stat-lbl">Total Target</div></div></div>
       <div class="stat"><div class="stat-ico purple">📈</div><div><div class="stat-val">${state.identitas.allIkhwan || 0}</div><div class="stat-lbl">All Kader Ikhwan</div></div></div>
     </div>
 
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head">
-          <span class="ico">📊</span><h2>Komposisi Kader per Mustawa</h2>
+          <span class="ico">📊</span><h2>Komposisi Kader</h2>
           <button class="btn btn-outline btn-sm" id="addUsroh">➕ Baris</button>
         </div>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th style="width:45px">No</th><th>Nama MR/Naqib</th><th>Mustawa</th><th>Jumlah</th><th style="width:60px"></th></tr></thead>
+            <thead><tr><th style="width:45px">No</th><th>Nama MR/Naqib</th><th>Mustawa</th><th>Jumlah</th><th style="width:55px"></th></tr></thead>
             <tbody id="usrohBody"></tbody>
             <tfoot><tr style="background:#f8fafc; font-weight:700"><td colspan="3" style="text-align:right; padding:10px 12px">Jumlah</td><td style="padding:10px 12px">${totalKader}</td><td></td></tr></tfoot>
           </table>
@@ -1140,9 +1099,9 @@ function renderStatistik(c) {
   ub.innerHTML = usroh.map((u, i) => `
     <tr>
       <td>${i+1}</td>
-      <td><input type="text" data-id="${u.id}" data-f="naqib" value="${esc(u.naqib)}" placeholder="Nama..."></td>
+      <td><input type="text" data-id="${u.id}" data-f="naqib" value="${esc(u.naqib)}" placeholder="Nama..." style="min-width:150px"></td>
       <td>
-        <select data-id="${u.id}" data-f="mustawa">
+        <select data-id="${u.id}" data-f="mustawa" style="width:120px">
           ${['Muntazhim','Muntasib','Muayyid','Tamhidi','Madya','Pratama','Muda']
             .map(v => `<option ${u.mustawa===v?'selected':''}>${v}</option>`).join('')}
         </select>
@@ -1151,7 +1110,6 @@ function renderStatistik(c) {
       <td><button class="mini-btn" data-del="${u.id}">🗑️</button></td>
     </tr>
   `).join('');
-
   ub.querySelectorAll('input, select').forEach(el => {
     el.oninput = el.onchange = () => {
       const u = usroh.find(x => x.id === el.dataset.id);
@@ -1172,14 +1130,12 @@ function renderStatistik(c) {
   const tb = document.getElementById('targetBody');
   tb.innerHTML = state.statistik.target.map(t => {
     const jlh = (Number(t.kader) || 0) * (Number(t.beban) || 0);
-    const real = Number(t.target) || 0;
+    const real = Number(t.jumlah) || 0;
     const pct = jlh ? Math.min(100, (real / jlh) * 100) : 0;
     return `
       <tr>
         <td><b>${esc(t.mustawa)}</b></td>
-        <td>${t.kader}</td>
-        <td>${t.beban}</td>
-        <td><b>${jlh}</b></td>
+        <td>${t.kader}</td><td>${t.beban}</td><td><b>${jlh}</b></td>
         <td>
           <div class="progress" style="width:130px"><div style="width:${pct}%"></div></div>
           <span style="font-size:11px; color:var(--muted)">${pct.toFixed(0)}%</span>
@@ -1197,7 +1153,10 @@ function renderMutabaah(c) {
   c.innerHTML = `
     <div class="section-head">
       <div><h2>Mutabaah Yaumiah</h2><div class="sub">Liqo Usroh ${esc(state.identitas.nama)}</div></div>
-      <button class="btn btn-primary" id="saveMut">💾 Simpan</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-wa" onclick="sendWAMutabaah()">📱 <span class="btn-text">Kirim ke WA</span></button>
+        <button class="btn btn-primary" id="saveMut">💾 Simpan</button>
+      </div>
     </div>
 
     <div class="card">
@@ -1214,10 +1173,9 @@ function renderMutabaah(c) {
         <table class="mut-table">
           <thead>
             <tr>
-              <th>Agenda</th>
-              <th>Target</th>
+              <th>Agenda</th><th>Target</th>
               ${m.members.map((mem, i) => `
-                <th><input type="text" data-mi="${i}" value="${esc(mem)}" style="width:60px; text-align:center; font-size:11px; padding:3px"></th>
+                <th><input type="text" data-mi="${i}" value="${esc(mem)}" style="width:56px; text-align:center; font-size:11px; padding:3px"></th>
               `).join('')}
             </tr>
           </thead>
@@ -1226,7 +1184,6 @@ function renderMutabaah(c) {
       </div>
     </div>
   `;
-
   const tb = document.getElementById('mutBody');
   tb.innerHTML = m.agenda.map((a, ri) => `
     <tr>
@@ -1237,7 +1194,6 @@ function renderMutabaah(c) {
       `).join('')}
     </tr>
   `).join('');
-
   tb.querySelectorAll('[data-ai]').forEach(el => {
     el.oninput = () => {
       const a = m.agenda.find(x => x.id === el.dataset.ai);
@@ -1247,14 +1203,9 @@ function renderMutabaah(c) {
   tb.querySelectorAll('[data-cell]').forEach(el => {
     el.oninput = () => { m.values[el.dataset.cell] = el.value; saveState(); };
   });
-
   c.querySelectorAll('[data-mi]').forEach(el => {
-    el.oninput = () => {
-      m.members[+el.dataset.mi] = el.value || '—';
-      saveState();
-    };
+    el.oninput = () => { m.members[+el.dataset.mi] = el.value || '—'; saveState(); };
   });
-
   document.getElementById('saveMut').onclick = () => {
     m.tanggal = document.getElementById('mut_tgl').value;
     m.pekan = document.getElementById('mut_pekan').value;
@@ -1264,7 +1215,7 @@ function renderMutabaah(c) {
 }
 
 /* ============================================================
-   REMINDER
+   REMINDER + WA
 ============================================================ */
 function getNextOccurrence(hari, jam) {
   if (!hari || !jam) return null;
@@ -1280,7 +1231,6 @@ function getNextOccurrence(hari, jam) {
   next.setDate(now.getDate() + diff);
   return next;
 }
-
 function formatDiff(ms) {
   const min = Math.round(ms / 60000);
   if (min < 60) return `${min} menit`;
@@ -1289,7 +1239,6 @@ function formatDiff(ms) {
   const d = Math.floor(hr / 24);
   return `${d} hari ${hr % 24}j`;
 }
-
 function getUpcomingActivities() {
   const now = new Date();
   const list = [];
@@ -1297,13 +1246,7 @@ function getUpcomingActivities() {
     const next = getNextOccurrence(p.hari, p.jam);
     if (!next) return;
     const diff = next - now;
-    list.push({
-      ...p,
-      next,
-      diff,
-      soon: diff < 60 * 60 * 1000, // < 1 jam
-      label: formatDiff(diff)
-    });
+    list.push({ ...p, next, diff, soon: diff < 3600000, label: formatDiff(diff) });
   });
   list.sort((a, b) => a.diff - b.diff);
   return list;
@@ -1312,27 +1255,49 @@ function getUpcomingActivities() {
 function renderReminder(c) {
   const list = getUpcomingActivities();
   const allScheduled = state.progja.filter(p => p.hari && p.jam);
+  const waNum = state.wa.defaultNumber || '';
 
   c.innerHTML = `
     <div class="section-head">
-      <div><h2>Reminder & Jadwal</h2><div class="sub">Pengingat otomatis untuk kegiatan yang dijadwalkan</div></div>
-      <button class="btn btn-primary" id="testNotif">🔔 Tes Notifikasi</button>
+      <div><h2>Reminder & Jadwal</h2><div class="sub">Pengingat otomatis kegiatan</div></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-wa" onclick="sendWAReminder()">📱 <span class="btn-text">Reminder via WA</span></button>
+        <button class="btn btn-outline" onclick="requestNotifPerm()">🔔 Izin Notif</button>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><span class="ico">⏰</span><h2>Agenda Terdekat</h2></div>
+      <div class="card-head"><span class="ico">📱</span><h2>Pengaturan WhatsApp</h2></div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Nomor WA Default (tanpa +, mulai 62)</label>
+          <input type="tel" id="wa_num" value="${esc(waNum)}" placeholder="628123456789">
+        </div>
+        <div class="form-group">
+          <label>Nama Grup / Penerima</label>
+          <input type="text" id="wa_group" value="${esc(state.wa.groupName)}">
+        </div>
+      </div>
+      <button class="btn btn-primary" id="saveWa">💾 Simpan Pengaturan WA</button>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="ico">⏰</span><h2>Agenda Terdekat</h2>
+        <button class="btn btn-wa btn-sm" onclick="sendWAReminder()">📱 Kirim Semua</button>
+      </div>
       ${list.length ? list.map(a => `
         <div class="rem-item ${a.soon ? 'soon' : ''}">
           <div class="rem-ico">${a.ico || '📌'}</div>
           <div class="rem-body">
             <div class="rem-title">${esc(a.nama)}</div>
-            <div class="rem-sub">
-              ${esc(a.hari)}, ${esc(a.jam)} • ${esc(a.pic)} • ${esc(a.periode)}
-            </div>
+            <div class="rem-sub">${esc(a.hari)}, ${esc(a.jam)} • ${esc(a.pic)} • ${esc(a.periode)}</div>
           </div>
-          <div class="rem-count">${a.label}<br><span style="font-weight:400; font-size:10px; color:var(--muted)">lagi</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end">
+            <div class="rem-count">${a.label}</div>
+            <button class="btn btn-wa btn-sm" onclick="sendWASingle('${a.id}')">📱 Ingatkan</button>
+          </div>
         </div>
-      `).join('') : `<div class="empty"><div class="e-ico">📭</div><p>Belum ada agenda yang dijadwalkan dengan hari & jam.</p></div>`}
+      `).join('') : `<div class="empty"><div class="e-ico">📭</div><p>Belum ada agenda dengan hari & jam.</p></div>`}
     </div>
 
     <div class="card">
@@ -1355,215 +1320,561 @@ function renderReminder(c) {
             </tbody>
           </table>
         </div>
-      ` : `<div class="empty"><div class="e-ico">📭</div><p>Atur hari & jam pada menu <b>Program Kerja</b> untuk mengaktifkan reminder.</p></div>`}
+      ` : `<div class="empty"><div class="e-ico">📭</div><p>Atur hari & jam pada menu <b>Program Kerja</b>.</p></div>`}
     </div>
 
     <div class="card">
-      <div class="card-head"><span class="ico">⚙️</span><h2>Pengaturan Reminder</h2></div>
+      <div class="card-head"><span class="ico">⚙️</span><h2>Pengaturan Reminder Otomatis</h2></div>
       <div class="form-row cols-2">
-        <div class="form-group">
-          <label>Aktifkan Reminder Otomatis</label>
+        <div class="form-group"><label>Aktifkan Reminder</label>
           <select id="set_enable">
             <option value="1" ${state.settings.reminderEnabled ? 'selected' : ''}>Aktif</option>
             <option value="0" ${!state.settings.reminderEnabled ? 'selected' : ''}>Nonaktif</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Ingatkan Sebelum (menit)</label>
+        <div class="form-group"><label>Ingatkan Sebelum (menit)</label>
           <input type="number" id="set_min" value="${state.settings.reminderMinutes}" min="1" max="180">
         </div>
       </div>
-      <button class="btn btn-primary" id="saveSet">💾 Simpan Pengaturan</button>
+      <button class="btn btn-primary" id="saveSet">💾 Simpan</button>
     </div>
   `;
 
+  document.getElementById('saveWa').onclick = () => {
+    state.wa.defaultNumber = document.getElementById('wa_num').value.trim().replace(/\D/g,'');
+    state.wa.groupName = document.getElementById('wa_group').value.trim();
+    saveState();
+    toast('Tersimpan', 'Pengaturan WhatsApp diperbarui.');
+  };
   document.getElementById('saveSet').onclick = () => {
     state.settings.reminderEnabled = document.getElementById('set_enable').value === '1';
     state.settings.reminderMinutes = +document.getElementById('set_min').value || 30;
-    saveState();
-    toast('Tersimpan', 'Pengaturan reminder diperbarui.');
-  };
-  document.getElementById('testNotif').onclick = () => {
-    showNotification('🔔 Tes Notifikasi', 'Ini contoh pengingat kegiatan UPA.');
-    toast('Tes Berhasil', 'Notifikasi berhasil dikirim.');
+    saveState(); toast('Tersimpan', 'Pengaturan reminder diperbarui.');
   };
 }
 
 /* ============================================================
-   NOTIFIKASI & REMINDER ENGINE
+   LAPORAN & EXPORT
 ============================================================ */
-function showNotification(title, body) {
-  // In-app toast
-  toast(title, body, 'warn');
-  // Browser notification
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try { new Notification(title, { body, icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕌</text></svg>' }); } catch(e){}
-  }
+function renderLaporan(c) {
+  c.innerHTML = `
+    <div class="section-head">
+      <div><h2>Laporan & Export</h2><div class="sub">Kirim laporan atau export data</div></div>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card" onclick="sendWAStruktur()">
+        <span class="r-ico">📱</span>
+        <div class="r-title">Laporan Struktur via WA</div>
+        <div class="r-desc">Kirim daftar anggota & amanah ke WhatsApp</div>
+      </div>
+      <div class="report-card" onclick="sendWAKader()">
+        <span class="r-ico">📱</span>
+        <div class="r-title">Laporan Kader via WA</div>
+        <div class="r-desc">Kirim data kader lengkap ke WhatsApp</div>
+      </div>
+      <div class="report-card" onclick="sendWAReminder()">
+        <span class="r-ico">📱</span>
+        <div class="r-title">Reminder Kegiatan via WA</div>
+        <div class="r-desc">Kirim jadwal kegiatan terdekat ke WhatsApp</div>
+      </div>
+      <div class="report-card" onclick="sendWAStatistik()">
+        <span class="r-ico">📱</span>
+        <div class="r-title">Laporan Statistik via WA</div>
+        <div class="r-desc">Kirim ringkasan statistik kader ke WhatsApp</div>
+      </div>
+      <div class="report-card" onclick="sendWAMutabaah()">
+        <span class="r-ico">📱</span>
+        <div class="r-title">Laporan Mutabaah via WA</div>
+        <div class="r-desc">Kirim rekap mutabaah yaumiah ke WhatsApp</div>
+      </div>
+      <div class="report-card" onclick="exportExcel()">
+        <span class="r-ico">📊</span>
+        <div class="r-title">Export ke Excel</div>
+        <div class="r-desc">Download semua data dalam format Excel (.xls)</div>
+      </div>
+      <div class="report-card" onclick="exportPDF()">
+        <span class="r-ico">📄</span>
+        <div class="r-title">Export ke PDF</div>
+        <div class="r-desc">Cetak / simpan laporan lengkap sebagai PDF</div>
+      </div>
+      <div class="report-card" onclick="exportBackup()">
+        <span class="r-ico">💾</span>
+        <div class="r-title">Backup Data (JSON)</div>
+        <div class="r-desc">Simpan semua data sebagai file backup</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-head"><span class="ico">📊</span><h2>Pratinjau Laporan</h2>
+        <button class="btn btn-primary btn-sm" onclick="exportPDF()">🖨️ Cetak PDF</button>
+      </div>
+      <div id="reportPreview" style="font-size:13px; line-height:1.7">
+        ${buildReportHTML()}
+      </div>
+    </div>
+  `;
 }
 
-const notifiedKeys = new Set();
+function buildReportHTML() {
+  const it = state.identitas;
+  const dateStr = formatDateID(new Date());
+  const anggotaRows = state.anggota.map((a,i) => `<tr><td>${i+1}</td><td>${esc(a.nama)||'-'}</td><td>${esc(a.amanah)}</td><td>${esc(a.idSik)||'-'}</td><td>${esc(a.hp)||'-'}</td></tr>`).join('');
+  const progjaRows = state.progja.map((p,i) => `<tr><td>${i+1}</td><td>${esc(p.nama)}</td><td>${esc(p.pic)}</td><td>${esc(p.hari)||'-'}</td><td>${esc(p.jam)||'-'}</td></tr>`).join('');
+  const kaderRows = state.kader.length ? state.kader.map((k,i) => `<tr><td>${i+1}</td><td>${esc(k.nama)||'-'}</td><td>${esc(k.naqib)||'-'}</td><td>${esc(k.jenjang)||'-'}</td><td>${esc(k.hp)||'-'}</td><td>${esc(k.kecamatan)||'-'}</td></tr>`).join('') : '<tr><td colspan="6" style="text-align:center">Belum ada data kader</td></tr>';
+  const mutRows = state.mutabaah.agenda.map((a,i) => {
+    const cells = state.mutabaah.members.map((_, ci) => `<td style="text-align:center">${esc(state.mutabaah.values[i+'-'+ci]||'')}</td>`).join('');
+    return `<tr><td>${i+1}</td><td>${esc(a.nama)}</td><td>${esc(a.target)}</td>${cells}</tr>`;
+  }).join('');
 
-function checkReminders(silent = false) {
-  if (!state.settings.reminderEnabled) return;
-  const now = new Date();
-  const ahead = (state.settings.reminderMinutes || 30) * 60 * 1000;
-  let upcomingCount = 0;
+  return `
+    <div style="text-align:center; margin-bottom:20px">
+      <h2 style="font-size:18px; margin-bottom:4px">LAPORAN RAKER UPA ${esc(it.nama)}</h2>
+      <div style="color:#64748b; font-size:12px">Dicetak: ${dateStr}</div>
+    </div>
 
-  state.progja.forEach(p => {
-    const next = getNextOccurrence(p.hari, p.jam);
-    if (!next) return;
-    const diff = next - now;
-    if (diff > 0 && diff <= ahead) upcomingCount++;
+    <h3 style="margin:16px 0 8px; font-size:14px; border-bottom:2px solid #0d9488; padding-bottom:4px">1. IDENTITAS</h3>
+    <table style="width:100%; font-size:12px; border-collapse:collapse">
+      <tr><td style="padding:4px; width:140px"><b>Nama UPA</b></td><td>: ${esc(it.nama)}</td></tr>
+      <tr><td style="padding:4px"><b>Visi</b></td><td>: ${esc(it.visi)}</td></tr>
+      <tr><td style="padding:4px"><b>Misi</b></td><td>: ${esc(it.misi)}</td></tr>
+      <tr><td style="padding:4px"><b>Naqib</b></td><td>: ${esc(it.naqib)||'-'}</td></tr>
+      <tr><td style="padding:4px"><b>Amin</b></td><td>: ${esc(it.amin)||'-'}</td></tr>
+    </table>
 
-    // Trigger notifikasi jika masuk window reminder
-    if (diff > 0 && diff <= ahead) {
-      const key = p.id + '|' + next.toISOString().slice(0, 13);
-      if (!notifiedKeys.has(key)) {
-        notifiedKeys.add(key);
-        if (!silent) {
-          showNotification(`⏰ ${p.nama}`, `Akan dimulai dalam ${formatDiff(diff)} (${p.hari}, ${p.jam}) • PIC: ${p.pic}`);
-        }
-      }
-    }
+    <h3 style="margin:16px 0 8px; font-size:14px; border-bottom:2px solid #0d9488; padding-bottom:4px">2. STRUKTUR ANGGOTA</h3>
+    <table style="width:100%; font-size:12px; border-collapse:collapse; border:1px solid #cbd5e1">
+      <thead><tr style="background:#f1f5f9"><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">No</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Nama</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Amanah</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">ID SIK</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">No HP</th></tr></thead>
+      <tbody>${anggotaRows}</tbody>
+    </table>
+
+    <h3 style="margin:16px 0 8px; font-size:14px; border-bottom:2px solid #0d9488; padding-bottom:4px">3. PROGRAM KERJA</h3>
+    <table style="width:100%; font-size:12px; border-collapse:collapse; border:1px solid #cbd5e1">
+      <thead><tr style="background:#f1f5f9"><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">No</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Program</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">PIC</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Hari</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Jam</th></tr></thead>
+      <tbody>${progjaRows}</tbody>
+    </table>
+
+    <h3 style="margin:16px 0 8px; font-size:14px; border-bottom:2px solid #0d9488; padding-bottom:4px">4. DATA KADER</h3>
+    <table style="width:100%; font-size:12px; border-collapse:collapse; border:1px solid #cbd5e1">
+      <thead><tr style="background:#f1f5f9"><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">No</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Nama</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Naqib</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Jenjang</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">No HP</th><th style="border:1px solid #cbd5e1; padding:5px; text-align:left">Kecamatan</th></tr></thead>
+      <tbody>${kaderRows}</tbody>
+    </table>
+
+    <h3 style="margin:16px 0 8px; font-size:14px; border-bottom:2px solid #0d9488; padding-bottom:4px">5. MUTABAAH YAUMIAH</h3>
+    <div style="font-size:11px; margin-bottom:6px">Tanggal: ${esc(state.mutabaah.tanggal)} • Pekan: ${esc(state.mutabaah.pekan)}</div>
+    <table style="width:100%; font-size:11px; border-collapse:collapse; border:1px solid #cbd5e1">
+      <thead>
+        <tr style="background:#f1f5f9">
+          <th style="border:1px solid #cbd5e1; padding:4px">No</th>
+          <th style="border:1px solid #cbd5e1; padding:4px">Agenda</th>
+          <th style="border:1px solid #cbd5e1; padding:4px">Target</th>
+          ${state.mutabaah.members.map(m => `<th style="border:1px solid #cbd5e1; padding:4px">${esc(m)}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>${mutRows}</tbody>
+    </table>
+
+    <div style="margin-top:30px; text-align:right; font-size:12px">
+      <div>${esc(it.kota)||'................'}, ${dateStr}</div>
+      <div style="margin-top:60px; border-top:1px solid #333; display:inline-block; padding-top:4px; min-width:180px; text-align:center">
+        <b>${esc(it.naqib)||'( Naqib )'}</b>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   WHATSAPP FUNCTIONS
+============================================================ */
+function openWA(text) {
+  const num = state.wa.defaultNumber || '';
+  const url = num ? `https://wa.me/${num}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+function sendWAStruktur() {
+  let msg = `*📋 STRUKTUR ANGGOTA*\n*UPA ${state.identitas.nama}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+  state.anggota.forEach((a, i) => {
+    msg += `${i+1}. *${a.nama || '(belum diisi)'}*\n`;
+    msg += `   Amanah: ${a.amanah}\n`;
+    if (a.idSik) msg += `   ID SIK: ${a.idSik}\n`;
+    if (a.hp) msg += `   HP: ${a.hp}\n`;
+    msg += `\n`;
   });
-
-  // Update badge
-  const badge = document.getElementById('bellBadge');
-  if (upcomingCount > 0) {
-    badge.textContent = upcomingCount;
-    badge.classList.remove('hidden');
-  } else {
-    badge.classList.add('hidden');
-  }
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Total: ${state.anggota.length} anggota\n`;
+  msg += `Dikirim: ${formatDateID(new Date())}`;
+  openWA(msg);
 }
 
-/* Bell click → go to reminder page */
-document.getElementById('bellBtn').onclick = () => {
-  goPage('reminder');
-};
+function sendWAKader() {
+  if (!state.kader.length) { toast('Kosong', 'Belum ada data kader untuk dikirim.', 'warn'); return; }
+  let msg = `*👥 DATA KADER*\n*UPA ${state.identitas.nama}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+  state.kader.forEach((k, i) => {
+    msg += `${i+1}. *${k.nama || '(tanpa nama)'}*\n`;
+    if (k.naqib) msg += `   Naqib: ${k.naqib}\n`;
+    if (k.jenjang) msg += `   Jenjang: ${k.jenjang}\n`;
+    if (k.hp) msg += `   HP: ${k.hp}\n`;
+    if (k.kecamatan) msg += `   Kec: ${k.kecamatan}\n`;
+    msg += `\n`;
+  });
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Total: ${state.kader.length} kader`;
+  openWA(msg);
+}
 
-/* Notif permission */
-document.getElementById('notifBtn').onclick = async () => {
-  if (!('Notification' in window)) {
-    toast('Tidak Didukung', 'Browser Anda tidak mendukung notifikasi.', 'danger');
-    return;
+function sendWAReminder() {
+  const list = getUpcomingActivities();
+  if (!list.length) { toast('Kosong', 'Belum ada agenda terjadwal.', 'warn'); return; }
+  let msg = `*🔔 REMINDER KEGIATAN*\n*UPA ${state.identitas.nama}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+  msg += `Assalamu'alaikum warahmatullahi wabarakatuh,\n\nBerikut agenda terdekat kita:\n\n`;
+  list.slice(0, 10).forEach((a, i) => {
+    msg += `${a.ico || '📌'} *${a.nama}*\n`;
+    msg += `   🗓️ ${a.hari}, ${a.jam}\n`;
+    msg += `   ⏳ ${a.label} lagi\n`;
+    msg += `   👤 PIC: ${a.pic}\n\n`;
+  });
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Mohon persiapan & kehadirannya. Jazakumullahu khairan 🤲`;
+  openWA(msg);
+}
+
+function sendWASingle(id) {
+  const p = state.progja.find(x => x.id === id);
+  if (!p) return;
+  const next = getNextOccurrence(p.hari, p.jam);
+  if (!next) return;
+  const diff = next - new Date();
+  let msg = `*🔔 PENGINGAT KEGIATAN*\n\n`;
+  msg += `${p.ico || '📌'} *${p.nama}*\n`;
+  msg += `🗓️ ${p.hari}, ${p.jam}\n`;
+  msg += `⏳ ${formatDiff(diff)} lagi\n`;
+  msg += `👤 PIC: ${p.pic}\n`;
+  msg += `📆 ${p.periode}\n\n`;
+  msg += `Mohon hadir tepat waktu. Barakallahu fiikum 🤲`;
+  openWA(msg);
+}
+
+function sendWAStatistik() {
+  const usroh = state.statistik.usroh;
+  const total = usroh.reduce((s,x)=>s+(+x.jumlah||0),0);
+  let msg = `*📊 LAPORAN STATISTIK USROH*\n*UPA ${state.identitas.nama}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+  msg += `*Komposisi Kader per Mustawa:*\n`;
+  usroh.forEach(u => { msg += `• ${u.mustawa}: *${u.jumlah}* orang\n`; });
+  msg += `\n*Total Kader: ${total} orang*\n\n`;
+  msg += `*Target s.d. Desember:*\n`;
+  state.statistik.target.forEach(t => {
+    const jlh = (+t.kader||0)*(+t.beban||0);
+    msg += `• ${t.mustawa}: ${t.kader} × ${t.beban} = *${jlh}*\n`;
+  });
+  msg += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Dikirim: ${formatDateID(new Date())}`;
+  openWA(msg);
+}
+
+function sendWAMutabaah() {
+  const m = state.mutabaah;
+  let msg = `*✅ LAPORAN MUTABAAH YAUMIAH*\n*UPA ${state.identitas.nama}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Tanggal: ${m.tanggal}\nPekan: ${m.pekan}\n\n`;
+  msg += `*Anggota:* ${m.members.join(', ')}\n\n`;
+  msg += `*Agenda:*\n`;
+  m.agenda.forEach((a, i) => {
+    const scores = m.members.map((_, ci) => m.values[i+'-'+ci] || '-');
+    msg += `${i+1}. ${a.nama} (target: ${a.target || '-'})\n`;
+    msg += `   [${scores.join('|')}]\n`;
+  });
+  msg += `\n━━━━━━━━━━━━━━━━━━━━\nBarakallahu fiikum 🤲`;
+  openWA(msg);
+}
+
+function sendWADashboard() {
+  let msg = `*🕌 RINGKASAN UPA ${state.identitas.nama}*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+  msg += `👥 Anggota: *${state.anggota.length}*\n`;
+  msg += `📋 Program Kerja: *${state.progja.length}*\n`;
+  msg += `📚 Materi Tarbiyah: *${state.materi.length}*\n`;
+  msg += `👤 Data Kader: *${state.kader.length}*\n\n`;
+  const list = getUpcomingActivities().slice(0, 3);
+  if (list.length) {
+    msg += `*🔔 Agenda Terdekat:*\n`;
+    list.forEach(a => { msg += `• ${a.nama} — ${a.hari}, ${a.jam} (${a.label})\n`; });
   }
-  const perm = await Notification.requestPermission();
-  if (perm === 'granted') {
-    state.settings.notifPermission = true;
-    saveState();
-    toast('Berhasil', 'Notifikasi browser diaktifkan.');
-    new Notification('🕌 Raker UPA A.H Nasution', { body: 'Notifikasi berhasil diaktifkan. Anda akan diingatkan untuk setiap kegiatan.' });
-  } else {
-    toast('Ditolak', 'Izin notifikasi tidak diberikan.', 'danger');
-  }
-};
+  msg += `\n━━━━━━━━━━━━━━━━━━━━\n${formatDateID(new Date())}`;
+  openWA(msg);
+}
+
+window.sendWAStruktur = sendWAStruktur;
+window.sendWAKader = sendWAKader;
+window.sendWAReminder = sendWAReminder;
+window.sendWASingle = sendWASingle;
+window.sendWAStatistik = sendWAStatistik;
+window.sendWAMutabaah = sendWAMutabaah;
+window.sendWADashboard = sendWADashboard;
+
+/* ============================================================
+   EXPORT EXCEL
+============================================================ */
+function exportExcel() {
+  let html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+  <head><meta charset="UTF-8">
+  <style>
+    table { border-collapse: collapse; font-family: Arial; font-size: 11pt; }
+    th { background: #0d9488; color: #fff; padding: 8px; border: 1px solid #333; text-align: left; }
+    td { padding: 6px 8px; border: 1px solid #ccc; vertical-align: top; }
+    h2 { color: #0d9488; font-family: Arial; margin: 16px 0 8px; }
+    h1 { color: #0f172a; font-family: Arial; }
+    .meta { font-family: Arial; font-size: 11pt; margin-bottom: 16px; }
+  </style></head><body>
+  <h1>Laporan Raker UPA ${esc(state.identitas.nama)}</h1>
+  <div class="meta">Dicetak: ${formatDateID(new Date())}</div>
+
+  <h2>1. Identitas UPA</h2>
+  <table>
+    <tr><th>Field</th><th>Nilai</th></tr>
+    <tr><td>Nama UPA</td><td>${esc(state.identitas.nama)}</td></tr>
+    <tr><td>Visi</td><td>${esc(state.identitas.visi)}</td></tr>
+    <tr><td>Misi</td><td>${esc(state.identitas.misi)}</td></tr>
+    <tr><td>Lahir</td><td>${esc(state.identitas.lahir)}</td></tr>
+    <tr><td>Provinsi/DPW</td><td>${esc(state.identitas.provinsi)}</td></tr>
+    <tr><td>Kota/Kab</td><td>${esc(state.identitas.kota)}</td></tr>
+    <tr><td>Naqib</td><td>${esc(state.identitas.naqib)}</td></tr>
+    <tr><td>Amin</td><td>${esc(state.identitas.amin)}</td></tr>
+  </table>
+
+  <h2>2. Struktur Anggota</h2>
+  <table>
+    <tr><th>No</th><th>Nama</th><th>Amanah</th><th>ID SIK</th><th>No HP</th></tr>
+    ${state.anggota.map((a,i)=>`<tr><td>${i+1}</td><td>${esc(a.nama)}</td><td>${esc(a.amanah)}</td><td>${esc(a.idSik)}</td><td>${esc(a.hp)}</td></tr>`).join('')}
+  </table>
+
+  <h2>3. Program Kerja</h2>
+  <table>
+    <tr><th>No</th><th>PIC</th><th>Nama Program</th><th>Periode</th><th>Jadwal</th><th>Hari</th><th>Jam</th></tr>
+    ${state.progja.map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.pic)}</td><td>${esc(p.nama)}</td><td>${esc(p.periode)}</td><td>${esc(p.jadwal)}</td><td>${esc(p.hari)}</td><td>${esc(p.jam)}</td></tr>`).join('')}
+  </table>
+
+  <h2>4. Materi Tarbiyah</h2>
+  <table>
+    <tr><th>No</th><th>Periode</th><th>Nama Materi</th><th>Pemateri</th></tr>
+    ${state.materi.map((m,i)=>`<tr><td>${i+1}</td><td>${esc(m.periode)}</td><td>${esc(m.nama)}</td><td>${esc(m.pemateri)}</td></tr>`).join('')}
+  </table>
+
+  <h2>5. Data Kader</h2>
+  <table>
+    <tr><th>No</th><th>Nama</th><th>Naqib</th><th>Jenjang</th><th>TTL</th><th>Gol</th><th>No HP</th><th>Alamat</th><th>Kelurahan</th><th>Kecamatan</th><th>Pendidikan</th><th>Kepakaran</th><th>Marital</th><th>Penghasilan</th></tr>
+    ${state.kader.length ? state.kader.map((k,i)=>`<tr><td>${i+1}</td><td>${esc(k.nama)}</td><td>${esc(k.naqib)}</td><td>${esc(k.jenjang)}</td><td>${esc(k.ttl)}</td><td>${esc(k.goldar)}</td><td>${esc(k.hp)}</td><td>${esc(k.alamat)}</td><td>${esc(k.kelurahan)}</td><td>${esc(k.kecamatan)}</td><td>${esc(k.pend)}</td><td>${esc(k.kepakaran)}</td><td>${esc(k.marital)}</td><td>${esc(k.penghasilan)}</td></tr>`).join('') : '<tr><td colspan="14">Belum ada data</td></tr>'}
+  </table>
+
+  <h2>6. Statistik</h2>
+  <table>
+    <tr><th>Mustawa</th><th>Naqib</th><th>Jumlah</th></tr>
+    ${state.statistik.usroh.map(u=>`<tr><td>${esc(u.mustawa)}</td><td>${esc(u.naqib)}</td><td>${u.jumlah}</td></tr>`).join('')}
+  </table>
+
+  <h2>7. Mutabaah Yaumiah</h2>
+  <table>
+    <tr><th>No</th><th>Agenda</th><th>Target</th>${state.mutabaah.members.map(m=>`<th>${esc(m)}</th>`).join('')}</tr>
+    ${state.mutabaah.agenda.map((a,i)=>`<tr><td>${i+1}</td><td>${esc(a.nama)}</td><td>${esc(a.target)}</td>${state.mutabaah.members.map((_,ci)=>`<td>${esc(state.mutabaah.values[i+'-'+ci]||'')}</td>`).join('')}</tr>`).join('')}
+  </table>
+
+  </body></html>`;
+
+  const blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Laporan-Raker-UPA-${state.identitas.nama.replace(/\s+/g,'-')}-${new Date().toISOString().slice(0,10)}.xls`;
+  a.click();
+  toast('Berhasil', 'File Excel berhasil diunduh.');
+}
+window.exportExcel = exportExcel;
+
+/* ============================================================
+   EXPORT PDF
+============================================================ */
+function exportPDF() {
+  const area = document.getElementById('printArea');
+  area.innerHTML = buildReportHTML();
+  area.style.display = 'block';
+  document.title = `Laporan-Raker-UPA-${state.identitas.nama}`;
+  setTimeout(() => {
+    window.print();
+    area.style.display = 'none';
+    document.title = 'Raker UPA A.H Nasution — Sistem Manajemen Usroh';
+  }, 200);
+  toast('Cetak PDF', 'Pilih "Save as PDF" pada dialog cetak.');
+}
+window.exportPDF = exportPDF;
+
+/* ============================================================
+   BACKUP / RESTORE
+============================================================ */
+function exportBackup() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `backup-raker-upa-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('Berhasil', 'File backup berhasil diunduh.');
+}
+window.exportBackup = exportBackup;
+
+function importBackup(file, cb) {
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const imported = JSON.parse(r.result);
+      state = deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), imported);
+      saveState();
+      toast('Berhasil', 'Data berhasil dipulihkan.');
+      if (cb) cb();
+    } catch(e) { toast('Gagal', 'File backup tidak valid.', 'danger'); }
+  };
+  r.readAsText(file);
+}
 
 /* ============================================================
    PENGATURAN
 ============================================================ */
 function renderPengaturan(c) {
   c.innerHTML = `
-    <div class="section-head">
-      <div><h2>Pengaturan</h2><div class="sub">Kelola data dan preferensi aplikasi</div></div>
-    </div>
+    <div class="section-head"><div><h2>Pengaturan</h2><div class="sub">Kelola data & preferensi</div></div></div>
 
     <div class="card">
       <div class="card-head"><span class="ico">💾</span><h2>Backup & Restore</h2></div>
       <p style="font-size:13px; color:var(--muted); margin-bottom:14px">
-        Ekspor seluruh data aplikasi ke file JSON, atau impor dari file backup.
+        Backup seluruh data aplikasi ke file JSON, atau pulihkan dari file backup.
       </p>
       <div style="display:flex; gap:10px; flex-wrap:wrap">
-        <button class="btn btn-primary" id="btnExport">⬇️ Ekspor Data</button>
+        <button class="btn btn-primary" id="btnExport2">⬇️ Backup Data</button>
         <label class="btn btn-outline" style="cursor:pointer">
-          ⬆️ Impor Data
-          <input type="file" id="fileImport" accept=".json" style="display:none">
+          ⬆️ Restore Data
+          <input type="file" id="fileImport2" accept=".json" style="display:none">
         </label>
-        <button class="btn btn-danger" id="btnReset">🗑️ Reset Semua Data</button>
+        <button class="btn btn-danger" id="btnReset2">🗑️ Reset Semua Data</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><span class="ico">🔔</span><h2>Izin Notifikasi</h2></div>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:14px">
-        Status: <b>${('Notification' in window) ? Notification.permission : 'tidak didukung'}</b>
-      </p>
-      <button class="btn btn-primary" onclick="document.getElementById('notifBtn').click()">🔔 Minta Izin Notifikasi</button>
+      <div class="card-head"><span class="ico">📤</span><h2>Export Laporan</h2></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportExcel()">📊 Export Excel</button>
+        <button class="btn btn-primary" onclick="exportPDF()">📄 Export PDF</button>
+        <button class="btn btn-wa" onclick="goPage('laporan')">📱 Laporan WA</button>
+      </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><span class="ico">ℹ️</span><h2>Tentang Aplikasi</h2></div>
+      <div class="card-head"><span class="ico">🔔</span><h2>Izin Notifikasi Browser</h2></div>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:14px">
+        Status: <b id="permStatus">${('Notification' in window) ? Notification.permission : 'tidak didukung'}</b>
+      </p>
+      <button class="btn btn-primary" id="reqPermBtn">🔔 Minta Izin Notifikasi</button>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="ico">ℹ️</span><h2>Tentang</h2></div>
       <div style="font-size:13px; line-height:1.8; color:var(--muted)">
         <div><b style="color:var(--text)">Raker UPA A.H Nasution</b> — Sistem Manajemen Usroh</div>
-        <div>Versi 1.0 • Tahun 2026/2027</div>
-        <div>Fitur: Identitas, Struktur Anggota, Program Kerja, Materi Tarbiyah, Data Kader, Statistik, Mutabaah Yaumiah, Reminder Otomatis.</div>
-        <div style="margin-top:8px">Data tersimpan otomatis di browser Anda (localStorage).</div>
+        <div>Versi 2.0 • 2026/2027</div>
+        <div>Fitur: Identitas, Anggota, Progja, Materi, Kader, Statistik, Mutabaah, Reminder WA, Export Excel/PDF, Backup/Restore.</div>
+        <div style="margin-top:8px">Data tersimpan otomatis di browser (localStorage).</div>
       </div>
     </div>
   `;
 
-  document.getElementById('btnExport').onclick = () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `raker-upa-${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    toast('Berhasil', 'Data berhasil diekspor.');
-  };
-  document.getElementById('fileImport').onchange = (e) => {
+  document.getElementById('btnExport2').onclick = exportBackup;
+  document.getElementById('fileImport2').onchange = e => {
     const f = e.target.files[0];
-    if (!f) return;
-    const r = new FileReader();
-    r.onload = () => {
-      try {
-        const imported = JSON.parse(r.result);
-        state = deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), imported);
-        saveState();
-        toast('Berhasil', 'Data berhasil diimpor.');
-        renderPage();
-      } catch (err) {
-        toast('Gagal', 'File tidak valid.', 'danger');
-      }
-    };
-    r.readAsText(f);
+    if (f) importBackup(f, () => { renderPage(); });
   };
-  document.getElementById('btnReset').onclick = () => {
-    if (!confirm('Yakin ingin mereset SEMUA data? Tindakan ini tidak bisa dibatalkan.')) return;
+  document.getElementById('btnReset2').onclick = () => {
+    if (!confirm('Yakin reset SEMUA data? Tidak bisa dibatalkan.')) return;
     localStorage.removeItem(LS_KEY);
     state = JSON.parse(JSON.stringify(DEFAULT_STATE));
     saveState();
     toast('Direset', 'Semua data telah direset.');
     goPage('dashboard');
   };
+  document.getElementById('reqPermBtn').onclick = requestNotifPerm;
+}
+
+function requestNotifPerm() {
+  if (!('Notification' in window)) { toast('Tidak Didukung', 'Browser tidak mendukung notifikasi.', 'danger'); return; }
+  Notification.requestPermission().then(p => {
+    const el = document.getElementById('permStatus');
+    if (el) el.textContent = p;
+    if (p === 'granted') {
+      toast('Berhasil', 'Notifikasi browser diaktifkan.');
+      new Notification('🕌 Raker UPA', { body: 'Notifikasi siap. Anda akan diingatkan untuk setiap kegiatan.' });
+    } else {
+      toast('Ditolak', 'Izin notifikasi tidak diberikan.', 'danger');
+    }
+  });
+}
+window.requestNotifPerm = requestNotifPerm;
+
+/* ============================================================
+   REMINDER ENGINE
+============================================================ */
+function showNotification(title, body) {
+  toast(title, body, 'warn');
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification(title, { body, icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕌</text></svg>' });
+    } catch(e){}
+  }
+}
+
+const notifiedKeys = new Set();
+function checkReminders(silent = false) {
+  if (!state.settings.reminderEnabled) return;
+  const now = new Date();
+  const ahead = (state.settings.reminderMinutes || 30) * 60000;
+  let upcomingCount = 0;
+  state.progja.forEach(p => {
+    const next = getNextOccurrence(p.hari, p.jam);
+    if (!next) return;
+    const diff = next - now;
+    if (diff > 0 && diff <= ahead) upcomingCount++;
+    if (diff > 0 && diff <= ahead) {
+      const key = p.id + '|' + next.toISOString().slice(0, 13);
+      if (!notifiedKeys.has(key)) {
+        notifiedKeys.add(key);
+        if (!silent) showNotification(`⏰ ${p.nama}`, `Akan dimulai dalam ${formatDiff(diff)} (${p.hari}, ${p.jam}) • PIC: ${p.pic}`);
+      }
+    }
+  });
+  const badge = document.getElementById('bellBadge');
+  if (upcomingCount > 0) { badge.textContent = upcomingCount; badge.classList.remove('hidden'); }
+  else badge.classList.add('hidden');
 }
 
 /* ============================================================
    INIT
 ============================================================ */
-document.getElementById('menuBtn').onclick = () => {
-  document.getElementById('sidebar').classList.toggle('open');
-};
+document.getElementById('menuBtn').onclick = () => document.getElementById('sidebar').classList.toggle('open');
+document.getElementById('bellBtn').onclick = () => goPage('reminder');
+document.getElementById('waReportBtn').onclick = () => goPage('laporan');
 
 renderNav();
 renderPage();
 checkReminders(true);
 
-// Cek reminder setiap 30 detik
 setInterval(() => checkReminders(false), 30000);
-
-// Update badge setiap 60 detik
 setInterval(() => {
   const list = getUpcomingActivities();
-  const soon = list.filter(a => a.diff < 60 * 60 * 1000).length;
+  const soon = list.filter(a => a.diff < 3600000).length;
   const badge = document.getElementById('bellBadge');
   if (soon > 0) { badge.textContent = soon; badge.classList.remove('hidden'); }
   else badge.classList.add('hidden');
 }, 60000);
 
-// Welcome
-setTimeout(() => {
-  toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama} siap digunakan.`);
-}, 800);
+setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama} siap digunakan.`), 800);
 </script>
 </body>
 </html>
