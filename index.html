@@ -1010,7 +1010,7 @@ function renderLaporanUPA(c) {
         <div class="form-group"><label>Tempat</label><input type="text" id="upa_tempat" placeholder="Tempat kegiatan"></div>
       </div>
       <div class="form-group" style="margin-bottom:14px"><label>Materi</label><textarea id="upa_materi" placeholder="Materi yang dibahas"></textarea></div>
-      <div class="form-group" style="margin-bottom:14px"><label>Infaq (Rp)</label><input type="number" id="upa_infaq" min="0" value="0"></div>
+      <div class="form-group" style="margin-bottom:14px"><label>Infaq (Rp)</label><input type="text" id="upa_infaq" inputmode="numeric" autocomplete="off" value="0" placeholder="Contoh: 100.000"></div>
       <div class="form-group" style="margin-bottom:14px"><label>Absensi Anggota</label>
         <div class="tbl-wrap"><table><thead><tr><th>Nama Anggota</th><th>Status</th><th>Alasan jika tidak hadir</th></tr></thead>
         <tbody id="upa_absensi"></tbody></table></div>
@@ -1023,6 +1023,20 @@ function renderLaporanUPA(c) {
         <tbody>${records.map((r,i)=>`<tr><td>${esc(r.tanggal)}</td><td>${esc(r.tempat)||'-'}</td><td>${esc(r.materi)||'-'}</td><td>Rp ${Number(r.infaq||0).toLocaleString('id-ID')}</td><td>${(r.absensi||[]).filter(a=>a.status==='Hadir').length} hadir / ${(r.absensi||[]).filter(a=>a.status==='Tidak hadir').length} tidak hadir</td><td><button class="mini-btn" data-upa-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` :
         `<div class="empty"><div class="e-ico">📝</div><p>Belum ada laporan UPA.</p></div>`}
     </div>`;
+  const infaqInput = document.getElementById('upa_infaq');
+  const formatRupiahInput = value => {
+    const digits = String(value ?? '').replace(/\\D/g, '');
+    return digits ? Number(digits).toLocaleString('id-ID') : '';
+  };
+  infaqInput.value = formatRupiahInput(infaqInput.value);
+  infaqInput.addEventListener('input', () => {
+    const start = infaqInput.selectionStart;
+    const before = infaqInput.value;
+    const formatted = formatRupiahInput(before);
+    infaqInput.value = formatted;
+    try { infaqInput.setSelectionRange(formatted.length, formatted.length); } catch (_) {}
+  });
+
   const absensiBody = document.getElementById('upa_absensi');
   absensiBody.innerHTML = state.anggota.map(a => `<tr>
     <td>${esc(a.nama)||'(Nama belum diisi)'}</td>
@@ -1036,6 +1050,49 @@ function renderLaporanUPA(c) {
       if (reason.disabled) reason.value = '';
     };
   });
+  // Autosave draft form values locally while typing/changing fields.
+  const draftKey = 'upaDraft';
+  const saveDraft = () => {
+    const draft = {
+      tanggal: document.getElementById('upa_tanggal').value,
+      tempat: document.getElementById('upa_tempat').value,
+      materi: document.getElementById('upa_materi').value,
+      infaq: document.getElementById('upa_infaq').value,
+      absensi: state.anggota.map(a => ({
+        anggotaId: a.id,
+        status: absensiBody.querySelector(`[data-upa-status="${a.id}"]`)?.value || 'Hadir',
+        alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`)?.value || ''
+      }))
+    };
+    try { localStorage.setItem('raker_upa_jsonbin_v1_' + draftKey, JSON.stringify(draft)); } catch (_) {}
+  };
+  ['upa_tanggal','upa_tempat','upa_materi','upa_infaq'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', saveDraft);
+    el.addEventListener('change', saveDraft);
+  });
+  absensiBody.querySelectorAll('select, input').forEach(el => {
+    el.addEventListener('input', saveDraft);
+    el.addEventListener('change', saveDraft);
+  });
+
+  // Restore a saved draft when opening this page.
+  try {
+    const draft = JSON.parse(localStorage.getItem('raker_upa_jsonbin_v1_' + draftKey) || 'null');
+    if (draft) {
+      if (draft.tanggal) document.getElementById('upa_tanggal').value = draft.tanggal;
+      if (draft.tempat) document.getElementById('upa_tempat').value = draft.tempat;
+      if (draft.materi) document.getElementById('upa_materi').value = draft.materi;
+      if (draft.infaq !== undefined) document.getElementById('upa_infaq').value = formatRupiahInput(draft.infaq);
+      (draft.absensi || []).forEach(a => {
+        const sel = absensiBody.querySelector(`[data-upa-status="${a.anggotaId}"]`);
+        const reason = absensiBody.querySelector(`[data-upa-reason="${a.anggotaId}"]`);
+        if (sel) { sel.value = a.status || 'Hadir'; }
+        if (reason) { reason.value = a.alasan || ''; reason.disabled = sel?.value !== 'Tidak hadir'; }
+      });
+    }
+  } catch (_) {}
+
   document.getElementById('saveUPA').onclick = () => {
     const tanggal = document.getElementById('upa_tanggal').value;
     if (!tanggal) { alert('Tanggal wajib diisi.'); return; }
@@ -1047,9 +1104,9 @@ function renderLaporanUPA(c) {
     records.unshift({
       id: uid(), tanggal, tempat: document.getElementById('upa_tempat').value.trim(),
       materi: document.getElementById('upa_materi').value.trim(),
-      infaq: Math.max(0, Number(document.getElementById('upa_infaq').value) || 0), absensi
+      infaq: Math.max(0, Number(document.getElementById('upa_infaq').value.replace(/\\D/g, '')) || 0), absensi
     });
-    saveState(); toast('Tersimpan', 'Laporan UPA berhasil disimpan.'); renderLaporanUPA(c);
+    saveState(); try { localStorage.removeItem('raker_upa_jsonbin_v1_upaDraft'); } catch (_) {} toast('Tersimpan', 'Laporan UPA berhasil disimpan.'); renderLaporanUPA(c);
   };
   c.querySelectorAll('[data-upa-del]').forEach(btn => btn.onclick = () => {
     if (!confirm('Hapus laporan ini?')) return;
@@ -1075,13 +1132,14 @@ function renderLaporanUPA(c) {
   };
   document.getElementById('sendUPAWA').onclick = () => {
     if (!records.length) { alert('Belum ada laporan UPA untuk dikirim.'); return; }
-    const text = records.map((r, idx) => {
+    const text = records.map(r => {
       const hadir = (r.absensi || []).filter(a => a.status === 'Hadir');
       const tidak = (r.absensi || []).filter(a => a.status === 'Tidak hadir');
-      return `*LAPORAN UPA ${idx + 1}*\\nTanggal: ${r.tanggal}\\nTempat: ${r.tempat || '-'}\\nMateri: ${r.materi || '-'}\\nInfaq: Rp ${Number(r.infaq || 0).toLocaleString('id-ID')}\\n\\n*Absensi:*\\n` +
-        ((r.absensi || []).map(a => `- ${a.nama}: ${a.status}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`).join('\\n') || '-') +
-        `\\n\\nRekap: ${hadir.length} hadir, ${tidak.length} tidak hadir`;
-    }).join('\\n\\n--------------------\\n\\n');
+      const daftarAbsensi = (r.absensi || []).map((a, i) =>
+        `${i + 1}. ${a.nama || '-'}: ${a.status === 'Hadir' ? '✅️' : '❌️'}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`
+      ).join('\\n');
+      return `*Laporan UPA*\\nTanggal : ${r.tanggal || '-'}\\nTempat : ${r.tempat || '-'}\\nInfaq : Rp ${Number(String(r.infaq || 0).replace(/\\D/g, '') || 0).toLocaleString('id-ID')}\\nMateri : ${r.materi || '-'}\\nAbsensi :\\n${daftarAbsensi || '-'}\\nRekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
+    }).join('\\n\\n');
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   };
   document.getElementById('printUPA').onclick = () => {
