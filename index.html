@@ -263,7 +263,7 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.7';
+const APP_VERSION = '3.9';
 const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
@@ -660,14 +660,21 @@ function renderDashboard(c) {
 function hitungStatistikIdentitas() {
   const kader = state.kader || [];
   const allBinaan = [];
-  kader.forEach(k => (k.binaan || []).forEach(b => allBinaan.push(b)));
+  kader.forEach(k => (k.binaan || []).forEach(b => allBinaan.push({ ...b, naqib: b.naqib || k.naqib || '' })));
   const cJenjang = j => kader.filter(k => k.jenjang === j).length;
   const cLevel = lvl => allBinaan.filter(b => b.level === lvl).length;
+
+  // Jumlah kelompok pada setiap mustawa dihitung dari jumlah binaan pada
+  // jenjang tersebut, bukan jumlah Naqib unik. Jadi jika seorang Naqib memiliki
+  // 2 binaan pada mustawa yang sama, dihitung 2 kelompok; binaan pada mustawa
+  // berbeda masuk ke hitungan jenjang masing-masing.
+  const cKelompok = lvl => allBinaan.filter(b => b.level === lvl).length;
+
   return {
-    kMuntashib: cJenjang('Muntashib'),
-    kMuayyid: cJenjang('Muayyid'),
-    kTamhidi: cJenjang('Tamhidi'),
-    kMuhib: cJenjang('Muhib'),
+    kMuntashib: cKelompok('Muntashib'),
+    kMuayyid: cKelompok('Muayyid'),
+    kTamhidi: cKelompok('Tamhidi'),
+    kMuhib: cKelompok('Muhib'),
     allIkhwan: kader.length + allBinaan.length,
     muntandhim: cJenjang('Muntandhim') + cLevel('Muntandhim'),
     muntashib: cJenjang('Muntashib') + cLevel('Muntashib'),
