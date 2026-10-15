@@ -1023,18 +1023,23 @@ function renderLaporanUPA(c) {
         <tbody>${records.map((r,i)=>`<tr><td>${esc(r.tanggal)}</td><td>${esc(r.tempat)||'-'}</td><td>${esc(r.materi)||'-'}</td><td>Rp ${Number(r.infaq||0).toLocaleString('id-ID')}</td><td>${(r.absensi||[]).filter(a=>a.status==='Hadir').length} hadir / ${(r.absensi||[]).filter(a=>a.status==='Tidak hadir').length} tidak hadir</td><td><button class="mini-btn" data-upa-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` :
         `<div class="empty"><div class="e-ico">📝</div><p>Belum ada laporan UPA.</p></div>`}
     </div>`;
+  let saveDraftIfReady = () => {};
   const infaqInput = document.getElementById('upa_infaq');
+  // Input is always normalized to digits first, then grouped in thousands.
+  // This avoids treating the dot in "100.000" as a decimal separator.
+  const digitsOnly = value => String(value ?? '').replace(/[^0-9]/g, '');
   const formatRupiahInput = value => {
-    const digits = String(value ?? '').replace(/\\D/g, '');
-    return digits ? Number(digits).toLocaleString('id-ID') : '';
+    const digits = digitsOnly(value);
+    if (!digits) return '';
+    return digits.replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
   };
   infaqInput.value = formatRupiahInput(infaqInput.value);
   infaqInput.addEventListener('input', () => {
-    const start = infaqInput.selectionStart;
-    const before = infaqInput.value;
-    const formatted = formatRupiahInput(before);
+    const digits = digitsOnly(infaqInput.value);
+    const formatted = formatRupiahInput(digits);
     infaqInput.value = formatted;
     try { infaqInput.setSelectionRange(formatted.length, formatted.length); } catch (_) {}
+    saveDraftIfReady();
   });
 
   const absensiBody = document.getElementById('upa_absensi');
@@ -1066,6 +1071,7 @@ function renderLaporanUPA(c) {
     };
     try { localStorage.setItem('raker_upa_jsonbin_v1_' + draftKey, JSON.stringify(draft)); } catch (_) {}
   };
+  saveDraftIfReady = saveDraft;
   ['upa_tanggal','upa_tempat','upa_materi','upa_infaq'].forEach(id => {
     const el = document.getElementById(id);
     el.addEventListener('input', saveDraft);
@@ -1104,7 +1110,7 @@ function renderLaporanUPA(c) {
     records.unshift({
       id: uid(), tanggal, tempat: document.getElementById('upa_tempat').value.trim(),
       materi: document.getElementById('upa_materi').value.trim(),
-      infaq: Math.max(0, Number(document.getElementById('upa_infaq').value.replace(/\\D/g, '')) || 0), absensi
+      infaq: Math.max(0, Number(digitsOnly(document.getElementById('upa_infaq').value)) || 0), absensi
     });
     saveState(); try { localStorage.removeItem('raker_upa_jsonbin_v1_upaDraft'); } catch (_) {} toast('Tersimpan', 'Laporan UPA berhasil disimpan.'); renderLaporanUPA(c);
   };
