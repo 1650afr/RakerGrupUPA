@@ -92,7 +92,6 @@
   td input, td select { padding: 7px 9px; font-size: 13px; }
   .col-nama { min-width: 200px; }
   .col-nama input { min-width: 180px; }
-  #upa_absensi { min-width: 600px; }
   .mini-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px 6px; border-radius: 6px; }
   .mini-btn:hover { background: var(--bg); }
   .tag { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--primary-light); color: var(--primary-dark); }
@@ -165,6 +164,20 @@
   .abs-chip.Dinas { background: #dbeafe; color: #1e40af; }
   .heat-table td, .heat-table th { padding: 6px; font-size: 11px; text-align: center; }
   .heat-cell { display: inline-block; width: 24px; height: 24px; border-radius: 5px; line-height: 24px; color: #fff; font-size: 12px; font-weight: 700; }
+  /* Laporan UPA: kolom absensi lebih lebar */
+  #upa_absensi { min-width: 640px; }
+  #upa_absensi td:nth-child(1), #upa_absensi th:nth-child(1) { min-width: 160px; }
+  #upa_absensi td:nth-child(2), #upa_absensi th:nth-child(2) { min-width: 160px; }
+  #upa_absensi td:nth-child(3), #upa_absensi th:nth-child(3) { min-width: 180px; }
+  .upa-status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    cursor: pointer; border: 1px solid var(--border); background: #fff;
+    color: var(--muted); transition: all .15s; white-space: nowrap; font-family: inherit;
+  }
+  .upa-status-pill:hover { transform: translateY(-1px); }
+  .upa-status-pill.active[data-val="Hadir"] { background: #10b981; color: #fff; border-color: #10b981; }
+  .upa-status-pill.active[data-val="Tidak hadir"] { background: #ef4444; color: #fff; border-color: #ef4444; }
   .lvl-chip { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
   .lvl-Muhib { background: #fce7f3; color: #9d174d; }
   .lvl-Muayyid { background: #e0e7ff; color: #3730a3; }
@@ -223,7 +236,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v3.5 — Absensi per-Tanggal</div>
+    <div class="sidebar-footer">v3.6 — Auto Statistik</div>
   </aside>
 
   <main class="main">
@@ -631,8 +644,29 @@ function renderDashboard(c) {
   `;
 }
 
+/* ============ HITUNG STATISTIK IDENTITAS OTOMATIS ============ */
+function hitungStatistikIdentitas() {
+  const kader = state.kader || [];
+  const allBinaan = [];
+  kader.forEach(k => (k.binaan || []).forEach(b => allBinaan.push(b)));
+  const cJenjang = j => kader.filter(k => k.jenjang === j).length;
+  const cLevel = lvl => allBinaan.filter(b => b.level === lvl).length;
+  return {
+    kMadya: cJenjang('Madya'),
+    kPratama: cJenjang('Pratama'),
+    kMuda: cJenjang('Muda'),
+    allIkhwan: kader.length + allBinaan.length,
+    dewasa: kader.filter(k => !['Madya','Pratama','Muda'].includes(k.jenjang)).length,
+    madya: cJenjang('Madya') + cLevel('Muayyid'),
+    pratama: cJenjang('Pratama') + cLevel('Muntasib'),
+    muda: cJenjang('Muda') + cLevel('Muhib') + cLevel('Tamhidi')
+  };
+}
+
 /* ============ IDENTITAS ============ */
 function renderIdentitas(c) {
+  const autoStat = hitungStatistikIdentitas();
+  Object.assign(state.identitas, autoStat);
   const it = state.identitas;
   c.innerHTML = `
     <div class="section-head"><div><h2>Identitas UPA</h2></div>
@@ -663,20 +697,26 @@ function renderIdentitas(c) {
       </div>
     </div>
     <div class="card">
-      <div class="card-head"><span class="ico">👥</span><h2>Jumlah Kelompok & Kader</h2></div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label>Kelompok Madya</label><input type="number" id="i_kMadya" value="${esc(it.kMadya)}"></div>
-        <div class="form-group"><label>Kelompok Pratama</label><input type="number" id="i_kPratama" value="${esc(it.kPratama)}"></div>
-        <div class="form-group"><label>Kelompok Muda</label><input type="number" id="i_kMuda" value="${esc(it.kMuda)}"></div>
+      <div class="card-head"><span class="ico">👥</span><h2>Jumlah Kelompok & Kader</h2>
+        <span class="tag" style="margin-left:auto">🔄 Otomatis</span>
+      </div>
+      <div class="info-box" style="margin-bottom:14px">
+        Nilai di bawah <b>dihitung otomatis</b> dari <b>Data Kader</b> & <b>Data Binaan</b>. Tidak perlu diisi manual.
+        <button class="btn btn-outline btn-sm" id="recalcIdent" style="margin-top:8px">🔄 Hitung Ulang Sekarang</button>
       </div>
       <div class="form-row cols-3">
-        <div class="form-group"><label>All Kader</label><input type="number" id="i_all" value="${esc(it.allIkhwan)}"></div>
-        <div class="form-group"><label>Dewasa</label><input type="number" id="i_dewasa" value="${esc(it.dewasa)}"></div>
-        <div class="form-group"><label>Madya</label><input type="number" id="i_madya" value="${esc(it.madya)}"></div>
+        <div class="form-group"><label>Kelompok Madya</label><input type="number" id="i_kMadya" value="${autoStat.kMadya}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>Kelompok Pratama</label><input type="number" id="i_kPratama" value="${autoStat.kPratama}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>Kelompok Muda</label><input type="number" id="i_kMuda" value="${autoStat.kMuda}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>All Kader</label><input type="number" id="i_all" value="${autoStat.allIkhwan}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>Dewasa</label><input type="number" id="i_dewasa" value="${autoStat.dewasa}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>Madya</label><input type="number" id="i_madya" value="${autoStat.madya}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
       </div>
       <div class="form-row cols-2">
-        <div class="form-group"><label>Pratama</label><input type="number" id="i_pratama" value="${esc(it.pratama)}"></div>
-        <div class="form-group"><label>Muda</label><input type="number" id="i_muda" value="${esc(it.muda)}"></div>
+        <div class="form-group"><label>Pratama</label><input type="number" id="i_pratama" value="${autoStat.pratama}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>Muda</label><input type="number" id="i_muda" value="${autoStat.muda}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
       </div>
     </div>
   `;
@@ -684,15 +724,21 @@ function renderIdentitas(c) {
     const g = id => document.getElementById(id).value;
     Object.assign(state.identitas, { nama:g('i_nama'), lahir:g('i_lahir'), visi:g('i_visi'), misi:g('i_misi'),
       provinsi:g('i_prov'), kota:g('i_kota'), dapil:g('i_dapil'), kecamatan:g('i_kec'),
-      jenjang:g('i_jenjang'), naqib:g('i_naqib'), amin:g('i_amin'),
-      kMadya:g('i_kMadya'), kPratama:g('i_kPratama'), kMuda:g('i_kMuda'),
-      allIkhwan:g('i_all'), dewasa:g('i_dewasa'), madya:g('i_madya'), pratama:g('i_pratama'), muda:g('i_muda') });
+      jenjang:g('i_jenjang'), naqib:g('i_naqib'), amin:g('i_amin') });
+    Object.assign(state.identitas, hitungStatistikIdentitas());
     saveState(); toast('Tersimpan', 'Identitas UPA disimpan.');
+  };
+  const recalcBtn = document.getElementById('recalcIdent');
+  if (recalcBtn) recalcBtn.onclick = () => {
+    Object.assign(state.identitas, hitungStatistikIdentitas());
+    saveState();
+    renderIdentitas(document.getElementById('content'));
+    toast('Terhitung', 'Statistik diperbarui dari Data Kader & Binaan.');
   };
   c.querySelectorAll('input, textarea').forEach(el => {
     el.oninput = () => {
       const id = el.id.replace('i_', '');
-      const mapping = { nama:'nama', lahir:'lahir', visi:'visi', misi:'misi', prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan', jenjang:'jenjang', naqib:'naqib', amin:'amin', kMadya:'kMadya', kPratama:'kPratama', kMuda:'kMuda', all:'allIkhwan', dewasa:'dewasa', madya:'madya', pratama:'pratama', muda:'muda' };
+      const mapping = { nama:'nama', lahir:'lahir', visi:'visi', misi:'misi', prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan', jenjang:'jenjang', naqib:'naqib', amin:'amin' };
       if (mapping[id]) { state.identitas[mapping[id]] = el.value; saveState(); }
     };
   });
@@ -1262,10 +1308,10 @@ function renderBinaanTimeline(c) {
 }
 
 function exportBinaanExcel() {
-  const rows = [['Nama Binaan','Level','Status','Tanggal Gabung','Lama Bergabung','Pembina','HP','Usia','Alamat','Pekerjaan','Catatan']];
+  const rows = [['Pembina','Nama Binaan','Level','Status','Tanggal Gabung','Lama Bergabung','HP','Usia','Alamat','Pekerjaan','Catatan']];
   state.kader.forEach(k => {
     (k.binaan || []).forEach(b => {
-      rows.push([b.nama || '', b.level || '', b.status || '', b.tanggalGabung || '', hitungUmur(b.tanggalGabung), k.nama || '', b.hp || '', b.usia || '', b.alamat || '', b.pekerjaan || '', b.catatan || '']);
+      rows.push([k.nama || '', b.nama || '', b.level || '', b.status || '', b.tanggalGabung || '', hitungUmur(b.tanggalGabung), b.hp || '', b.usia || '', b.alamat || '', b.pekerjaan || '', b.catatan || '']);
     });
   });
   if (rows.length === 1) { alert('Belum ada data binaan untuk diekspor.'); return; }
@@ -1281,35 +1327,62 @@ function sendWABinaan() {
   const rows = [];
   state.kader.forEach(k => {
     if ((k.binaan || []).length === 0) return;
-    rows.push({ kader: k.nama || '(tanpa nama)', binaan: k.binaan });
+    rows.push({ kader: k, binaan: k.binaan });
   });
   if (!rows.length) { alert('Belum ada binaan untuk dikirim.'); return; }
-  let msg = `*🌳 LAPORAN BINAAN*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
+  let msg = `*🌳 LAPORAN BINAAN*\n*UPA ${state.identitas.nama}*\n*${formatDateID(new Date())}*\n`;
   rows.forEach(r => {
-    msg += `*${r.kader}* — ${r.binaan.length} binaan\n`;
-    r.binaan.forEach((b, i) => {
-      msg += `  ${i+1}. ${b.nama} — ${b.level} — ${formatDateShort(b.tanggalGabung)}${b.status !== 'Aktif' ? ' [' + b.status + ']' : ''}\n`;
-    });
+    msg += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `👤 *${r.kader.nama || '(tanpa nama)'}*`;
+    if (r.kader.jenjang) msg += ` — ${r.kader.jenjang}`;
     msg += `\n`;
+    msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `📊 Memiliki *${r.binaan.length}* binaan:\n\n`;
+    r.binaan.forEach((b, i) => {
+      msg += `${i + 1}. *${b.nama}*\n`;
+      msg += `   • Level: ${b.level}\n`;
+      msg += `   • Status: ${b.status}\n`;
+      if (b.tanggalGabung) msg += `   • Gabung: ${formatDateShort(b.tanggalGabung)} (${hitungUmur(b.tanggalGabung)})\n`;
+      if (b.hp) msg += `   • HP: ${b.hp}\n`;
+      msg += `\n`;
+    });
   });
   const totalBinaan = rows.reduce((s, r) => s + r.binaan.length, 0);
-  msg += `━━━━━━━━━━━━━━━━━━━━\nTotal: ${totalBinaan} binaan dari ${rows.length} kader\n${formatDateID(new Date())}`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n📊 *Total: ${totalBinaan} binaan dari ${rows.length} kader*`;
   openWA(msg);
 }
 function printBinaan() {
-  const rows = state.kader.map(k => {
+  const sections = state.kader.map(k => {
     if ((k.binaan || []).length === 0) return '';
-    return `<section style="margin-bottom:22px; page-break-inside:avoid">
-      <h3>${esc(k.nama) || '(tanpa nama)'} — ${k.binaan.length} binaan</h3>
-      <table style="width:100%; border-collapse:collapse" border="1" cellpadding="6">
-        <tr><th>No</th><th>Nama</th><th>Level</th><th>Status</th><th>Tgl Gabung</th><th>HP</th></tr>
-        ${k.binaan.map((b, i) => `<tr><td>${i+1}</td><td>${esc(b.nama)}</td><td>${esc(b.level)}</td><td>${esc(b.status)}</td><td>${formatDateShort(b.tanggalGabung)}</td><td>${esc(b.hp) || '-'}</td></tr>`).join('')}
+    return `<section style="margin-bottom:26px; page-break-inside:avoid">
+      <div style="background:#0d9488; color:#fff; padding:10px 14px; border-radius:8px 8px 0 0">
+        <b style="font-size:14px">👤 ${esc(k.nama) || '(tanpa nama)'}</b>
+        ${k.jenjang ? ` <span style="font-size:11px; opacity:.85">(${esc(k.jenjang)})</span>` : ''}
+        <span style="float:right; font-size:12px">${k.binaan.length} binaan</span>
+      </div>
+      <table style="width:100%; border-collapse:collapse; border:1px solid #cbd5e1" cellpadding="6">
+        <tr style="background:#f1f5f9">
+          <th style="border:1px solid #cbd5e1">No</th>
+          <th style="border:1px solid #cbd5e1">Nama Binaan</th>
+          <th style="border:1px solid #cbd5e1">Level</th>
+          <th style="border:1px solid #cbd5e1">Status</th>
+          <th style="border:1px solid #cbd5e1">Tgl Gabung</th>
+          <th style="border:1px solid #cbd5e1">HP</th>
+        </tr>
+        ${k.binaan.map((b, i) => `<tr>
+          <td style="border:1px solid #cbd5e1; text-align:center">${i+1}</td>
+          <td style="border:1px solid #cbd5e1">${esc(b.nama)}</td>
+          <td style="border:1px solid #cbd5e1">${esc(b.level)}</td>
+          <td style="border:1px solid #cbd5e1">${esc(b.status)}</td>
+          <td style="border:1px solid #cbd5e1">${formatDateShort(b.tanggalGabung)}</td>
+          <td style="border:1px solid #cbd5e1">${esc(b.hp) || '-'}</td>
+        </tr>`).join('')}
       </table>
     </section>`;
   }).join('');
-  if (!rows.trim()) { alert('Belum ada data binaan.'); return; }
+  if (!sections.trim()) { alert('Belum ada data binaan.'); return; }
   const area = document.getElementById('printArea');
-  area.innerHTML = `<h2>Laporan Binaan — ${esc(state.identitas.nama)}</h2>${rows}`;
+  area.innerHTML = `<h2 style="text-align:center; margin-bottom:16px">Laporan Binaan — ${esc(state.identitas.nama)}</h2>${sections}`;
   area.style.display = 'block'; window.print(); area.style.display = 'none';
 }
 
@@ -1467,8 +1540,6 @@ function getAnggotaAbsenBerturut(minBerturut = 3) {
   });
   return hasil.sort((a, b) => b.count - a.count);
 }
-
-/* ✅ v3.5: Group per TANGGAL, bukan per kegiatan */
 function getKegiatanPerluAbsensi() {
   if (!state.absensiReminder || !state.absensiReminder.enabled) return [];
   const now = new Date();
@@ -1489,7 +1560,6 @@ function getKegiatanPerluAbsensi() {
     if (kejadian > now) kejadian.setDate(kejadian.getDate() - 7);
     if (now - kejadian < afterMs) return;
     const tglStr = kejadian.toISOString().slice(0, 10);
-    // ✅ Cek per TANGGAL: kalau sudah ada 1 absensi di tanggal itu, semua kegiatan di tanggal itu selesai
     const sudahAda = (state.absensi || []).some(r => r.tanggal === tglStr);
     if (sudahAda) return;
     if (!perTanggal[tglStr]) perTanggal[tglStr] = { tanggal: tglStr, items: [] };
@@ -1972,16 +2042,30 @@ function renderLaporanUPA(c) {
     saveDraftIfReady();
   });
   const absensiBody = document.getElementById('upa_absensi');
+  const statusMap = {};
+  state.anggota.forEach(a => { statusMap[a.id] = 'Hadir'; });
   absensiBody.innerHTML = state.anggota.map(a => `<tr>
     <td>${esc(a.nama)||'(Nama belum diisi)'}</td>
-    <td><select data-upa-status="${esc(a.id)}"><option>Hadir</option><option>Tidak hadir</option></select></td>
+    <td>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <button type="button" class="upa-status-pill active" data-upa-status="${esc(a.id)}" data-val="Hadir">✅ Hadir</button>
+        <button type="button" class="upa-status-pill" data-upa-status="${esc(a.id)}" data-val="Tidak hadir">❌ Tidak</button>
+      </div>
+    </td>
     <td><input type="text" data-upa-reason="${esc(a.id)}" placeholder="Alasan tidak hadir" disabled></td>
   </tr>`).join('');
-  absensiBody.querySelectorAll('[data-upa-status]').forEach(sel => {
-    sel.onchange = () => {
-      const reason = absensiBody.querySelector(`[data-upa-reason="${sel.dataset.upaStatus}"]`);
-      reason.disabled = sel.value !== 'Tidak hadir';
+  absensiBody.querySelectorAll('.upa-status-pill').forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.upaStatus;
+      const val = btn.dataset.val;
+      statusMap[id] = val;
+      absensiBody.querySelectorAll(`[data-upa-status="${id}"]`).forEach(b => {
+        b.classList.toggle('active', b.dataset.val === val);
+      });
+      const reason = absensiBody.querySelector(`[data-upa-reason="${id}"]`);
+      reason.disabled = val !== 'Tidak hadir';
       if (reason.disabled) reason.value = '';
+      saveDraftIfReady();
     };
   });
   const draftKey = 'upaDraft';
@@ -1991,13 +2075,13 @@ function renderLaporanUPA(c) {
       tempat: document.getElementById('upa_tempat').value,
       materi: document.getElementById('upa_materi').value,
       infaq: document.getElementById('upa_infaq').value,
-      absensi: state.anggota.map(a => ({ anggotaId: a.id, status: absensiBody.querySelector(`[data-upa-status="${a.id}"]`)?.value || 'Hadir', alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`)?.value || '' }))
+      absensi: state.anggota.map(a => ({ anggotaId: a.id, status: statusMap[a.id] || 'Hadir', alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`)?.value || '' }))
     };
     try { localStorage.setItem('raker_upa_jsonbin_v1_' + draftKey, JSON.stringify(draft)); } catch (_) {}
   };
   saveDraftIfReady = saveDraft;
   ['upa_tanggal','upa_tempat','upa_materi','upa_infaq'].forEach(id => { const el = document.getElementById(id); el.addEventListener('input', saveDraft); el.addEventListener('change', saveDraft); });
-  absensiBody.querySelectorAll('select, input').forEach(el => { el.addEventListener('input', saveDraft); el.addEventListener('change', saveDraft); });
+  absensiBody.querySelectorAll('input').forEach(el => { el.addEventListener('input', saveDraft); el.addEventListener('change', saveDraft); });
   try {
     const draft = JSON.parse(localStorage.getItem('raker_upa_jsonbin_v1_' + draftKey) || 'null');
     if (draft) {
@@ -2006,10 +2090,12 @@ function renderLaporanUPA(c) {
       if (draft.materi) document.getElementById('upa_materi').value = draft.materi;
       if (draft.infaq !== undefined) document.getElementById('upa_infaq').value = formatRupiahInput(draft.infaq);
       (draft.absensi || []).forEach(a => {
-        const sel = absensiBody.querySelector(`[data-upa-status="${a.anggotaId}"]`);
+        statusMap[a.anggotaId] = a.status || 'Hadir';
+        absensiBody.querySelectorAll(`[data-upa-status="${a.anggotaId}"]`).forEach(b => {
+          b.classList.toggle('active', b.dataset.val === statusMap[a.anggotaId]);
+        });
         const reason = absensiBody.querySelector(`[data-upa-reason="${a.anggotaId}"]`);
-        if (sel) { sel.value = a.status || 'Hadir'; }
-        if (reason) { reason.value = a.alasan || ''; reason.disabled = sel?.value !== 'Tidak hadir'; }
+        if (reason) { reason.value = a.alasan || ''; reason.disabled = statusMap[a.anggotaId] !== 'Tidak hadir'; }
       });
     }
   } catch (_) {}
@@ -2018,7 +2104,7 @@ function renderLaporanUPA(c) {
     if (!tanggal) { alert('Tanggal wajib diisi.'); return; }
     const absensi = state.anggota.map(a => ({
       anggotaId: a.id, nama: a.nama,
-      status: absensiBody.querySelector(`[data-upa-status="${a.id}"]`).value,
+      status: statusMap[a.id] || 'Hadir',
       alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`).value.trim()
     }));
     records.unshift({ id: uid(), tanggal, tempat: document.getElementById('upa_tempat').value.trim(), materi: document.getElementById('upa_materi').value.trim(), infaq: Math.max(0, Number(digitsOnly(document.getElementById('upa_infaq').value)) || 0), absensi });
@@ -2213,8 +2299,8 @@ function exportExcel() {
   <table><tr><th>No</th><th>Nama</th><th>Naqib</th><th>Jenjang</th><th>HP</th><th>Kecamatan</th><th>Jml Binaan</th></tr>
   ${state.kader.length ? state.kader.map((k,i)=>`<tr><td>${i+1}</td><td>${esc(k.nama)}</td><td>${esc(k.naqib)}</td><td>${esc(k.jenjang)}</td><td>${esc(k.hp)}</td><td>${esc(k.kecamatan)}</td><td>${(k.binaan||[]).length}</td></tr>`).join('') : '<tr><td colspan="7">Belum ada data</td></tr>'}</table>
   <h2>6. Binaan</h2>
-  <table><tr><th>No</th><th>Nama Binaan</th><th>Level</th><th>Status</th><th>Tanggal Gabung</th><th>Pembina</th><th>HP</th></tr>
-  ${(() => { let i = 0; let rows = ''; state.kader.forEach(k => { (k.binaan || []).forEach(b => { i++; rows += `<tr><td>${i}</td><td>${esc(b.nama)}</td><td>${esc(b.level)}</td><td>${esc(b.status)}</td><td>${formatDateShort(b.tanggalGabung)}</td><td>${esc(k.nama)}</td><td>${esc(b.hp)}</td></tr>`; }); }); return rows || '<tr><td colspan="7">Belum ada data</td></tr>'; })()}</table>
+  <table><tr><th>No</th><th>Pembina</th><th>Nama Binaan</th><th>Level</th><th>Status</th><th>Tanggal Gabung</th><th>HP</th></tr>
+  ${(() => { let i = 0; let rows = ''; state.kader.forEach(k => { (k.binaan || []).forEach(b => { i++; rows += `<tr><td>${i}</td><td>${esc(k.nama)}</td><td>${esc(b.nama)}</td><td>${esc(b.level)}</td><td>${esc(b.status)}</td><td>${formatDateShort(b.tanggalGabung)}</td><td>${esc(b.hp)}</td></tr>`; }); }); return rows || '<tr><td colspan="7">Belum ada data</td></tr>'; })()}</table>
   <h2>7. Rekap Absensi</h2>
   <table><tr><th>Nama</th><th>Hadir</th><th>Tidak Hadir</th><th>Izin</th><th>Sakit</th><th>Dinas</th><th>Total</th><th>%</th></tr>
   ${hitungRekapAbsensi({}).map(r=>`<tr><td>${esc(r.nama)}</td><td>${r.Hadir||0}</td><td>${r['Tidak hadir']||0}</td><td>${r.Izin||0}</td><td>${r.Sakit||0}</td><td>${r.Dinas||0}</td><td>${r.total}</td><td>${r.persen}%</td></tr>`).join('')}</table>
@@ -2370,7 +2456,6 @@ function checkReminders(silent) {
   if (state.absensiReminder && state.absensiReminder.enabled) {
     const perlu = getKegiatanPerluAbsensi();
     perlu.forEach(k => {
-      // ✅ v3.5: key per TANGGAL saja, bukan per kegiatan
       const key = 'abs|' + k.tanggal;
       if (!notifiedAbsenKeys.has(key)) {
         notifiedAbsenKeys.add(key);
@@ -2438,7 +2523,7 @@ if (state.cloud.binId && state.cloud.masterKey) {
 } else setCloudStatus('offline');
 setInterval(() => { if (state.cloud.binId && state.cloud.masterKey) syncFromCloud(true); }, 60000);
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
-console.log('%cRaker UPA v3.5 — Absensi per-Tanggal loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
+console.log('%cRaker UPA v3.6 — Auto Statistik loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
