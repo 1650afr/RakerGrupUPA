@@ -89,6 +89,12 @@
   td input, td select { padding: 7px 9px; font-size: 13px; }
   .col-nama { min-width: 200px; }
   .col-nama input { min-width: 180px; }
+  /* Laporan UPA: keep attendance status readable on mobile */
+  #upa_absensi { min-width: 600px; }
+  #upa_absensi td:nth-child(1), #upa_absensi th:nth-child(1) { min-width: 150px; }
+  #upa_absensi td:nth-child(2), #upa_absensi th:nth-child(2) { min-width: 125px; }
+  #upa_absensi td:nth-child(2) select[data-upa-status] { min-width: 110px; width: 110px; white-space: nowrap; }
+  #upa_absensi td:nth-child(3), #upa_absensi th:nth-child(3) { min-width: 190px; }
   .mini-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px 6px; border-radius: 6px; }
   .mini-btn:hover { background: var(--bg); }
   .tag { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--primary-light); color: var(--primary-dark); }
@@ -1010,7 +1016,7 @@ function renderLaporanUPA(c) {
         <div class="form-group"><label>Tempat</label><input type="text" id="upa_tempat" placeholder="Tempat kegiatan"></div>
       </div>
       <div class="form-group" style="margin-bottom:14px"><label>Materi</label><textarea id="upa_materi" placeholder="Materi yang dibahas"></textarea></div>
-      <div class="form-group" style="margin-bottom:14px"><label>Infaq (Rp)</label><input type="text" id="upa_infaq" inputmode="numeric" autocomplete="off" value="0" placeholder="Contoh: 100.000"></div>
+      <div class="form-group" style="margin-bottom:14px"><label>Infaq (Rp)</label><input type="text" id="upa_infaq" inputmode="numeric" autocomplete="off" value="" placeholder="Contoh: 100.000"></div>
       <div class="form-group" style="margin-bottom:14px"><label>Absensi Anggota</label>
         <div class="tbl-wrap"><table><thead><tr><th>Nama Anggota</th><th>Status</th><th>Alasan jika tidak hadir</th></tr></thead>
         <tbody id="upa_absensi"></tbody></table></div>
@@ -1029,7 +1035,8 @@ function renderLaporanUPA(c) {
   // This avoids treating the dot in "100.000" as a decimal separator.
   const digitsOnly = value => String(value ?? '').replace(/[^0-9]/g, '');
   const formatRupiahInput = value => {
-    const digits = digitsOnly(value);
+    let digits = digitsOnly(value);
+    digits = digits.replace(/^0+(?=\\d)/, '');
     if (!digits) return '';
     return digits.replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
   };
