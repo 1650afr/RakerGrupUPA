@@ -89,7 +89,6 @@
   td input, td select { padding: 7px 9px; font-size: 13px; }
   .col-nama { min-width: 200px; }
   .col-nama input { min-width: 180px; }
-  /* Laporan UPA: keep attendance status readable on mobile */
   #upa_absensi { min-width: 600px; }
   #upa_absensi td:nth-child(1), #upa_absensi th:nth-child(1) { min-width: 150px; }
   #upa_absensi td:nth-child(2), #upa_absensi th:nth-child(2) { min-width: 125px; }
@@ -284,7 +283,6 @@ const DEFAULT_STATE = {
 };
 
 let state = loadState();
-// Hilangkan program dokumentasi usroh dari data lama maupun data awal.
 state.progja = (state.progja || []).filter(p => !/dokumentasi.*usroh|dokumentasi liqo usroh/i.test(p.nama || ''));
 if (!Array.isArray(state.laporanUPA)) state.laporanUPA = [];
 
@@ -418,11 +416,8 @@ async function syncToCloud(silent) {
 
 function applyCloudData(data) {
   if (!data || typeof data !== 'object') return;
-  // Identitas
   if (data.identitas) Object.assign(state.identitas, data.identitas);
-  // WA
   if (data.wa) Object.assign(state.wa, data.wa);
-  // Preserve cloud config kita sendiri
   if (data.cloud) {
     const myBin = state.cloud.binId;
     const myKey = state.cloud.masterKey;
@@ -430,7 +425,6 @@ function applyCloudData(data) {
     state.cloud.binId = myBin;
     state.cloud.masterKey = myKey;
   }
-  // Array
   if (Array.isArray(data.anggota))    state.anggota = data.anggota;
   if (Array.isArray(data.progja))     state.progja = data.progja;
   if (Array.isArray(data.materi))     state.materi = data.materi;
@@ -608,8 +602,7 @@ function renderIdentitas(c) {
       </div>
     </div>
   `;
-  
-  // Simpan Manual (jika tombol ditekan)
+
   document.getElementById('saveIdent').onclick = () => {
     const g = id => document.getElementById(id).value;
     Object.assign(state.identitas, { nama:g('i_nama'), lahir:g('i_lahir'), visi:g('i_visi'), misi:g('i_misi'),
@@ -620,20 +613,19 @@ function renderIdentitas(c) {
     saveState(); toast('Tersimpan', 'Identitas UPA disimpan.');
   };
 
-  // FITUR BARU: AUTO-SAVE SETIAP KETIK
   c.querySelectorAll('input, textarea').forEach(el => {
     el.oninput = () => {
       const id = el.id.replace('i_', '');
-      const mapping = { 
-        nama:'nama', lahir:'lahir', visi:'visi', misi:'misi', 
-        prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan', 
-        jenjang:'jenjang', naqib:'naqib', amin:'amin', 
-        kMadya:'kMadya', kPratama:'kPratama', kMuda:'kMuda', 
-        all:'allIkhwan', dewasa:'dewasa', madya:'madya', pratama:'pratama', muda:'muda' 
+      const mapping = {
+        nama:'nama', lahir:'lahir', visi:'visi', misi:'misi',
+        prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan',
+        jenjang:'jenjang', naqib:'naqib', amin:'amin',
+        kMadya:'kMadya', kPratama:'kPratama', kMuda:'kMuda',
+        all:'allIkhwan', dewasa:'dewasa', madya:'madya', pratama:'pratama', muda:'muda'
       };
       if (mapping[id]) {
         state.identitas[mapping[id]] = el.value;
-        saveState(); // Simpan otomatis ke cloud
+        saveState();
       }
     };
   });
@@ -830,7 +822,7 @@ function renderStatistik(c) {
         }).join('')}
       </div>
     </div>`;
-  
+
   const ub = document.getElementById('usrohBody');
   ub.innerHTML = usroh.map((u, i) => `
     <tr><td>${i+1}</td>
@@ -844,7 +836,7 @@ function renderStatistik(c) {
         </div>
       </td>
       <td><button class="mini-btn" data-del="${u.id}">🗑️</button></td></tr>`).join('');
-      
+
   ub.querySelectorAll('input, select').forEach(el => {
     el.oninput = el.onchange = () => { const u = usroh.find(x => x.id === el.dataset.id); if (u) { u[el.dataset.f] = el.value; saveState(); } };
   });
@@ -856,7 +848,6 @@ function renderStatistik(c) {
   };
 }
 
-// FITUR BARU: Tombol Tambah / Kurang Kader
 window.adjustKader = function(id, delta) {
   const usroh = state.statistik.usroh;
   const item = usroh.find(x => x.id === id);
@@ -913,7 +904,6 @@ function renderMutabaah(c) {
     } else if (count < oldCount) {
       m.members = m.members.slice(0, count);
     }
-    // Buang nilai sel yang sudah tidak memiliki kolom anggota.
     Object.keys(m.values).forEach(key => {
       const parts = key.split('-');
       if (parts.length === 2 && Number(parts[1]) >= count) delete m.values[key];
@@ -1031,14 +1021,12 @@ function renderLaporanUPA(c) {
     </div>`;
   let saveDraftIfReady = () => {};
   const infaqInput = document.getElementById('upa_infaq');
-  // Input is always normalized to digits first, then grouped in thousands.
-  // This avoids treating the dot in "100.000" as a decimal separator.
   const digitsOnly = value => String(value ?? '').replace(/[^0-9]/g, '');
   const formatRupiahInput = value => {
     let digits = digitsOnly(value);
-    digits = digits.replace(/^0+(?=\\d)/, '');
+    digits = digits.replace(/^0+(?=\d)/, '');
     if (!digits) return '';
-    return digits.replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
   infaqInput.value = formatRupiahInput(infaqInput.value);
   infaqInput.addEventListener('input', () => {
@@ -1062,7 +1050,6 @@ function renderLaporanUPA(c) {
       if (reason.disabled) reason.value = '';
     };
   });
-  // Autosave draft form values locally while typing/changing fields.
   const draftKey = 'upaDraft';
   const saveDraft = () => {
     const draft = {
@@ -1089,7 +1076,6 @@ function renderLaporanUPA(c) {
     el.addEventListener('change', saveDraft);
   });
 
-  // Restore a saved draft when opening this page.
   try {
     const draft = JSON.parse(localStorage.getItem('raker_upa_jsonbin_v1_' + draftKey) || 'null');
     if (draft) {
@@ -1135,7 +1121,7 @@ function renderLaporanUPA(c) {
         rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), '', '', '']);
       }
     });
-    const csv = '\\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\\r\\n');
+    const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
     const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1161,8 +1147,19 @@ function renderLaporanUPA(c) {
         return r.tanggal;
       })();
       const nilaiInfaq = Math.floor(Number(String(r.infaq ?? 0).replace(/\D/g, '') || 0) / 1000).toLocaleString('id-ID');
-      return `Laporan UPA\nTanggal : ${tanggalIndonesia}\nTempat : ${r.tempat || '-'}\nInfaq : Rp ${nilaiInfaq}\nMateri : ${r.materi || '-'}\n\nAbsensi :\n\n${daftarAbsensi || '-'}\n\nRekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
-    }).join('\\n\\n');
+      // Gunakan baris baru ASLI (multi-line template literal) supaya tidak salah escape.
+      return `Laporan UPA :
+Tanggal : ${tanggalIndonesia}
+Tempat : ${r.tempat || '-'}
+Infaq : Rp ${nilaiInfaq}
+Materi : ${r.materi || '-'}
+
+Absensi :
+
+${daftarAbsensi || '-'}
+
+Rekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
+    }).join('\n\n');
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   };
   document.getElementById('printUPA').onclick = () => {
@@ -1544,19 +1541,15 @@ renderPage();
 checkReminders(true);
 setInterval(() => checkReminders(false), 30000);
 
-// Init cloud status
 if (state.cloud.binId && state.cloud.masterKey) {
   setCloudStatus('online');
-  // Auto-fetch saat buka
   setTimeout(() => syncFromCloud(true), 1500);
 } else {
   setCloudStatus('offline');
 }
 
-// Auto-poll (kalau diaktifkan)
 setInterval(() => {
   if (state.cloud.binId && state.cloud.masterKey) {
-    // Cek perubahan dari user lain (silent)
     syncFromCloud(true);
   }
 }, 60000);
