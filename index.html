@@ -1146,7 +1146,8 @@ function renderLaporanUPA(c) {
         }
         return r.tanggal;
       })();
-      const nilaiInfaq = Math.floor(Number(String(r.infaq ?? 0).replace(/\D/g, '') || 0) / 1000).toLocaleString('id-ID');
+      // ✅ FIX: nilai infaq penuh (tanpa dibagi 1000), dengan pemisah ribuan
+      const nilaiInfaq = Number(String(r.infaq ?? 0).replace(/\D/g, '') || 0).toLocaleString('id-ID');
       // Gunakan baris baru ASLI (multi-line template literal) supaya tidak salah escape.
       return `Laporan UPA :
 Tanggal : ${tanggalIndonesia}
