@@ -2,6 +2,9 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>UPA — Online</title>
 <style>
@@ -171,7 +174,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v3.1 — Infaq Fix</div>
+    <div class="sidebar-footer">v3.2 — Auto Update</div>
   </aside>
 
   <main class="main">
@@ -1159,7 +1162,6 @@ function renderLaporanUPA(c) {
         }
         return r.tanggal;
       })();
-      // ✅ FIX TOTAL: gunakan formatRupiah() manual — tidak ada pembagian, tidak bergantung locale browser
       const nilaiInfaq = formatRupiah(r.infaq);
       return `Laporan UPA :
 Tanggal : ${tanggalIndonesia}
@@ -1540,6 +1542,40 @@ function checkReminders(silent) {
   }
 }
 
+/* ============ AUTO UPDATE (Cara 1) ============ */
+(async function autoUpdate() {
+  try {
+    const res = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
+    const serverLM = res.headers.get('last-modified');
+    const pageLM = document.lastModified;
+    if (!serverLM || !pageLM) return;
+    const serverTime = new Date(serverLM).getTime();
+    const pageTime = new Date(pageLM).getTime();
+    // toleransi 2 detik supaya tidak false-positive
+    if (serverTime > pageTime + 2000) {
+      const url = new URL(location.href);
+      url.searchParams.set('v', serverTime);
+      location.replace(url.toString());
+    }
+  } catch (e) { /* offline / gagal, diamkan saja */ }
+})();
+// Cek ulang tiap 5 menit kalau tab dibiarkan terbuka lama
+setInterval(() => {
+  (async () => {
+    try {
+      const res = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
+      const serverLM = res.headers.get('last-modified');
+      const pageLM = document.lastModified;
+      if (!serverLM || !pageLM) return;
+      if (new Date(serverLM).getTime() > new Date(pageLM).getTime() + 2000) {
+        const url = new URL(location.href);
+        url.searchParams.set('v', Date.now());
+        location.replace(url.toString());
+      }
+    } catch (e) {}
+  })();
+}, 5 * 60 * 1000);
+
 /* ============ INIT ============ */
 document.getElementById('menuBtn').onclick = () => document.getElementById('sidebar').classList.toggle('open');
 document.getElementById('bellBtn').onclick = () => goPage('reminder');
@@ -1569,8 +1605,7 @@ setInterval(() => {
 
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
 
-/* Log versi supaya bisa dicek di Console (F12) */
-console.log('%cRaker UPA v3.1 — Infaq Fix loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
+console.log('%cRaker UPA v3.2 — Auto Update loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
