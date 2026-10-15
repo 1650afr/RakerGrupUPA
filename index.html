@@ -1150,8 +1150,18 @@ function renderLaporanUPA(c) {
       const tidak = (r.absensi || []).filter(a => a.status === 'Tidak hadir');
       const daftarAbsensi = (r.absensi || []).map((a, i) =>
         `${i + 1}. ${a.nama || '-'}: ${a.status === 'Hadir' ? '✅️' : '❌️'}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`
-      ).join('\\n');
-      return `*Laporan UPA*\\nTanggal : ${r.tanggal || '-'}\\nTempat : ${r.tempat || '-'}\\nInfaq : Rp ${Number(String(r.infaq || 0).replace(/\\D/g, '') || 0).toLocaleString('id-ID')}\\nMateri : ${r.materi || '-'}\\nAbsensi :\\n${daftarAbsensi || '-'}\\nRekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
+      ).join('\n');
+      const tanggalIndonesia = (() => {
+        if (!r.tanggal) return '-';
+        const parts = String(r.tanggal).split('-');
+        if (parts.length === 3) {
+          const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+          return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        return r.tanggal;
+      })();
+      const nilaiInfaq = Math.floor(Number(String(r.infaq ?? 0).replace(/\D/g, '') || 0) / 1000).toLocaleString('id-ID');
+      return `Laporan UPA\nTanggal : ${tanggalIndonesia}\nTempat : ${r.tempat || '-'}\nInfaq : Rp ${nilaiInfaq}\nMateri : ${r.materi || '-'}\n\nAbsensi :\n\n${daftarAbsensi || '-'}\n\nRekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
     }).join('\\n\\n');
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   };
