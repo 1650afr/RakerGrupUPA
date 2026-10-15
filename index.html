@@ -79,7 +79,7 @@
   .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
   .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
   .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .4px; }
-  input[type="text"], input[type="number"], input[type="time"], input[type="date"], input[type="tel"], input[type="password"], select, textarea {
+  input[type="text"], input[type="number"], input[type="time"], input[type="date"], input[type="tel"], input[type="password"], input[type="month"], select, textarea {
     width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; background: #fff; color: var(--text);
   }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,.12); }
@@ -93,10 +93,6 @@
   .col-nama { min-width: 200px; }
   .col-nama input { min-width: 180px; }
   #upa_absensi { min-width: 600px; }
-  #upa_absensi td:nth-child(1), #upa_absensi th:nth-child(1) { min-width: 150px; }
-  #upa_absensi td:nth-child(2), #upa_absensi th:nth-child(2) { min-width: 125px; }
-  #upa_absensi td:nth-child(2) select[data-upa-status] { min-width: 110px; width: 110px; white-space: nowrap; }
-  #upa_absensi td:nth-child(3), #upa_absensi th:nth-child(3) { min-width: 190px; }
   .mini-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px 6px; border-radius: 6px; }
   .mini-btn:hover { background: var(--bg); }
   .tag { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--primary-light); color: var(--primary-dark); }
@@ -143,7 +139,34 @@
   .info-box { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px; border-radius: 8px; font-size: 13px; line-height: 1.6; margin-bottom: 14px; }
   .info-box.warn { background: #fffbeb; border-color: var(--accent); }
   .info-box.success { background: #f0fdf4; border-color: var(--success); }
+  .info-box.danger { background: #fef2f2; border-color: var(--danger); }
   .info-box code { background: rgba(0,0,0,.06); padding: 2px 6px; border-radius: 4px; font-size: 11px; word-break: break-all; }
+  /* Absensi Khusus */
+  .abs-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .abs-tab { padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); background: transparent; border: none; }
+  .abs-tab:hover { background: var(--bg); color: var(--text); }
+  .abs-tab.active { background: var(--primary); color: #fff; }
+  .abs-person-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 8px; flex-wrap: wrap; background: #fff; }
+  .abs-person-name { flex: 1; min-width: 130px; font-weight: 600; font-size: 14px; }
+  .abs-person-status { display: flex; gap: 5px; flex-wrap: wrap; }
+  .abs-status-btn { padding: 6px 10px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; color: var(--text); }
+  .abs-status-btn:hover { transform: translateY(-1px); }
+  .abs-status-btn.active { color: #fff; border-color: transparent; }
+  .abs-status-btn.active[data-status="Hadir"] { background: #10b981; }
+  .abs-status-btn.active[data-status="Tidak hadir"] { background: #ef4444; }
+  .abs-status-btn.active[data-status="Izin"] { background: #f59e0b; }
+  .abs-status-btn.active[data-status="Sakit"] { background: #fb923c; }
+  .abs-status-btn.active[data-status="Dinas"] { background: #3b82f6; }
+  .abs-person-reason { width: 100%; margin-top: 6px; display: none; }
+  .abs-person-reason.show { display: block; }
+  .abs-chip { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .abs-chip.Hadir { background: #d1fae5; color: #065f46; }
+  .abs-chip\\.Tidak-hadir { background: #fee2e2; color: #991b1b; }
+  .abs-chip.Izin { background: #fef3c7; color: #92400e; }
+  .abs-chip.Sakit { background: #ffedd5; color: #9a3412; }
+  .abs-chip.Dinas { background: #dbeafe; color: #1e40af; }
+  .heat-table td, .heat-table th { padding: 6px; font-size: 11px; text-align: center; }
+  .heat-cell { display: inline-block; width: 24px; height: 24px; border-radius: 5px; line-height: 24px; color: #fff; font-size: 12px; font-weight: 700; }
   @media print {
     body * { visibility: hidden; }
     #printArea, #printArea * { visibility: visible; }
@@ -174,7 +197,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v3.2 — Auto Update</div>
+    <div class="sidebar-footer">v3.3 — Absensi Khusus</div>
   </aside>
 
   <main class="main">
@@ -203,18 +226,17 @@ const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 function uid() { return Math.random().toString(36).slice(2, 10); }
 
-/* ============ FORMAT RUPIAH (ANTI-GAGAL) ============ */
 function formatRupiah(val) {
   let num;
-  if (typeof val === 'number' && isFinite(val)) {
-    num = Math.floor(val);
-  } else {
-    const digits = String(val ?? '').replace(/[^0-9]/g, '');
-    num = Number(digits) || 0;
-  }
+  if (typeof val === 'number' && isFinite(val)) num = Math.floor(val);
+  else { const digits = String(val ?? '').replace(/[^0-9]/g, ''); num = Number(digits) || 0; }
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 window.formatRupiah = formatRupiah;
+
+const ABSENSI_STATUS = ['Hadir', 'Tidak hadir', 'Izin', 'Sakit', 'Dinas'];
+const ABSENSI_EMOJI = { 'Hadir': '✅', 'Tidak hadir': '❌', 'Izin': '🟡', 'Sakit': '🟠', 'Dinas': '🔵' };
+const ABSENSI_COLOR = { 'Hadir': '#10b981', 'Tidak hadir': '#ef4444', 'Izin': '#f59e0b', 'Sakit': '#fb923c', 'Dinas': '#3b82f6' };
 
 const DEFAULT_STATE = {
   identitas: {
@@ -265,6 +287,13 @@ const DEFAULT_STATE = {
   ],
   kader: [],
   laporanUPA: [],
+  absensi: [],
+  absensiReminder: {
+    enabled: true,
+    afterMinutes: 60,
+    kegiatanIds: [],  // kalau kosong = semua program kerja
+    tampilkanKonfirmasi: true
+  },
   statistik: {
     usroh: [
       { id: uid(), naqib:'', mustawa:'Muntazhim', jumlah:1 },
@@ -301,6 +330,9 @@ const DEFAULT_STATE = {
 let state = loadState();
 state.progja = (state.progja || []).filter(p => !/dokumentasi.*usroh|dokumentasi liqo usroh/i.test(p.nama || ''));
 if (!Array.isArray(state.laporanUPA)) state.laporanUPA = [];
+if (!Array.isArray(state.absensi)) state.absensi = [];
+if (!state.absensiReminder) state.absensiReminder = { enabled: true, afterMinutes: 60, kegiatanIds: [], tampilkanKonfirmasi: true };
+if (!Array.isArray(state.absensiReminder.kegiatanIds)) state.absensiReminder.kegiatanIds = [];
 
 function loadState() {
   try {
@@ -327,9 +359,8 @@ function saveState() {
   }
 }
 
-/* ============ CLOUD (JSONBin.io) ============ */
+/* ============ CLOUD ============ */
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
-
 function setCloudStatus(s) {
   state.cloud.status = s;
   const pill = document.getElementById('cloudPill');
@@ -338,14 +369,7 @@ function setCloudStatus(s) {
   pill.className = 'cloud-pill ' + s;
   text.textContent = { offline:'Offline', syncing:'Syncing...', online:'Online', error:'Error' }[s] || s;
 }
-
-function cloudHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    'X-Master-Key': state.cloud.masterKey,
-    'X-Bin-Meta': 'false'
-  };
-}
+function cloudHeaders() { return { 'Content-Type': 'application/json', 'X-Master-Key': state.cloud.masterKey, 'X-Bin-Meta': 'false' }; }
 
 async function testCloud() {
   const bin = (document.getElementById('cloud_bin') || {}).value.trim();
@@ -353,38 +377,24 @@ async function testCloud() {
   if (!bin || !key) { toast('Kosong', 'Isi Bin ID & Master Key dulu.', 'warn'); return; }
   setCloudStatus('syncing');
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${bin}/latest`, {
-      headers: { 'X-Master-Key': key, 'X-Bin-Meta': 'false' }
-    });
+    const res = await fetch(`${JSONBIN_BASE}/${bin}/latest`, { headers: { 'X-Master-Key': key, 'X-Bin-Meta': 'false' } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     await res.json();
     setCloudStatus('online');
     toast('Berhasil', 'Koneksi ke JSONBin OK! ✅', 'cloud');
-  } catch(e) {
-    setCloudStatus('error');
-    toast('Gagal', 'Cek Bin ID / Master Key. Error: ' + e.message, 'danger');
-  }
+  } catch(e) { setCloudStatus('error'); toast('Gagal', 'Cek Bin ID / Master Key. Error: ' + e.message, 'danger'); }
 }
 window.testCloud = testCloud;
 
 async function syncFromCloud(silent) {
-  if (!state.cloud.binId || !state.cloud.masterKey) {
-    if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn');
-    return false;
-  }
+  if (!state.cloud.binId || !state.cloud.masterKey) { if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn'); return false; }
   setCloudStatus('syncing');
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}/latest`, {
-      headers: { 'X-Master-Key': state.cloud.masterKey, 'X-Bin-Meta': 'false' }
-    });
+    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}/latest`, { headers: { 'X-Master-Key': state.cloud.masterKey, 'X-Bin-Meta': 'false' } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const record = await res.json();
     const payload = record && record.data ? record.data : record;
-    if (!payload || !payload.appData) {
-      setCloudStatus('online');
-      if (!silent) toast('Cloud Kosong', 'Belum ada data tersimpan. Klik "Kirim ke Cloud" untuk upload.', 'warn');
-      return false;
-    }
+    if (!payload || !payload.appData) { setCloudStatus('online'); if (!silent) toast('Cloud Kosong', 'Belum ada data tersimpan. Klik "Kirim ke Cloud" untuk upload.', 'warn'); return false; }
     applyCloudData(payload.appData);
     state.cloud.lastSync = new Date().toISOString();
     localStorage.setItem(LS_KEY, JSON.stringify(state));
@@ -392,42 +402,22 @@ async function syncFromCloud(silent) {
     if (!silent) toast('Berhasil', 'Data ditarik dari cloud.', 'cloud');
     renderPage();
     return true;
-  } catch(e) {
-    setCloudStatus('error');
-    if (!silent) toast('Gagal Tarik', e.message, 'danger');
-    return false;
-  }
+  } catch(e) { setCloudStatus('error'); if (!silent) toast('Gagal Tarik', e.message, 'danger'); return false; }
 }
 
 async function syncToCloud(silent) {
-  if (!state.cloud.binId || !state.cloud.masterKey) {
-    if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn');
-    return false;
-  }
+  if (!state.cloud.binId || !state.cloud.masterKey) { if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn'); return false; }
   setCloudStatus('syncing');
-  const payload = {
-    app: 'raker-upa',
-    version: 3,
-    updatedAt: new Date().toISOString(),
-    appData: state
-  };
+  const payload = { app: 'raker-upa', version: 3, updatedAt: new Date().toISOString(), appData: state };
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}`, {
-      method: 'PUT',
-      headers: cloudHeaders(),
-      body: JSON.stringify(payload)
-    });
+    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}`, { method: 'PUT', headers: cloudHeaders(), body: JSON.stringify(payload) });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     state.cloud.lastSync = new Date().toISOString();
     localStorage.setItem(LS_KEY, JSON.stringify(state));
     setCloudStatus('online');
     if (!silent) toast('Berhasil', 'Data terkirim ke cloud. ☁️', 'cloud');
     return true;
-  } catch(e) {
-    setCloudStatus('error');
-    if (!silent) toast('Gagal Kirim', e.message, 'danger');
-    return false;
-  }
+  } catch(e) { setCloudStatus('error'); if (!silent) toast('Gagal Kirim', e.message, 'danger'); return false; }
 }
 
 function applyCloudData(data) {
@@ -446,13 +436,13 @@ function applyCloudData(data) {
   if (Array.isArray(data.materi))     state.materi = data.materi;
   if (Array.isArray(data.kader))      state.kader = data.kader;
   if (Array.isArray(data.laporanUPA)) state.laporanUPA = data.laporanUPA;
+  if (Array.isArray(data.absensi))    state.absensi = data.absensi;
+  if (data.absensiReminder) state.absensiReminder = deepMerge(state.absensiReminder || {}, data.absensiReminder);
   if (data.statistik) {
     if (Array.isArray(data.statistik.usroh))  state.statistik.usroh = data.statistik.usroh;
     if (Array.isArray(data.statistik.target)) state.statistik.target = data.statistik.target;
   }
-  if (data.mutabaah) {
-    state.mutabaah = deepMerge(state.mutabaah, data.mutabaah);
-  }
+  if (data.mutabaah) state.mutabaah = deepMerge(state.mutabaah, data.mutabaah);
   if (data.settings) Object.assign(state.settings, data.settings);
 }
 
@@ -476,6 +466,15 @@ function formatDateID(d) {
   const bln = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   return `${d.getDate()} ${bln[d.getMonth()]} ${d.getFullYear()}`;
 }
+function formatDateShort(s) {
+  if (!s) return '-';
+  const parts = String(s).split('-');
+  if (parts.length === 3) {
+    const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  return s;
+}
 
 /* ============ NAV ============ */
 const MENU = [
@@ -487,12 +486,15 @@ const MENU = [
   { id:'kader',     ico:'👥', label:'Data Kader' },
   { id:'statistik', ico:'📊', label:'Statistik' },
   { id:'mutabaah',  ico:'✅', label:'Mutabaah Yaumiah' },
+  { id:'absensi',   ico:'📋', label:'Absensi Khusus' },
   { id:'reminder',  ico:'🔔', label:'Reminder & Jadwal' },
   { id:'laporanUPA', ico:'📝', label:'Laporan UPA' },
   { id:'laporan',   ico:'📤', label:'Laporan & Export' },
   { id:'pengaturan',ico:'⚙️', label:'Pengaturan Cloud' }
 ];
 let currentPage = 'dashboard';
+let absensiTab = 'input';
+let editingAbsensiId = null;
 
 function renderNav() {
   document.getElementById('nav').innerHTML = MENU.map(m => `
@@ -503,6 +505,7 @@ function renderNav() {
   document.querySelectorAll('.nav-item').forEach(el => {
     el.onclick = () => {
       currentPage = el.dataset.page;
+      if (currentPage === 'absensi') { absensiTab = 'input'; editingAbsensiId = null; }
       renderNav(); renderPage();
       document.getElementById('sidebar').classList.remove('open');
     };
@@ -515,7 +518,8 @@ function renderPage() {
   c.innerHTML = '';
   ({ dashboard: renderDashboard, identitas: renderIdentitas, anggota: renderAnggota,
      progja: renderProgja, materi: renderMateri, kader: renderKader, statistik: renderStatistik,
-     mutabaah: renderMutabaah, reminder: renderReminder, laporanUPA: renderLaporanUPA, laporan: renderLaporan,
+     mutabaah: renderMutabaah, absensi: renderAbsensi, reminder: renderReminder,
+     laporanUPA: renderLaporanUPA, laporan: renderLaporan,
      pengaturan: renderPengaturan }[currentPage] || (()=>{}))(c);
 }
 function goPage(p) { currentPage = p; renderNav(); renderPage(); }
@@ -526,6 +530,8 @@ function renderDashboard(c) {
   const upcoming = getUpcomingActivities().slice(0, 5);
   const cloudOk = state.cloud.binId && state.cloud.masterKey;
   const lastSync = state.cloud.lastSync ? new Date(state.cloud.lastSync).toLocaleString('id-ID') : 'Belum pernah';
+  const perluAbsen = getKegiatanPerluAbsensi().slice(0, 3);
+  const absenBerturut = getAnggotaAbsenBerturut(3);
   c.innerHTML = `
     <div class="section-head">
       <div>
@@ -540,9 +546,20 @@ function renderDashboard(c) {
     <div class="grid grid-4" style="margin-bottom:18px">
       <div class="stat"><div class="stat-ico green">🧑‍🤝‍🧑</div><div><div class="stat-val">${state.anggota.length}</div><div class="stat-lbl">Anggota</div></div></div>
       <div class="stat"><div class="stat-ico amber">📋</div><div><div class="stat-val">${state.progja.length}</div><div class="stat-lbl">Program Kerja</div></div></div>
-      <div class="stat"><div class="stat-ico blue">📚</div><div><div class="stat-val">${state.materi.length}</div><div class="stat-lbl">Materi</div></div></div>
+      <div class="stat"><div class="stat-ico blue">📝</div><div><div class="stat-val">${state.absensi.length}</div><div class="stat-lbl">Absensi Tercatat</div></div></div>
       <div class="stat"><div class="stat-ico purple">👥</div><div><div class="stat-val">${state.kader.length}</div><div class="stat-lbl">Kader</div></div></div>
     </div>
+    ${perluAbsen.length ? `
+    <div class="info-box warn">
+      <b>⚠️ ${perluAbsen.length} kegiatan belum diisi absensinya</b>
+      <div style="margin-top:6px; font-size:12px">${perluAbsen.map(k => `• ${esc(k.nama)} (${formatDateShort(k.tanggal)})`).join('<br>')}</div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="goPage('absensi')">📋 Isi Sekarang</button>
+    </div>` : ''}
+    ${absenBerturut.length ? `
+    <div class="info-box danger">
+      <b>🔴 ${absenBerturut.length} anggota tidak hadir 3x berturut-turut</b>
+      <div style="margin-top:6px; font-size:12px">${absenBerturut.map(a => `• ${esc(a.nama)} (${a.count}x berturut)`).join('<br>')}</div>
+    </div>` : ''}
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head"><span class="ico">🔔</span><h2>Agenda Terdekat</h2>
@@ -618,7 +635,6 @@ function renderIdentitas(c) {
       </div>
     </div>
   `;
-
   document.getElementById('saveIdent').onclick = () => {
     const g = id => document.getElementById(id).value;
     Object.assign(state.identitas, { nama:g('i_nama'), lahir:g('i_lahir'), visi:g('i_visi'), misi:g('i_misi'),
@@ -628,21 +644,11 @@ function renderIdentitas(c) {
       allIkhwan:g('i_all'), dewasa:g('i_dewasa'), madya:g('i_madya'), pratama:g('i_pratama'), muda:g('i_muda') });
     saveState(); toast('Tersimpan', 'Identitas UPA disimpan.');
   };
-
   c.querySelectorAll('input, textarea').forEach(el => {
     el.oninput = () => {
       const id = el.id.replace('i_', '');
-      const mapping = {
-        nama:'nama', lahir:'lahir', visi:'visi', misi:'misi',
-        prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan',
-        jenjang:'jenjang', naqib:'naqib', amin:'amin',
-        kMadya:'kMadya', kPratama:'kPratama', kMuda:'kMuda',
-        all:'allIkhwan', dewasa:'dewasa', madya:'madya', pratama:'pratama', muda:'muda'
-      };
-      if (mapping[id]) {
-        state.identitas[mapping[id]] = el.value;
-        saveState();
-      }
+      const mapping = { nama:'nama', lahir:'lahir', visi:'visi', misi:'misi', prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan', jenjang:'jenjang', naqib:'naqib', amin:'amin', kMadya:'kMadya', kPratama:'kPratama', kMuda:'kMuda', all:'allIkhwan', dewasa:'dewasa', madya:'madya', pratama:'pratama', muda:'muda' };
+      if (mapping[id]) { state.identitas[mapping[id]] = el.value; saveState(); }
     };
   });
 }
@@ -838,21 +844,17 @@ function renderStatistik(c) {
         }).join('')}
       </div>
     </div>`;
-
   const ub = document.getElementById('usrohBody');
   ub.innerHTML = usroh.map((u, i) => `
     <tr><td>${i+1}</td>
       <td><input type="text" data-id="${u.id}" data-f="naqib" value="${esc(u.naqib)}" style="min-width:120px"></td>
       <td><select data-id="${u.id}" data-f="mustawa" style="width:110px">${['Muntazhim','Muntasib','Muayyid','Tamhidi','Madya','Pratama','Muda'].map(v => `<option ${u.mustawa===v?'selected':''}>${v}</option>`).join('')}</select></td>
-      <td>
-        <div style="display:flex; align-items:center; gap:4px; justify-content:center;">
+      <td><div style="display:flex; align-items:center; gap:4px; justify-content:center;">
           <button class="mini-btn" onclick="adjustKader('${u.id}', -1)">➖</button>
           <input type="number" data-id="${u.id}" data-f="jumlah" value="${u.jumlah}" style="width:60px; text-align:center; padding:4px;">
           <button class="mini-btn" onclick="adjustKader('${u.id}', 1)">➕</button>
-        </div>
-      </td>
+        </div></td>
       <td><button class="mini-btn" data-del="${u.id}">🗑️</button></td></tr>`).join('');
-
   ub.querySelectorAll('input, select').forEach(el => {
     el.oninput = el.onchange = () => { const u = usroh.find(x => x.id === el.dataset.id); if (u) { u[el.dataset.f] = el.value; saveState(); } };
   });
@@ -863,15 +865,10 @@ function renderStatistik(c) {
     state.statistik.usroh.push({ id: uid(), naqib:'', mustawa:'Muntasib', jumlah:0 }); saveState(); renderStatistik(c);
   };
 }
-
 window.adjustKader = function(id, delta) {
   const usroh = state.statistik.usroh;
   const item = usroh.find(x => x.id === id);
-  if (item) {
-    item.jumlah = Math.max(0, (Number(item.jumlah) || 0) + delta);
-    saveState();
-    renderStatistik(document.getElementById('content'));
-  }
+  if (item) { item.jumlah = Math.max(0, (Number(item.jumlah) || 0) + delta); saveState(); renderStatistik(document.getElementById('content')); }
 };
 
 /* ============ MUTABAAH ============ */
@@ -915,23 +912,501 @@ function renderMutabaah(c) {
     const count = Math.max(1, Math.min(20, Number(input.value) || 1));
     input.value = count;
     const oldCount = m.members.length;
-    if (count > oldCount) {
-      for (let i = oldCount; i < count; i++) m.members.push('Anggota ' + (i + 1));
-    } else if (count < oldCount) {
-      m.members = m.members.slice(0, count);
-    }
-    Object.keys(m.values).forEach(key => {
-      const parts = key.split('-');
-      if (parts.length === 2 && Number(parts[1]) >= count) delete m.values[key];
-    });
-    saveState();
-    renderMutabaah(c);
+    if (count > oldCount) for (let i = oldCount; i < count; i++) m.members.push('Anggota ' + (i + 1));
+    else if (count < oldCount) m.members = m.members.slice(0, count);
+    Object.keys(m.values).forEach(key => { const parts = key.split('-'); if (parts.length === 2 && Number(parts[1]) >= count) delete m.values[key]; });
+    saveState(); renderMutabaah(c);
   };
   document.getElementById('saveMut').onclick = () => {
     m.tanggal = document.getElementById('mut_tgl').value;
     m.pekan = document.getElementById('mut_pekan').value;
     saveState(); toast('Tersimpan', 'Data mutabaah disimpan.');
   };
+}
+
+/* ============ ABSENSI KHUSUS ============ */
+function hitungRekapAbsensi(filter = {}) {
+  const records = state.absensi || [];
+  const filtered = records.filter(r => {
+    if (filter.bulan && !(r.tanggal || '').startsWith(filter.bulan)) return false;
+    if (filter.kegiatanId && r.kegiatanId !== filter.kegiatanId) return false;
+    return true;
+  });
+  const map = {};
+  state.anggota.forEach(a => {
+    map[a.id] = { id: a.id, nama: a.nama, Hadir: 0, 'Tidak hadir': 0, Izin: 0, Sakit: 0, Dinas: 0, total: 0 };
+  });
+  filtered.forEach(r => {
+    (r.records || []).forEach(rec => {
+      if (!map[rec.anggotaId]) return;
+      if (map[rec.anggotaId][rec.status] === undefined) map[rec.anggotaId][rec.status] = 0;
+      map[rec.anggotaId][rec.status]++;
+      map[rec.anggotaId].total++;
+    });
+  });
+  return Object.values(map).map(v => {
+    const persen = v.total > 0 ? Math.round((v.Hadir / v.total) * 100) : 0;
+    return { ...v, persen };
+  });
+}
+
+function getAnggotaAbsenBerturut(minBerturut = 3) {
+  const records = [...(state.absensi || [])].sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
+  const hasil = [];
+  state.anggota.forEach(a => {
+    let count = 0;
+    for (const r of records) {
+      const rec = (r.records || []).find(x => x.anggotaId === a.id);
+      if (!rec) break;
+      if (rec.status === 'Tidak hadir') count++;
+      else break;
+    }
+    if (count >= minBerturut) hasil.push({ ...a, count });
+  });
+  return hasil.sort((a, b) => b.count - a.count);
+}
+
+function getKegiatanPerluAbsensi() {
+  if (!state.absensiReminder || !state.absensiReminder.enabled) return [];
+  const now = new Date();
+  const afterMs = (state.absensiReminder.afterMinutes || 60) * 60000;
+  const dilacak = state.absensiReminder.kegiatanIds || [];
+  const hasil = [];
+  state.progja.forEach(p => {
+    if (!p.hari || !p.jam) return;
+    if (dilacak.length > 0 && !dilacak.includes(p.id)) return;
+    // Cari kejadian terakhir kegiatan ini (dalam 7 hari terakhir)
+    const td = DAYS.indexOf(p.hari);
+    if (td < 0) return;
+    const [h, mi] = p.jam.split(':').map(Number);
+    if (isNaN(h)) return;
+    let diff = (now.getDay() - td + 7) % 7;
+    const kejadian = new Date(now);
+    kejadian.setHours(h, mi || 0, 0, 0);
+    kejadian.setDate(now.getDate() - diff);
+    if (kejadian > now) kejadian.setDate(kejadian.getDate() - 7);
+    // Cek apakah sudah lewat afterMs
+    if (now - kejadian < afterMs) return;
+    // Cek apakah belum ada absensi untuk kegiatan ini di tanggal tsb
+    const tglStr = kejadian.toISOString().slice(0, 10);
+    const sudahAda = (state.absensi || []).some(r => r.kegiatanId === p.id && r.tanggal === tglStr);
+    if (!sudahAda) hasil.push({ id: p.id, nama: p.nama, tanggal: tglStr, jam: p.jam, ico: p.ico });
+  });
+  return hasil;
+}
+
+function renderAbsensi(c) {
+  const tabs = [
+    { id: 'input', ico: '📝', label: 'Input Absensi' },
+    { id: 'rekap', ico: '📊', label: 'Rekap Anggota' },
+    { id: 'riwayat', ico: '📚', label: 'Riwayat' },
+    { id: 'grafik', ico: '📈', label: 'Grafik' },
+    { id: 'setting', ico: '⚙️', label: 'Reminder' }
+  ];
+  c.innerHTML = `
+    <div class="section-head">
+      <div><h2>Absensi Khusus</h2><div class="sub">Catat kehadiran anggota per kegiatan.</div></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-outline" id="absExportExcel">📊 Excel</button>
+        <button class="btn btn-wa" id="absExportWA">📱 Kirim WA</button>
+        <button class="btn btn-outline" id="absPrint">🖨️ Cetak</button>
+      </div>
+    </div>
+    <div class="abs-tabs">
+      ${tabs.map(t => `<button class="abs-tab ${absensiTab === t.id ? 'active' : ''}" data-tab="${t.id}">${t.ico} ${t.label}</button>`).join('')}
+    </div>
+    <div id="absContent"></div>
+  `;
+  c.querySelectorAll('.abs-tab').forEach(btn => {
+    btn.onclick = () => { absensiTab = btn.dataset.tab; editingAbsensiId = null; renderAbsensi(c); };
+  });
+  const box = document.getElementById('absContent');
+  ({ input: renderAbsensiInput, rekap: renderAbsensiRekap, riwayat: renderAbsensiRiwayat, grafik: renderAbsensiGrafik, setting: renderAbsensiSetting }[absensiTab] || renderAbsensiInput)(box);
+  document.getElementById('absExportExcel').onclick = exportAbsensiExcel;
+  document.getElementById('absExportWA').onclick = sendWAAbsensiRekap;
+  document.getElementById('absPrint').onclick = printAbsensi;
+}
+
+function renderAbsensiInput(c) {
+  const editing = editingAbsensiId ? (state.absensi || []).find(r => r.id === editingAbsensiId) : null;
+  const today = new Date().toISOString().slice(0, 10);
+  const defaultProg = state.progja[0] || {};
+  const selectedKeg = editing?.kegiatanId || defaultProg.id || '';
+  const selectedKegObj = state.progja.find(p => p.id === selectedKeg) || defaultProg;
+  const selectedTgl = editing?.tanggal || today;
+  const selectedJam = editing?.jam || selectedKegObj.jam || '';
+  const catatan = editing?.catatan || '';
+  const existingRecords = editing?.records || state.anggota.map(a => ({ anggotaId: a.id, nama: a.nama, status: 'Hadir', alasan: '' }));
+
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><span class="ico">📝</span><h2>${editing ? '✏️ Edit Absensi' : 'Absensi Cepat'}</h2>
+        ${editing ? '<button class="btn btn-outline btn-sm" id="absCancelEdit">✖ Batal Edit</button>' : ''}
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Kegiatan</label>
+          <select id="abs_kegiatan">
+            ${state.progja.map(p => `<option value="${p.id}" ${p.id === selectedKeg ? 'selected' : ''}>${p.ico||''} ${esc(p.nama)}</option>`).join('')}
+          </select></div>
+        <div class="form-group"><label>Tanggal</label><input type="date" id="abs_tanggal" value="${selectedTgl}"></div>
+        <div class="form-group"><label>Jam</label><input type="time" id="abs_jam" value="${selectedJam}"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Catatan (opsional)</label><input type="text" id="abs_catatan" value="${esc(catatan)}" placeholder="Keterangan tambahan..."></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px">
+        <button class="btn btn-primary btn-sm" id="absSemuaHadir">✅ Semua Hadir</button>
+        <button class="btn btn-outline btn-sm" id="absResetStatus">🔄 Reset</button>
+      </div>
+      <div id="absDaftarAnggota"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px">
+        <button class="btn btn-primary" id="absSimpan">💾 Simpan Absensi</button>
+      </div>
+    </div>
+  `;
+
+  const daftarEl = document.getElementById('absDaftarAnggota');
+  const draftStatus = {};
+  const draftAlasan = {};
+  existingRecords.forEach(r => { draftStatus[r.anggotaId] = r.status; draftAlasan[r.anggotaId] = r.alasan || ''; });
+  state.anggota.forEach(a => { if (!draftStatus[a.id]) draftStatus[a.id] = 'Hadir'; if (!draftAlasan[a.id]) draftAlasan[a.id] = ''; });
+
+  function renderDaftar() {
+    daftarEl.innerHTML = state.anggota.map(a => {
+      const status = draftStatus[a.id] || 'Hadir';
+      const alasan = draftAlasan[a.id] || '';
+      const needReason = status !== 'Hadir';
+      return `<div class="abs-person-row" data-person="${a.id}">
+        <div class="abs-person-name">${esc(a.nama) || '(tanpa nama)'}</div>
+        <div class="abs-person-status">
+          ${ABSENSI_STATUS.map(s => `<button type="button" class="abs-status-btn ${status === s ? 'active' : ''}" data-status="${s}" data-person="${a.id}">${ABSENSI_EMOJI[s]} ${s}</button>`).join('')}
+        </div>
+        <input type="text" class="abs-person-reason ${needReason ? 'show' : ''}" data-reason="${a.id}" value="${esc(alasan)}" placeholder="Alasan ${status.toLowerCase()}...">
+      </div>`;
+    }).join('');
+    daftarEl.querySelectorAll('.abs-status-btn').forEach(btn => {
+      btn.onclick = () => {
+        draftStatus[btn.dataset.person] = btn.dataset.status;
+        renderDaftar();
+      };
+    });
+    daftarEl.querySelectorAll('[data-reason]').forEach(inp => {
+      inp.oninput = () => { draftAlasan[inp.dataset.reason] = inp.value; };
+    });
+  }
+  renderDaftar();
+
+  document.getElementById('absSemuaHadir').onclick = () => { state.anggota.forEach(a => { draftStatus[a.id] = 'Hadir'; draftAlasan[a.id] = ''; }); renderDaftar(); };
+  document.getElementById('absResetStatus').onclick = () => { state.anggota.forEach(a => { draftStatus[a.id] = 'Hadir'; draftAlasan[a.id] = ''; }); renderDaftar(); };
+  if (editing) {
+    document.getElementById('absCancelEdit').onclick = () => { editingAbsensiId = null; renderAbsensi(document.getElementById('content')); };
+  }
+  document.getElementById('absSimpan').onclick = () => {
+    const kegiatanId = document.getElementById('abs_kegiatan').value;
+    const kegiatanObj = state.progja.find(p => p.id === kegiatanId);
+    const tanggal = document.getElementById('abs_tanggal').value;
+    if (!kegiatanObj || !tanggal) { alert('Kegiatan dan tanggal wajib diisi.'); return; }
+    const records = state.anggota.map(a => ({ anggotaId: a.id, nama: a.nama, status: draftStatus[a.id] || 'Hadir', alasan: (draftAlasan[a.id] || '').trim() }));
+    if (editing) {
+      const idx = state.absensi.findIndex(r => r.id === editing.id);
+      if (idx >= 0) state.absensi[idx] = { ...state.absensi[idx], kegiatanId, kegiatanNama: kegiatanObj.nama, ico: kegiatanObj.ico, tanggal, jam: document.getElementById('abs_jam').value, catatan: document.getElementById('abs_catatan').value.trim(), records };
+      toast('Tersimpan', 'Absensi diperbarui.');
+      editingAbsensiId = null;
+    } else {
+      state.absensi.unshift({ id: uid(), kegiatanId, kegiatanNama: kegiatanObj.nama, ico: kegiatanObj.ico, tanggal, jam: document.getElementById('abs_jam').value, catatan: document.getElementById('abs_catatan').value.trim(), records });
+      toast('Tersimpan', 'Absensi berhasil dicatat.');
+    }
+    saveState();
+    renderAbsensi(document.getElementById('content'));
+  };
+}
+
+function renderAbsensiRekap(c) {
+  const bulanIni = new Date().toISOString().slice(0, 7);
+  const [bulan, setBulan] = [c._absBulan || bulanIni, v => { c._absBulan = v; }];
+  const [kegFilter, setKegFilter] = [c._absKeg || '', v => { c._absKeg = v; }];
+  const rekap = hitungRekapAbsensi({ bulan, kegiatanId: kegFilter });
+  const sorted = [...rekap].sort((a, b) => b.persen - a.persen);
+  const rata = rekap.length > 0 ? Math.round(rekap.reduce((s, r) => s + r.persen, 0) / rekap.length) : 0;
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><span class="ico">📊</span><h2>Rekap Kehadiran Anggota</h2></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Bulan</label><input type="month" id="rekap_bulan" value="${bulan}"></div>
+        <div class="form-group"><label>Kegiatan (opsional)</label>
+          <select id="rekap_keg">
+            <option value="">— Semua Kegiatan —</option>
+            ${state.progja.map(p => `<option value="${p.id}" ${kegFilter === p.id ? 'selected' : ''}>${p.ico||''} ${esc(p.nama)}</option>`).join('')}
+          </select></div>
+      </div>
+      <div class="grid grid-4" style="margin:10px 0 16px">
+        <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${rekap.length}</div><div class="stat-lbl">Anggota</div></div></div>
+        <div class="stat"><div class="stat-ico amber">📋</div><div><div class="stat-val">${(state.absensi||[]).filter(r => (r.tanggal||'').startsWith(bulan) && (!kegFilter || r.kegiatanId === kegFilter)).length}</div><div class="stat-lbl">Kegiatan</div></div></div>
+        <div class="stat"><div class="stat-ico blue">📈</div><div><div class="stat-val">${rata}%</div><div class="stat-lbl">Rata Kehadiran</div></div></div>
+        <div class="stat"><div class="stat-ico purple">⭐</div><div><div class="stat-val">${sorted[0]?.nama?.split(' ')[0] || '-'}</div><div class="stat-lbl">Paling Rajin</div></div></div>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr>
+          <th>No</th><th>Nama</th>
+          <th style="text-align:center">✅</th><th style="text-align:center">❌</th>
+          <th style="text-align:center">🟡</th><th style="text-align:center">🟠</th>
+          <th style="text-align:center">🔵</th><th style="text-align:center">Total</th>
+          <th style="text-align:center">%</th>
+        </tr></thead>
+        <tbody>
+          ${sorted.map((r, i) => `<tr>
+            <td>${i+1}</td>
+            <td><b>${esc(r.nama)}</b></td>
+            <td style="text-align:center">${r.Hadir || 0}</td>
+            <td style="text-align:center">${r['Tidak hadir'] || 0}</td>
+            <td style="text-align:center">${r.Izin || 0}</td>
+            <td style="text-align:center">${r.Sakit || 0}</td>
+            <td style="text-align:center">${r.Dinas || 0}</td>
+            <td style="text-align:center"><b>${r.total}</b></td>
+            <td style="text-align:center"><span class="abs-chip" style="background:${r.persen >= 75 ? '#d1fae5;color:#065f46' : r.persen >= 50 ? '#fef3c7;color:#92400e' : '#fee2e2;color:#991b1b'}">${r.persen}%</span></td>
+          </tr>`).join('') || `<tr><td colspan="9"><div class="empty"><div class="e-ico">📭</div><p>Belum ada data absensi bulan ini.</p></div></td></tr>`}
+        </tbody>
+      </table></div>
+    </div>
+  `;
+  document.getElementById('rekap_bulan').onchange = e => { setBulan(e.target.value); renderAbsensiRekap(c); };
+  document.getElementById('rekap_keg').onchange = e => { setKegFilter(e.target.value); renderAbsensiRekap(c); };
+}
+
+function renderAbsensiRiwayat(c) {
+  const records = [...(state.absensi || [])].sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><span class="ico">📚</span><h2>Riwayat Absensi</h2><div class="sub" style="margin-left:auto">${records.length} kegiatan tercatat</div></div>
+      ${records.length ? records.map((r, i) => {
+        const hadir = (r.records || []).filter(x => x.status === 'Hadir').length;
+        const tidak = (r.records || []).filter(x => x.status === 'Tidak hadir').length;
+        const izin = (r.records || []).filter(x => x.status === 'Izin').length;
+        const sakit = (r.records || []).filter(x => x.status === 'Sakit').length;
+        const dinas = (r.records || []).filter(x => x.status === 'Dinas').length;
+        return `<details class="card" style="margin-bottom:10px; padding:14px">
+          <summary style="cursor:pointer; font-weight:600; font-size:14px; list-style:none; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+            <span>${r.ico || '📌'}</span>
+            <span style="flex:1; min-width:140px">${esc(r.kegiatanNama || '-')}</span>
+            <span style="font-size:12px; color:var(--muted)">${formatDateShort(r.tanggal)} ${r.jam || ''}</span>
+            <span class="abs-chip Hadir">✅ ${hadir}</span>
+            ${tidak ? `<span class="abs-chip" style="background:#fee2e2;color:#991b1b">❌ ${tidak}</span>` : ''}
+            ${izin ? `<span class="abs-chip Izin">🟡 ${izin}</span>` : ''}
+            ${sakit ? `<span class="abs-chip Sakit">🟠 ${sakit}</span>` : ''}
+            ${dinas ? `<span class="abs-chip Dinas">🔵 ${dinas}</span>` : ''}
+          </summary>
+          <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border)">
+            ${r.catatan ? `<div style="font-size:12px; color:var(--muted); margin-bottom:10px"><b>Catatan:</b> ${esc(r.catatan)}</div>` : ''}
+            <div class="tbl-wrap"><table>
+              <thead><tr><th>No</th><th>Nama</th><th>Status</th><th>Alasan</th></tr></thead>
+              <tbody>
+                ${(r.records || []).map((x, j) => `<tr>
+                  <td>${j+1}</td>
+                  <td>${esc(x.nama)}</td>
+                  <td><span class="abs-chip ${x.status.replace(' ', '-')}" style="background:${ABSENSI_COLOR[x.status]}22;color:${ABSENSI_COLOR[x.status]}">${ABSENSI_EMOJI[x.status]||''} ${esc(x.status)}</span></td>
+                  <td>${esc(x.alasan) || '-'}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table></div>
+            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+              <button class="btn btn-outline btn-sm" onclick="editAbsensi('${r.id}')">✏️ Edit</button>
+              <button class="btn btn-wa btn-sm" onclick="sendWAAbsensiSingle('${r.id}')">📱 Kirim WA</button>
+              <button class="btn btn-danger btn-sm" onclick="hapusAbsensi('${r.id}')">🗑️ Hapus</button>
+            </div>
+          </div>
+        </details>`;
+      }).join('') : `<div class="empty"><div class="e-ico">📭</div><p>Belum ada riwayat absensi.</p></div>`}
+    </div>
+  `;
+}
+
+window.editAbsensi = function(id) {
+  editingAbsensiId = id;
+  absensiTab = 'input';
+  renderAbsensi(document.getElementById('content'));
+};
+window.hapusAbsensi = function(id) {
+  if (!confirm('Hapus absensi ini?')) return;
+  state.absensi = state.absensi.filter(r => r.id !== id);
+  saveState(); renderAbsensi(document.getElementById('content'));
+};
+window.sendWAAbsensiSingle = function(id) {
+  const r = state.absensi.find(x => x.id === id);
+  if (!r) return;
+  const hadir = (r.records || []).filter(x => x.status === 'Hadir').length;
+  const tidak = (r.records || []).filter(x => x.status === 'Tidak hadir').length;
+  const izin = (r.records || []).filter(x => x.status === 'Izin').length;
+  const sakit = (r.records || []).filter(x => x.status === 'Sakit').length;
+  const dinas = (r.records || []).filter(x => x.status === 'Dinas').length;
+  const daftar = (r.records || []).map((x, i) => `${i + 1}. ${x.nama}: ${ABSENSI_EMOJI[x.status] || ''}${x.alasan ? ' (' + x.alasan + ')' : ''}`).join('\n');
+  const text = `Absensi ${r.kegiatanNama || '-'}
+Tanggal : ${formatDateShort(r.tanggal)} ${r.jam || ''}
+${r.catatan ? 'Catatan : ' + r.catatan + '\n' : ''}
+Daftar Hadir :
+
+${daftar || '-'}
+
+Rekap :
+✅ Hadir : ${hadir}
+❌ Tidak hadir : ${tidak}
+🟡 Izin : ${izin}
+🟠 Sakit : ${sakit}
+🔵 Dinas : ${dinas}`;
+  openWA(text);
+};
+
+function renderAbsensiGrafik(c) {
+  const rekap = hitungRekapAbsensi({});
+  const records = [...(state.absensi || [])].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || ''));
+  const perKegiatan = {};
+  records.forEach(r => {
+    const key = r.kegiatanNama || 'Lainnya';
+    if (!perKegiatan[key]) perKegiatan[key] = { hadir: 0, total: 0 };
+    (r.records || []).forEach(x => {
+      perKegiatan[key].total++;
+      if (x.status === 'Hadir') perKegiatan[key].hadir++;
+    });
+  });
+  const perKegArr = Object.entries(perKegiatan).map(([k, v]) => ({ nama: k, persen: v.total > 0 ? Math.round(v.hadir/v.total*100) : 0, ...v })).sort((a, b) => b.persen - a.persen);
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><span class="ico">📈</span><h2>Kehadiran per Kegiatan</h2></div>
+      ${perKegArr.length ? perKegArr.map(k => `
+        <div style="margin-bottom:14px">
+          <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px">
+            <span>${esc(k.nama)}</span><span style="color:var(--muted)">${k.hadir}/${k.total} (${k.persen}%)</span>
+          </div>
+          <div class="progress"><div style="width:${k.persen}%"></div></div>
+        </div>`).join('') : '<div class="empty"><div class="e-ico">📊</div><p>Belum ada data.</p></div>'}
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico">🔥</span><h2>Heatmap Kehadiran Anggota</h2></div>
+      <div class="tbl-wrap">
+        <table class="heat-table">
+          <thead><tr><th>Nama</th>${records.slice(-15).map(r => `<th title="${esc(r.kegiatanNama)} ${formatDateShort(r.tanggal)}">${formatDateShort(r.tanggal).slice(0,6)}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${state.anggota.map(a => `<tr>
+              <td style="text-align:left; font-weight:600">${esc(a.nama)}</td>
+              ${records.slice(-15).map(r => {
+                const rec = (r.records || []).find(x => x.anggotaId === a.id);
+                const status = rec ? rec.status : '-';
+                const bg = rec ? (ABSENSI_COLOR[status] || '#cbd5e1') : '#e2e8f0';
+                const em = rec ? (ABSENSI_EMOJI[status] || '?') : '·';
+                return `<td><span class="heat-cell" style="background:${bg}" title="${status}">${em}</span></td>`;
+              }).join('')}
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px; font-size:11px; color:var(--muted)">
+        ✅ Hadir • ❌ Tidak hadir • 🟡 Izin • 🟠 Sakit • 🔵 Dinas
+      </div>
+    </div>
+  `;
+}
+
+function renderAbsensiSetting(c) {
+  const s = state.absensiReminder || {};
+  const dilacak = s.kegiatanIds || [];
+  c.innerHTML = `
+    <div class="card">
+      <div class="card-head"><span class="ico">⚙️</span><h2>Pengaturan Reminder Absensi</h2></div>
+      <div class="info-box">
+        Reminder akan muncul di Dashboard ketika <b>kegiatan sudah lewat</b> dan <b>absensinya belum diisi</b>.
+        Cocok untuk mengingatkan Amin/Naqib agar segera input absensi setelah kegiatan selesai.
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Status Reminder</label>
+          <select id="set_enabled">
+            <option value="1" ${s.enabled ? 'selected' : ''}>Aktif</option>
+            <option value="0" ${!s.enabled ? 'selected' : ''}>Nonaktif</option>
+          </select></div>
+        <div class="form-group"><label>Ingatkan Setelah (menit)</label>
+          <input type="number" id="set_after" min="5" max="720" value="${s.afterMinutes || 60}"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico">🎯</span><h2>Kegiatan yang Dilacak</h2></div>
+      <div class="info-box">Kalau <b>tidak ada</b> yang dicentang → <b>semua</b> program kerja akan dilacak.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px">
+        <button class="btn btn-outline btn-sm" id="setCheckAll">✅ Centang Semua</button>
+        <button class="btn btn-outline btn-sm" id="setUncheckAll">⬜ Kosongkan Semua</button>
+      </div>
+      <div id="kegiatanList"></div>
+      <button class="btn btn-primary" style="margin-top:14px" id="setSimpan">💾 Simpan Pengaturan</button>
+    </div>
+  `;
+  const listEl = document.getElementById('kegiatanList');
+  const draft = new Set(dilacak);
+  function renderList() {
+    listEl.innerHTML = state.progja.map(p => `
+      <label style="display:flex; align-items:center; gap:10px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; cursor:pointer; background:#fff">
+        <input type="checkbox" data-keg="${p.id}" ${draft.has(p.id) ? 'checked' : ''} style="width:18px; height:18px; margin:0">
+        <span style="font-size:14px">${p.ico||'📌'} ${esc(p.nama)}</span>
+        <span style="margin-left:auto; font-size:11px; color:var(--muted)">${esc(p.hari||'-')} ${esc(p.jam||'')}</span>
+      </label>
+    `).join('');
+    listEl.querySelectorAll('[data-keg]').forEach(inp => {
+      inp.onchange = () => { if (inp.checked) draft.add(inp.dataset.keg); else draft.delete(inp.dataset.keg); };
+    });
+  }
+  renderList();
+  document.getElementById('setCheckAll').onclick = () => { state.progja.forEach(p => draft.add(p.id)); renderList(); };
+  document.getElementById('setUncheckAll').onclick = () => { draft.clear(); renderList(); };
+  document.getElementById('setSimpan').onclick = () => {
+    state.absensiReminder = {
+      enabled: document.getElementById('set_enabled').value === '1',
+      afterMinutes: Math.max(5, Math.min(720, Number(document.getElementById('set_after').value) || 60)),
+      kegiatanIds: Array.from(draft),
+      tampilkanKonfirmasi: true
+    };
+    saveState(); toast('Tersimpan', 'Pengaturan reminder disimpan.');
+  };
+}
+
+/* Export Absensi */
+function exportAbsensiExcel() {
+  if (!state.absensi.length) { alert('Belum ada data absensi untuk diekspor.'); return; }
+  const rows = [['Tanggal','Jam','Kegiatan','Catatan','Nama','Status','Alasan']];
+  state.absensi.forEach(r => {
+    (r.records || []).forEach(x => {
+      rows.push([r.tanggal, r.jam || '', r.kegiatanNama || '', r.catatan || '', x.nama || '', x.status || '', x.alasan || '']);
+    });
+  });
+  const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Absensi_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  toast('Berhasil', 'File absensi diekspor.');
+}
+
+function sendWAAbsensiRekap() {
+  const bulan = new Date().toISOString().slice(0, 7);
+  const rekap = hitungRekapAbsensi({ bulan }).sort((a, b) => b.persen - a.persen);
+  if (!rekap.length) { alert('Belum ada data absensi bulan ini.'); return; }
+  let msg = `*📋 REKAP ABSENSI BULANAN*\n*UPA ${state.identitas.nama}*\nBulan: ${bulan}\n━━━━━━━━━━━━━━━━━━━━\n\n`;
+  rekap.forEach((r, i) => {
+    msg += `${i+1}. *${r.nama}*\n   ✅ ${r.Hadir||0} | ❌ ${r['Tidak hadir']||0} | 🟡 ${r.Izin||0} | 🟠 ${r.Sakit||0} | 🔵 ${r.Dinas||0}\n   Kehadiran: *${r.persen}%*\n\n`;
+  });
+  const rata = Math.round(rekap.reduce((s, r) => s + r.persen, 0) / rekap.length);
+  msg += `━━━━━━━━━━━━━━━━━━━━\n*Rata-rata UPA: ${rata}%*`;
+  openWA(msg);
+}
+
+function printAbsensi() {
+  if (!state.absensi.length) { alert('Belum ada data absensi untuk dicetak.'); return; }
+  const rows = [...state.absensi].sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || '')).map(r => `
+    <section style="margin-bottom:22px; page-break-inside:avoid">
+      <h3>${esc(r.kegiatanNama || '-')} — ${formatDateShort(r.tanggal)} ${r.jam || ''}</h3>
+      ${r.catatan ? `<p><b>Catatan:</b> ${esc(r.catatan)}</p>` : ''}
+      <table style="width:100%; border-collapse:collapse" border="1" cellpadding="6">
+        <tr><th>No</th><th>Nama</th><th>Status</th><th>Alasan</th></tr>
+        ${(r.records || []).map((x, j) => `<tr><td>${j+1}</td><td>${esc(x.nama)}</td><td>${esc(x.status)}</td><td>${esc(x.alasan) || '-'}</td></tr>`).join('')}
+      </table>
+    </section>`).join('');
+  const area = document.getElementById('printArea');
+  area.innerHTML = `<h2>Absensi UPA — ${esc(state.identitas.nama)}</h2>${rows}`;
+  area.style.display = 'block'; window.print(); area.style.display = 'none';
 }
 
 /* ============ REMINDER ============ */
@@ -1052,7 +1527,6 @@ function renderLaporanUPA(c) {
     try { infaqInput.setSelectionRange(formatted.length, formatted.length); } catch (_) {}
     saveDraftIfReady();
   });
-
   const absensiBody = document.getElementById('upa_absensi');
   absensiBody.innerHTML = state.anggota.map(a => `<tr>
     <td>${esc(a.nama)||'(Nama belum diisi)'}</td>
@@ -1091,7 +1565,6 @@ function renderLaporanUPA(c) {
     el.addEventListener('input', saveDraft);
     el.addEventListener('change', saveDraft);
   });
-
   try {
     const draft = JSON.parse(localStorage.getItem('raker_upa_jsonbin_v1_' + draftKey) || 'null');
     if (draft) {
@@ -1107,7 +1580,6 @@ function renderLaporanUPA(c) {
       });
     }
   } catch (_) {}
-
   document.getElementById('saveUPA').onclick = () => {
     const tanggal = document.getElementById('upa_tanggal').value;
     if (!tanggal) { alert('Tanggal wajib diisi.'); return; }
@@ -1131,40 +1603,27 @@ function renderLaporanUPA(c) {
     if (!records.length) { alert('Belum ada laporan UPA untuk diekspor.'); return; }
     const rows = [['Tanggal','Tempat','Materi','Infaq (Rp)','Nama Anggota','Absensi','Alasan Tidak Hadir']];
     records.forEach(r => {
-      if (r.absensi && r.absensi.length) {
-        r.absensi.forEach(a => rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), a.nama || '', a.status || '', a.alasan || '']));
-      } else {
-        rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), '', '', '']);
-      }
+      if (r.absensi && r.absensi.length) r.absensi.forEach(a => rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), a.nama || '', a.status || '', a.alasan || '']));
+      else rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), '', '', '']);
     });
     const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
     const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'Laporan_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    toast('Berhasil', 'File laporan UPA berhasil diekspor. Buka file dengan Excel.');
+    a.href = URL.createObjectURL(blob); a.download = 'Laporan_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+    toast('Berhasil', 'File laporan UPA berhasil diekspor.');
   };
   document.getElementById('sendUPAWA').onclick = () => {
     if (!records.length) { alert('Belum ada laporan UPA untuk dikirim.'); return; }
     const text = records.map(r => {
       const hadir = (r.absensi || []).filter(a => a.status === 'Hadir');
       const tidak = (r.absensi || []).filter(a => a.status === 'Tidak hadir');
-      const daftarAbsensi = (r.absensi || []).map((a, i) =>
-        `${i + 1}. ${a.nama || '-'}: ${a.status === 'Hadir' ? '✅️' : '❌️'}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`
-      ).join('\n');
-      const tanggalIndonesia = (() => {
-        if (!r.tanggal) return '-';
-        const parts = String(r.tanggal).split('-');
-        if (parts.length === 3) {
-          const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-          return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-        return r.tanggal;
-      })();
+      const daftarAbsensi = (r.absensi || []).map((a, i) => `${i + 1}. ${a.nama || '-'}: ${a.status === 'Hadir' ? '✅️' : '❌️'}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`).join('\n');
+      const parts = String(r.tanggal || '').split('-');
+      const tanggalID = parts.length === 3 ? new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : (r.tanggal || '-');
       const nilaiInfaq = formatRupiah(r.infaq);
       return `Laporan UPA :
-Tanggal : ${tanggalIndonesia}
+Tanggal : ${tanggalID}
 Tempat : ${r.tempat || '-'}
 Infaq : Rp ${nilaiInfaq}
 Materi : ${r.materi || '-'}
@@ -1195,6 +1654,7 @@ function renderLaporan(c) {
       <div class="report-card" onclick="sendWAReminder()"><span class="r-ico">📱</span><div class="r-title">Reminder via WA</div><div class="r-desc">Agenda terdekat</div></div>
       <div class="report-card" onclick="sendWAStatistik()"><span class="r-ico">📱</span><div class="r-title">Statistik via WA</div><div class="r-desc">Ringkasan kader</div></div>
       <div class="report-card" onclick="sendWAMutabaah()"><span class="r-ico">📱</span><div class="r-title">Mutabaah via WA</div><div class="r-desc">Rekap mutabaah</div></div>
+      <div class="report-card" onclick="goPage('absensi')"><span class="r-ico">📋</span><div class="r-title">Absensi Khusus</div><div class="r-desc">Rekap kehadiran</div></div>
       <div class="report-card" onclick="exportExcel()"><span class="r-ico">📊</span><div class="r-title">Export Excel</div><div class="r-desc">Download .xls</div></div>
       <div class="report-card" onclick="exportPDF()"><span class="r-ico">📄</span><div class="r-title">Export PDF</div><div class="r-desc">Cetak laporan</div></div>
     </div>
@@ -1273,9 +1733,7 @@ function sendWAReminder() {
   const list = getUpcomingActivities();
   if (!list.length) { toast('Kosong', 'Belum ada agenda.', 'warn'); return; }
   let msg = `*🔔 REMINDER KEGIATAN*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\n\nAssalamu'alaikum,\n\nAgenda terdekat:\n\n`;
-  list.slice(0,10).forEach(a => {
-    msg += `${a.ico||'📌'} *${a.nama}*\n   🗓️ ${a.hari}, ${a.jam}\n   ⏳ ${a.label} lagi\n   👤 PIC: ${a.pic}\n\n`;
-  });
+  list.slice(0,10).forEach(a => { msg += `${a.ico||'📌'} *${a.nama}*\n   🗓️ ${a.hari}, ${a.jam}\n   ⏳ ${a.label} lagi\n   👤 PIC: ${a.pic}\n\n`; });
   msg += `━━━━━━━━━━━━━━━━━━━━\nJazakumullahu khairan 🤲`;
   openWA(msg);
 }
@@ -1338,6 +1796,9 @@ function exportExcel() {
   <h2>5. Kader</h2>
   <table><tr><th>No</th><th>Nama</th><th>Naqib</th><th>Jenjang</th><th>HP</th><th>Kecamatan</th></tr>
   ${state.kader.length ? state.kader.map((k,i)=>`<tr><td>${i+1}</td><td>${esc(k.nama)}</td><td>${esc(k.naqib)}</td><td>${esc(k.jenjang)}</td><td>${esc(k.hp)}</td><td>${esc(k.kecamatan)}</td></tr>`).join('') : '<tr><td colspan="6">Belum ada data</td></tr>'}</table>
+  <h2>6. Rekap Absensi</h2>
+  <table><tr><th>Nama</th><th>Hadir</th><th>Tidak Hadir</th><th>Izin</th><th>Sakit</th><th>Dinas</th><th>Total</th><th>%</th></tr>
+  ${hitungRekapAbsensi({}).map(r=>`<tr><td>${esc(r.nama)}</td><td>${r.Hadir||0}</td><td>${r['Tidak hadir']||0}</td><td>${r.Izin||0}</td><td>${r.Sakit||0}</td><td>${r.Dinas||0}</td><td>${r.total}</td><td>${r.persen}%</td></tr>`).join('')}</table>
   </body></html>`;
   const blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
   const a = document.createElement('a');
@@ -1351,11 +1812,7 @@ function exportPDF() {
   area.innerHTML = buildReportHTML();
   area.style.display = 'block';
   document.title = `Laporan-Raker-UPA`;
-  setTimeout(() => {
-    window.print();
-    area.style.display = 'none';
-    document.title = 'Raker UPA A.H Nasution — Online';
-  }, 200);
+  setTimeout(() => { window.print(); area.style.display = 'none'; document.title = 'Raker UPA A.H Nasution — Online'; }, 200);
   toast('Cetak PDF', 'Pilih "Save as PDF".');
 }
 window.exportExcel = exportExcel;
@@ -1366,7 +1823,6 @@ function renderPengaturan(c) {
   const connected = state.cloud.binId && state.cloud.masterKey;
   c.innerHTML = `
     <div class="section-head"><div><h2>Pengaturan Cloud</h2><div class="sub">Hubungkan ke JSONBin.io</div></div></div>
-
     ${!connected ? `
     <div class="card">
       <div class="card-head"><span class="ico">📖</span><h2>Cara Setup (3 Menit dari HP)</h2></div>
@@ -1379,22 +1835,12 @@ function renderPengaturan(c) {
       </div>
     </div>
     ` : `
-    <div class="info-box success">
-      <b>✅ Terhubung ke JSONBin Cloud</b><br>
-      Data disinkronkan ke cloud. Bagi Bin ID & Master Key ke pengurus lain agar mereka bisa akses data yang sama.
-    </div>
+    <div class="info-box success"><b>✅ Terhubung ke JSONBin Cloud</b><br>Data disinkronkan ke cloud. Bagi Bin ID & Master Key ke pengurus lain agar mereka bisa akses data yang sama.</div>
     `}
-
     <div class="card">
       <div class="card-head"><span class="ico">🔑</span><h2>Kredensial JSONBin</h2></div>
-      <div class="form-row">
-        <div class="form-group"><label>Bin ID</label>
-          <input type="text" id="cloud_bin" value="${esc(state.cloud.binId)}" placeholder="65abc123def456..."></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Master Key (X-MASTER-KEY)</label>
-          <input type="password" id="cloud_key" value="${esc(state.cloud.masterKey)}" placeholder="$2b$10$..."></div>
-      </div>
+      <div class="form-row"><div class="form-group"><label>Bin ID</label><input type="text" id="cloud_bin" value="${esc(state.cloud.binId)}" placeholder="65abc123def456..."></div></div>
+      <div class="form-row"><div class="form-group"><label>Master Key (X-MASTER-KEY)</label><input type="password" id="cloud_key" value="${esc(state.cloud.masterKey)}" placeholder="$2b$10$..."></div></div>
       <div class="form-row cols-2">
         <div class="form-group"><label>Auto-Sync (setelah edit)</label>
           <select id="cloud_auto">
@@ -1409,7 +1855,6 @@ function renderPengaturan(c) {
         <button class="btn btn-primary" id="btnDownload">⬇️ Tarik dari Cloud</button>
       </div>
     </div>
-
     <div class="card">
       <div class="card-head"><span class="ico">📤</span><h2>Export Laporan</h2></div>
       <div style="display:flex; gap:10px; flex-wrap:wrap">
@@ -1418,7 +1863,6 @@ function renderPengaturan(c) {
         <button class="btn btn-wa" onclick="goPage('laporan')">📱 Laporan WA</button>
       </div>
     </div>
-
     <div class="card">
       <div class="card-head"><span class="ico">💾</span><h2>Backup Lokal</h2></div>
       <p style="font-size:13px; color:var(--muted); margin-bottom:14px">Backup data ke file JSON di HP Anda.</p>
@@ -1429,47 +1873,36 @@ function renderPengaturan(c) {
         <button class="btn btn-danger" id="btnReset">🗑️ Reset Semua</button>
       </div>
     </div>
-
     <div class="card">
       <div class="card-head"><span class="ico">🔔</span><h2>Izin Notifikasi Browser</h2></div>
       <p style="font-size:13px; color:var(--muted); margin-bottom:10px">Status: <b>${('Notification' in window) ? Notification.permission : 'tidak didukung'}</b></p>
       <button class="btn btn-primary" onclick="requestNotifPerm()">🔔 Minta Izin</button>
     </div>
   `;
-
   const binEl = document.getElementById('cloud_bin');
   const keyEl = document.getElementById('cloud_key');
-
   document.getElementById('btnTest').onclick = testCloud;
   document.getElementById('btnSaveCloud').onclick = () => {
-    state.cloud.binId = binEl.value.trim();
-    state.cloud.masterKey = keyEl.value.trim();
+    state.cloud.binId = binEl.value.trim(); state.cloud.masterKey = keyEl.value.trim();
     state.cloud.autoSync = document.getElementById('cloud_auto').value === '1';
-    saveState();
-    toast('Tersimpan', 'Kredensial cloud disimpan.');
-    renderPage();
+    saveState(); toast('Tersimpan', 'Kredensial cloud disimpan.'); renderPage();
   };
   document.getElementById('btnUpload').onclick = () => {
-    state.cloud.binId = binEl.value.trim();
-    state.cloud.masterKey = keyEl.value.trim();
+    state.cloud.binId = binEl.value.trim(); state.cloud.masterKey = keyEl.value.trim();
     state.cloud.autoSync = document.getElementById('cloud_auto').value === '1';
-    saveState();
-    syncToCloud(false);
+    saveState(); syncToCloud(false);
   };
   document.getElementById('btnDownload').onclick = () => {
-    state.cloud.binId = binEl.value.trim();
-    state.cloud.masterKey = keyEl.value.trim();
+    state.cloud.binId = binEl.value.trim(); state.cloud.masterKey = keyEl.value.trim();
     state.cloud.autoSync = document.getElementById('cloud_auto').value === '1';
-    saveState();
-    syncFromCloud(false);
+    saveState(); syncFromCloud(false);
   };
   document.getElementById('btnBackup').onclick = () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `backup-raker-upa-${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    toast('Berhasil', 'Backup diunduh.');
+    a.click(); toast('Berhasil', 'Backup diunduh.');
   };
   document.getElementById('fileRestore').onchange = e => {
     const f = e.target.files[0]; if (!f) return;
@@ -1490,21 +1923,14 @@ function renderPengaturan(c) {
     const bin = state.cloud.binId, key = state.cloud.masterKey;
     state = JSON.parse(JSON.stringify(DEFAULT_STATE));
     state.cloud.binId = bin; state.cloud.masterKey = key;
-    saveState();
-    toast('Direset', 'Semua data telah direset.');
-    goPage('dashboard');
+    saveState(); toast('Direset', 'Semua data telah direset.'); goPage('dashboard');
   };
 }
-
 function requestNotifPerm() {
   if (!('Notification' in window)) { toast('Tidak Didukung', 'Browser tidak mendukung notif.', 'danger'); return; }
   Notification.requestPermission().then(p => {
-    if (p === 'granted') {
-      toast('Berhasil', 'Notifikasi diaktifkan.');
-      new Notification('🕌 Raker UPA', { body: 'Notifikasi siap.' });
-    } else {
-      toast('Ditolak', 'Buka pengaturan browser untuk izinkan.', 'danger');
-    }
+    if (p === 'granted') { toast('Berhasil', 'Notifikasi diaktifkan.'); new Notification('🕌 Raker UPA', { body: 'Notifikasi siap.' }); }
+    else toast('Ditolak', 'Buka pengaturan browser untuk izinkan.', 'danger');
     renderPage();
   });
 }
@@ -1512,6 +1938,7 @@ window.requestNotifPerm = requestNotifPerm;
 
 /* ============ REMINDER ENGINE ============ */
 const notifiedKeys = new Set();
+const notifiedAbsenKeys = new Set();
 function checkReminders(silent) {
   if (!state.settings.reminderEnabled) return;
   const now = new Date();
@@ -1535,31 +1962,42 @@ function checkReminders(silent) {
       }
     }
   });
+  // Cek reminder absensi belum diisi
+  if (state.absensiReminder && state.absensiReminder.enabled) {
+    const perlu = getKegiatanPerluAbsensi();
+    perlu.forEach(k => {
+      const key = 'abs|' + k.id + '|' + k.tanggal;
+      if (!notifiedAbsenKeys.has(key)) {
+        notifiedAbsenKeys.add(key);
+        if (!silent) {
+          toast(`📋 Absensi belum diisi`, `${k.nama} (${formatDateShort(k.tanggal)})`, 'warn');
+        }
+      }
+    });
+  }
   const badge = document.getElementById('bellBadge');
   if (badge) {
-    if (upcomingCount > 0) { badge.textContent = upcomingCount; badge.classList.remove('hidden'); }
+    const perluAbs = getKegiatanPerluAbsensi().length;
+    const total = upcomingCount + perluAbs;
+    if (total > 0) { badge.textContent = total; badge.classList.remove('hidden'); }
     else badge.classList.add('hidden');
   }
 }
 
-/* ============ AUTO UPDATE (Cara 1) ============ */
+/* ============ AUTO UPDATE ============ */
 (async function autoUpdate() {
   try {
     const res = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
     const serverLM = res.headers.get('last-modified');
     const pageLM = document.lastModified;
     if (!serverLM || !pageLM) return;
-    const serverTime = new Date(serverLM).getTime();
-    const pageTime = new Date(pageLM).getTime();
-    // toleransi 2 detik supaya tidak false-positive
-    if (serverTime > pageTime + 2000) {
+    if (new Date(serverLM).getTime() > new Date(pageLM).getTime() + 2000) {
       const url = new URL(location.href);
-      url.searchParams.set('v', serverTime);
+      url.searchParams.set('v', Date.now());
       location.replace(url.toString());
     }
-  } catch (e) { /* offline / gagal, diamkan saja */ }
+  } catch (e) {}
 })();
-// Cek ulang tiap 5 menit kalau tab dibiarkan terbuka lama
 setInterval(() => {
   (async () => {
     try {
@@ -1578,7 +2016,7 @@ setInterval(() => {
 
 /* ============ INIT ============ */
 document.getElementById('menuBtn').onclick = () => document.getElementById('sidebar').classList.toggle('open');
-document.getElementById('bellBtn').onclick = () => goPage('reminder');
+document.getElementById('bellBtn').onclick = () => goPage('absensi');
 document.getElementById('waReportBtn').onclick = () => goPage('laporan');
 document.getElementById('cloudPill').onclick = () => {
   if (!state.cloud.binId || !state.cloud.masterKey) goPage('pengaturan');
@@ -1597,15 +2035,9 @@ if (state.cloud.binId && state.cloud.masterKey) {
   setCloudStatus('offline');
 }
 
-setInterval(() => {
-  if (state.cloud.binId && state.cloud.masterKey) {
-    syncFromCloud(true);
-  }
-}, 60000);
-
+setInterval(() => { if (state.cloud.binId && state.cloud.masterKey) syncFromCloud(true); }, 60000);
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
-
-console.log('%cRaker UPA v3.2 — Auto Update loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
+console.log('%cRaker UPA v3.3 — Absensi Khusus loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
