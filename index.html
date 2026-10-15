@@ -2,11 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8" />
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UPA — Online</title>
+<title>Raker UPA A.H Nasution — Online</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -79,7 +76,7 @@
   .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
   .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
   .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .4px; }
-  input[type="text"], input[type="number"], input[type="time"], input[type="date"], input[type="tel"], input[type="password"], input[type="month"], select, textarea {
+  input[type="text"], input[type="number"], input[type="time"], input[type="date"], input[type="tel"], input[type="password"], select, textarea {
     width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; font-family: inherit; background: #fff; color: var(--text);
   }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,.12); }
@@ -116,7 +113,7 @@
   .progress > div { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
   .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.55); display: none; align-items: center; justify-content: center; z-index: 9998; padding: 20px; }
   .modal-overlay.show { display: flex; }
-  .modal { background: #fff; border-radius: 16px; max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 24px; }
+  .modal { background: #fff; border-radius: 16px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 24px; }
   .modal h3 { font-size: 17px; margin-bottom: 16px; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
   .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
@@ -138,74 +135,7 @@
   .info-box { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px; border-radius: 8px; font-size: 13px; line-height: 1.6; margin-bottom: 14px; }
   .info-box.warn { background: #fffbeb; border-color: var(--accent); }
   .info-box.success { background: #f0fdf4; border-color: var(--success); }
-  .info-box.danger { background: #fef2f2; border-color: var(--danger); }
   .info-box code { background: rgba(0,0,0,.06); padding: 2px 6px; border-radius: 4px; font-size: 11px; word-break: break-all; }
-  .abs-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-  .abs-tab { padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); background: transparent; border: none; }
-  .abs-tab:hover { background: var(--bg); color: var(--text); }
-  .abs-tab.active { background: var(--primary); color: #fff; }
-  .abs-person-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 8px; flex-wrap: wrap; background: #fff; }
-  .abs-person-name { flex: 1; min-width: 130px; font-weight: 600; font-size: 14px; }
-  .abs-person-status { display: flex; gap: 5px; flex-wrap: wrap; }
-  .abs-status-btn { padding: 6px 10px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; color: var(--text); }
-  .abs-status-btn:hover { transform: translateY(-1px); }
-  .abs-status-btn.active { color: #fff; border-color: transparent; }
-  .abs-status-btn.active[data-status="Hadir"] { background: #10b981; }
-  .abs-status-btn.active[data-status="Tidak hadir"] { background: #ef4444; }
-  .abs-status-btn.active[data-status="Izin"] { background: #f59e0b; }
-  .abs-status-btn.active[data-status="Sakit"] { background: #fb923c; }
-  .abs-status-btn.active[data-status="Dinas"] { background: #3b82f6; }
-  .abs-person-reason { width: 100%; margin-top: 6px; display: none; }
-  .abs-person-reason.show { display: block; }
-  .abs-chip { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-  .abs-chip.Hadir { background: #d1fae5; color: #065f46; }
-  .abs-chip.Izin { background: #fef3c7; color: #92400e; }
-  .abs-chip.Sakit { background: #ffedd5; color: #9a3412; }
-  .abs-chip.Dinas { background: #dbeafe; color: #1e40af; }
-  .heat-table td, .heat-table th { padding: 6px; font-size: 11px; text-align: center; }
-  .heat-cell { display: inline-block; width: 24px; height: 24px; border-radius: 5px; line-height: 24px; color: #fff; font-size: 12px; font-weight: 700; }
-  /* Laporan UPA: kolom absensi lebih lebar */
-  #upa_absensi { min-width: 640px; }
-  #upa_absensi td:nth-child(1), #upa_absensi th:nth-child(1) { min-width: 160px; }
-  #upa_absensi td:nth-child(2), #upa_absensi th:nth-child(2) { min-width: 160px; }
-  #upa_absensi td:nth-child(3), #upa_absensi th:nth-child(3) { min-width: 180px; }
-  .upa-status-pill {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
-    cursor: pointer; border: 1px solid var(--border); background: #fff;
-    color: var(--muted); transition: all .15s; white-space: nowrap; font-family: inherit;
-  }
-  .upa-status-pill:hover { transform: translateY(-1px); }
-  .upa-status-pill.active[data-val="Hadir"] { background: #10b981; color: #fff; border-color: #10b981; }
-  .upa-status-pill.active[data-val="Tidak hadir"] { background: #ef4444; color: #fff; border-color: #ef4444; }
-  .lvl-chip { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-  .lvl-Muhib { background: #fce7f3; color: #9d174d; }
-  .lvl-Muayyid { background: #e0e7ff; color: #3730a3; }
-  .lvl-Muntashib { background: #dbeafe; color: #1e40af; }
-  .lvl-Muntandhim { background: #d1fae5; color: #065f46; }
-  .lvl-Tamhidi { background: #fef3c7; color: #92400e; }
-  .sts-chip { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-  .sts-Aktif { background: #d1fae5; color: #065f46; }
-  .sts-Lulus { background: #dbeafe; color: #1e40af; }
-  .sts-Keluar { background: #fee2e2; color: #991b1b; }
-  .sts-Mubarak { background: #f3e8ff; color: #6b21a8; }
-  .sts-Hijrah { background: #fef3c7; color: #92400e; }
-  .pohon-kader { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; background: #fff; overflow: hidden; }
-  .pohon-kader-head { padding: 14px 16px; background: #f8fafc; display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; flex-wrap: wrap; }
-  .pohon-kader-head:hover { background: var(--primary-light); }
-  .pohon-kader-head .pohon-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 14px; }
-  .pohon-kader-head .pohon-info { flex: 1; min-width: 140px; }
-  .pohon-kader-head .pohon-nama { font-weight: 700; font-size: 14px; }
-  .pohon-kader-head .pohon-sub { font-size: 11px; color: var(--muted); }
-  .pohon-kader-head .pohon-count { font-size: 12px; font-weight: 700; color: var(--primary-dark); }
-  .pohon-kader-body { padding: 12px 16px; display: none; }
-  .pohon-kader.open .pohon-kader-body { display: block; }
-  .binaan-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; background: #fff; flex-wrap: wrap; }
-  .binaan-nama { flex: 1; min-width: 130px; font-weight: 600; font-size: 13px; }
-  .binaan-meta { font-size: 11px; color: var(--muted); }
-  .kegiatan-grup { padding: 8px 0; }
-  .kegiatan-grup ul { margin: 4px 0 0 20px; padding: 0; }
-  .kegiatan-grup li { font-size: 12px; margin-bottom: 2px; }
   @media print {
     body * { visibility: hidden; }
     #printArea, #printArea * { visibility: visible; }
@@ -231,12 +161,12 @@
     <div class="brand">
       <div class="brand-logo">🕌</div>
       <div>
-        <div class="brand-title">UPA</div>
-        <div class="brand-sub">UPA</div>
+        <div class="brand-title">RAKER UPA</div>
+        <div class="brand-sub">A.H Nasution</div>
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer" id="appVersion">v3.7 — Auto Statistik</div>
+    <div class="sidebar-footer">v3.0 JSONBin</div>
   </aside>
 
   <main class="main">
@@ -260,24 +190,10 @@
 <div id="printArea"></div>
 
 <script>
-/* ============ KONSTANTA ============ */
+/* ============ STATE ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.10';
-const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
-const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
-const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
-const ABSENSI_STATUS = ['Hadir', 'Tidak hadir', 'Izin', 'Sakit', 'Dinas'];
-const ABSENSI_EMOJI = { 'Hadir': '✅', 'Tidak hadir': '❌', 'Izin': '🟡', 'Sakit': '🟠', 'Dinas': '🔵' };
-const ABSENSI_COLOR = { 'Hadir': '#10b981', 'Tidak hadir': '#ef4444', 'Izin': '#f59e0b', 'Sakit': '#fb923c', 'Dinas': '#3b82f6' };
 function uid() { return Math.random().toString(36).slice(2, 10); }
-function formatRupiah(val) {
-  let num;
-  if (typeof val === 'number' && isFinite(val)) num = Math.floor(val);
-  else { const digits = String(val ?? '').replace(/[^0-9]/g, ''); num = Number(digits) || 0; }
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-window.formatRupiah = formatRupiah;
 
 const DEFAULT_STATE = {
   identitas: {
@@ -285,7 +201,7 @@ const DEFAULT_STATE = {
     visi: 'MENYIAPKAN KADER DAKWAH YANG MILITAN DAN TRANSFORMATIF',
     misi: 'MENINGKATKAN KUALITAS DAN KUANTITAS KADER UNTUK MENCAPAI TARGET TUJUAN DAKWAH K2',
     lahir: 'SEPTEMBER 2026', provinsi: '', kota: '', dapil: '', kecamatan: '', jenjang: '', naqib: '', amin: '',
-    kMuntashib:'0', kMuayyid:'0', kTamhidi:'0', kMuhib:'0', allIkhwan:'0', muntandhim:'0', muntashib:'0', muayyid:'0', tamhidi:'0', muhib:'0'
+    kMadya:'0', kPratama:'0', kMuda:'0', allIkhwan:'0', dewasa:'0', madya:'0', pratama:'0', muda:'0'
   },
   wa: { groupName: 'Tim UPA A.H Nasution', defaultNumber: '' },
   cloud: { binId: '', masterKey: '', lastSync: null, status: 'offline', autoSync: false, pollInterval: 60 },
@@ -304,6 +220,7 @@ const DEFAULT_STATE = {
     { id: uid(), pic:'AMIN : ATS', nama:'Liqo Amin / P2UPA', periode:'Triwulan', jadwal:'Triwulanan', hari:'', jam:'', ico:'🤝' },
     { id: uid(), pic:'AMIN : ATS', nama:'Evaluasi Manhaj KKP', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Jumat', jam:'16:00', ico:'📊' },
     { id: uid(), pic:'AMIN : ATS', nama:'SKJA', periode:'Semester', jadwal:'Ikut BK DPD', hari:'', jam:'', ico:'🎓' },
+    { id: uid(), pic:'AMIN : ATS', nama:'Dokumentasi Liqo Usroh', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Rabu', jam:'19:30', ico:'📷' },
     { id: uid(), pic:'MAAL', nama:'Setoran IWAI di USROH', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Rabu', jam:'19:30', ico:'💰' },
     { id: uid(), pic:'MAAL', nama:'Setor IWAI ke DPD', periode:'Bulanan', jadwal:'Tiap tgl 15', hari:'', jam:'', ico:'🏦' },
     { id: uid(), pic:'MAAL', nama:'Kondisi Keuangan Usroh', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Sabtu', jam:'20:00', ico:'📉' },
@@ -327,17 +244,14 @@ const DEFAULT_STATE = {
     { id: uid(), periode:'Pekanan 4 (Keluarga)', nama:'2. Keluarga Muslim Teladan', pemateri:'' }
   ],
   kader: [],
-  laporanUPA: [],
-  absensi: [],
-  absensiReminder: { enabled: true, afterMinutes: 60, kegiatanIds: [], tampilkanKonfirmasi: true },
   statistik: {
     usroh: [
-      { id: uid(), naqib:'', mustawa:'Muntandhim', jumlah:1 },
-      { id: uid(), naqib:'', mustawa:'Muntashib', jumlah:7 },
+      { id: uid(), naqib:'', mustawa:'Muntazhim', jumlah:1 },
+      { id: uid(), naqib:'', mustawa:'Muntasib', jumlah:7 },
       { id: uid(), naqib:'', mustawa:'Tamhidi', jumlah:5 }
     ],
     target: [
-      { id: uid(), mustawa:'Muntashib', kader:7, beban:10 },
+      { id: uid(), mustawa:'Muntasib', kader:7, beban:10 },
       { id: uid(), mustawa:'Muayyid', kader:17, beban:5 },
       { id: uid(), mustawa:'Tamhidi', kader:23, beban:0 }
     ]
@@ -364,22 +278,6 @@ const DEFAULT_STATE = {
 };
 
 let state = loadState();
-// Migrasi istilah jenjang lama ke nomenklatur terbaru.
-const LEVEL_MIGRATION = { Muntasib:'Muntashib', Muntasyib:'Muntashib', Muntazhim:'Muntandhim', Madya:'Muntashib', Pratama:'Muayyid', Muda:'Tamhidi', Dewasa:'Muntandhim' };
-(state.kader || []).forEach(k => {
-  if (LEVEL_MIGRATION[k.jenjang]) k.jenjang = LEVEL_MIGRATION[k.jenjang];
-  (k.binaan || []).forEach(b => { if (LEVEL_MIGRATION[b.level]) b.level = LEVEL_MIGRATION[b.level]; });
-});
-['usroh','target'].forEach(group => (state.statistik?.[group] || []).forEach(item => {
-  const field = group === 'usroh' ? 'mustawa' : 'mustawa';
-  if (LEVEL_MIGRATION[item[field]]) item[field] = LEVEL_MIGRATION[item[field]];
-}));
-state.progja = (state.progja || []).filter(p => !/dokumentasi.*usroh|dokumentasi liqo usroh/i.test(p.nama || ''));
-if (!Array.isArray(state.laporanUPA)) state.laporanUPA = [];
-if (!Array.isArray(state.absensi)) state.absensi = [];
-if (!state.absensiReminder) state.absensiReminder = { enabled: true, afterMinutes: 60, kegiatanIds: [], tampilkanKonfirmasi: true };
-if (!Array.isArray(state.absensiReminder.kegiatanIds)) state.absensiReminder.kegiatanIds = [];
-state.kader.forEach(k => { if (!Array.isArray(k.binaan)) k.binaan = []; });
 
 function loadState() {
   try {
@@ -396,6 +294,7 @@ function deepMerge(base, over) {
   }
   return base;
 }
+
 let syncTimer = null;
 function saveState() {
   localStorage.setItem(LS_KEY, JSON.stringify(state));
@@ -405,8 +304,9 @@ function saveState() {
   }
 }
 
-/* ============ CLOUD ============ */
+/* ============ CLOUD (JSONBin.io) ============ */
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
+
 function setCloudStatus(s) {
   state.cloud.status = s;
   const pill = document.getElementById('cloudPill');
@@ -415,30 +315,53 @@ function setCloudStatus(s) {
   pill.className = 'cloud-pill ' + s;
   text.textContent = { offline:'Offline', syncing:'Syncing...', online:'Online', error:'Error' }[s] || s;
 }
-function cloudHeaders() { return { 'Content-Type': 'application/json', 'X-Master-Key': state.cloud.masterKey, 'X-Bin-Meta': 'false' }; }
+
+function cloudHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'X-Master-Key': state.cloud.masterKey,
+    'X-Bin-Meta': 'false'
+  };
+}
+
 async function testCloud() {
   const bin = (document.getElementById('cloud_bin') || {}).value.trim();
   const key = (document.getElementById('cloud_key') || {}).value.trim();
   if (!bin || !key) { toast('Kosong', 'Isi Bin ID & Master Key dulu.', 'warn'); return; }
   setCloudStatus('syncing');
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${bin}/latest`, { headers: { 'X-Master-Key': key, 'X-Bin-Meta': 'false' } });
+    const res = await fetch(`${JSONBIN_BASE}/${bin}/latest`, {
+      headers: { 'X-Master-Key': key, 'X-Bin-Meta': 'false' }
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     await res.json();
     setCloudStatus('online');
     toast('Berhasil', 'Koneksi ke JSONBin OK! ✅', 'cloud');
-  } catch(e) { setCloudStatus('error'); toast('Gagal', 'Cek Bin ID / Master Key. Error: ' + e.message, 'danger'); }
+  } catch(e) {
+    setCloudStatus('error');
+    toast('Gagal', 'Cek Bin ID / Master Key. Error: ' + e.message, 'danger');
+  }
 }
 window.testCloud = testCloud;
+
 async function syncFromCloud(silent) {
-  if (!state.cloud.binId || !state.cloud.masterKey) { if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn'); return false; }
+  if (!state.cloud.binId || !state.cloud.masterKey) {
+    if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn');
+    return false;
+  }
   setCloudStatus('syncing');
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}/latest`, { headers: { 'X-Master-Key': state.cloud.masterKey, 'X-Bin-Meta': 'false' } });
+    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}/latest`, {
+      headers: { 'X-Master-Key': state.cloud.masterKey, 'X-Bin-Meta': 'false' }
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const record = await res.json();
     const payload = record && record.data ? record.data : record;
-    if (!payload || !payload.appData) { setCloudStatus('online'); if (!silent) toast('Cloud Kosong', 'Belum ada data tersimpan.', 'warn'); return false; }
+    if (!payload || !payload.appData) {
+      setCloudStatus('online');
+      if (!silent) toast('Cloud Kosong', 'Belum ada data tersimpan. Klik "Kirim ke Cloud" untuk upload.', 'warn');
+      return false;
+    }
     applyCloudData(payload.appData);
     state.cloud.lastSync = new Date().toISOString();
     localStorage.setItem(LS_KEY, JSON.stringify(state));
@@ -446,26 +369,51 @@ async function syncFromCloud(silent) {
     if (!silent) toast('Berhasil', 'Data ditarik dari cloud.', 'cloud');
     renderPage();
     return true;
-  } catch(e) { setCloudStatus('error'); if (!silent) toast('Gagal Tarik', e.message, 'danger'); return false; }
+  } catch(e) {
+    setCloudStatus('error');
+    if (!silent) toast('Gagal Tarik', e.message, 'danger');
+    return false;
+  }
 }
+
 async function syncToCloud(silent) {
-  if (!state.cloud.binId || !state.cloud.masterKey) { if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn'); return false; }
+  if (!state.cloud.binId || !state.cloud.masterKey) {
+    if (!silent) toast('Belum Diatur', 'Isi Bin ID & Master Key di Pengaturan.', 'warn');
+    return false;
+  }
   setCloudStatus('syncing');
-  const payload = { app: 'raker-upa', version: 3, updatedAt: new Date().toISOString(), appData: state };
+  const payload = {
+    app: 'raker-upa',
+    version: 3,
+    updatedAt: new Date().toISOString(),
+    appData: state
+  };
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}`, { method: 'PUT', headers: cloudHeaders(), body: JSON.stringify(payload) });
+    const res = await fetch(`${JSONBIN_BASE}/${state.cloud.binId}`, {
+      method: 'PUT',
+      headers: cloudHeaders(),
+      body: JSON.stringify(payload)
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     state.cloud.lastSync = new Date().toISOString();
     localStorage.setItem(LS_KEY, JSON.stringify(state));
     setCloudStatus('online');
     if (!silent) toast('Berhasil', 'Data terkirim ke cloud. ☁️', 'cloud');
     return true;
-  } catch(e) { setCloudStatus('error'); if (!silent) toast('Gagal Kirim', e.message, 'danger'); return false; }
+  } catch(e) {
+    setCloudStatus('error');
+    if (!silent) toast('Gagal Kirim', e.message, 'danger');
+    return false;
+  }
 }
+
 function applyCloudData(data) {
   if (!data || typeof data !== 'object') return;
+  // Identitas
   if (data.identitas) Object.assign(state.identitas, data.identitas);
+  // WA
   if (data.wa) Object.assign(state.wa, data.wa);
+  // Preserve cloud config kita sendiri
   if (data.cloud) {
     const myBin = state.cloud.binId;
     const myKey = state.cloud.masterKey;
@@ -473,20 +421,18 @@ function applyCloudData(data) {
     state.cloud.binId = myBin;
     state.cloud.masterKey = myKey;
   }
+  // Array
   if (Array.isArray(data.anggota))    state.anggota = data.anggota;
   if (Array.isArray(data.progja))     state.progja = data.progja;
   if (Array.isArray(data.materi))     state.materi = data.materi;
-  if (Array.isArray(data.kader)) {
-    state.kader = data.kader.map(k => ({ ...k, binaan: Array.isArray(k.binaan) ? k.binaan : [] }));
-  }
-  if (Array.isArray(data.laporanUPA)) state.laporanUPA = data.laporanUPA;
-  if (Array.isArray(data.absensi))    state.absensi = data.absensi;
-  if (data.absensiReminder) state.absensiReminder = deepMerge(state.absensiReminder || {}, data.absensiReminder);
+  if (Array.isArray(data.kader))      state.kader = data.kader;
   if (data.statistik) {
     if (Array.isArray(data.statistik.usroh))  state.statistik.usroh = data.statistik.usroh;
     if (Array.isArray(data.statistik.target)) state.statistik.target = data.statistik.target;
   }
-  if (data.mutabaah) state.mutabaah = deepMerge(state.mutabaah, data.mutabaah);
+  if (data.mutabaah) {
+    state.mutabaah = deepMerge(state.mutabaah, data.mutabaah);
+  }
   if (data.settings) Object.assign(state.settings, data.settings);
 }
 
@@ -510,31 +456,6 @@ function formatDateID(d) {
   const bln = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   return `${d.getDate()} ${bln[d.getMonth()]} ${d.getFullYear()}`;
 }
-function formatDateShort(s) {
-  if (!s) return '-';
-  const parts = String(s).split('-');
-  if (parts.length === 3) {
-    const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-  }
-  return s;
-}
-function hitungUmur(tglGabung) {
-  if (!tglGabung) return '-';
-  const parts = String(tglGabung).split('-');
-  if (parts.length !== 3) return '-';
-  const gabung = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-  const now = new Date();
-  const hari = Math.floor((now - gabung) / (1000 * 60 * 60 * 24));
-  if (hari < 30) return `${hari} hari`;
-  if (hari < 365) return `${Math.floor(hari / 30)} bulan`;
-  const th = Math.floor(hari / 365);
-  const sisa = Math.floor((hari % 365) / 30);
-  return sisa > 0 ? `${th} thn ${sisa} bln` : `${th} tahun`;
-}
-function initialOf(nama) {
-  return (String(nama || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0,2) || '?').toUpperCase();
-}
 
 /* ============ NAV ============ */
 const MENU = [
@@ -544,19 +465,13 @@ const MENU = [
   { id:'progja',    ico:'📋', label:'Program Kerja' },
   { id:'materi',    ico:'📚', label:'Materi Tarbiyah' },
   { id:'kader',     ico:'👥', label:'Data Kader' },
-  { id:'binaan',    ico:'🌳', label:'Binaan' },
   { id:'statistik', ico:'📊', label:'Statistik' },
   { id:'mutabaah',  ico:'✅', label:'Mutabaah Yaumiah' },
-  { id:'absensi',   ico:'📋', label:'Absensi Khusus' },
   { id:'reminder',  ico:'🔔', label:'Reminder & Jadwal' },
-  { id:'laporanUPA', ico:'📝', label:'Laporan UPA' },
   { id:'laporan',   ico:'📤', label:'Laporan & Export' },
   { id:'pengaturan',ico:'⚙️', label:'Pengaturan Cloud' }
 ];
 let currentPage = 'dashboard';
-let absensiTab = 'input';
-let editingAbsensiId = null;
-let binaanTab = 'daftar';
 
 function renderNav() {
   document.getElementById('nav').innerHTML = MENU.map(m => `
@@ -567,8 +482,6 @@ function renderNav() {
   document.querySelectorAll('.nav-item').forEach(el => {
     el.onclick = () => {
       currentPage = el.dataset.page;
-      if (currentPage === 'absensi') { absensiTab = 'input'; editingAbsensiId = null; }
-      if (currentPage === 'binaan') { binaanTab = 'daftar'; }
       renderNav(); renderPage();
       document.getElementById('sidebar').classList.remove('open');
     };
@@ -580,9 +493,8 @@ function renderPage() {
   const c = document.getElementById('content');
   c.innerHTML = '';
   ({ dashboard: renderDashboard, identitas: renderIdentitas, anggota: renderAnggota,
-     progja: renderProgja, materi: renderMateri, kader: renderKader, binaan: renderBinaan,
-     statistik: renderStatistik, mutabaah: renderMutabaah, absensi: renderAbsensi,
-     reminder: renderReminder, laporanUPA: renderLaporanUPA, laporan: renderLaporan,
+     progja: renderProgja, materi: renderMateri, kader: renderKader, statistik: renderStatistik,
+     mutabaah: renderMutabaah, reminder: renderReminder, laporan: renderLaporan,
      pengaturan: renderPengaturan }[currentPage] || (()=>{}))(c);
 }
 function goPage(p) { currentPage = p; renderNav(); renderPage(); }
@@ -593,9 +505,6 @@ function renderDashboard(c) {
   const upcoming = getUpcomingActivities().slice(0, 5);
   const cloudOk = state.cloud.binId && state.cloud.masterKey;
   const lastSync = state.cloud.lastSync ? new Date(state.cloud.lastSync).toLocaleString('id-ID') : 'Belum pernah';
-  const perluAbsen = getKegiatanPerluAbsensi().slice(0, 3);
-  const absenBerturut = getAnggotaAbsenBerturut(3);
-  const totalBinaan = (state.kader || []).reduce((s, k) => s + (k.binaan || []).length, 0);
   c.innerHTML = `
     <div class="section-head">
       <div>
@@ -609,27 +518,10 @@ function renderDashboard(c) {
     </div>
     <div class="grid grid-4" style="margin-bottom:18px">
       <div class="stat"><div class="stat-ico green">🧑‍🤝‍🧑</div><div><div class="stat-val">${state.anggota.length}</div><div class="stat-lbl">Anggota</div></div></div>
-      <div class="stat"><div class="stat-ico amber">👥</div><div><div class="stat-val">${state.kader.length}</div><div class="stat-lbl">Kader</div></div></div>
-      <div class="stat"><div class="stat-ico blue">🌳</div><div><div class="stat-val">${totalBinaan}</div><div class="stat-lbl">Binaan</div></div></div>
-      <div class="stat"><div class="stat-ico purple">📋</div><div><div class="stat-val">${state.absensi.length}</div><div class="stat-lbl">Absensi</div></div></div>
+      <div class="stat"><div class="stat-ico amber">📋</div><div><div class="stat-val">${state.progja.length}</div><div class="stat-lbl">Program Kerja</div></div></div>
+      <div class="stat"><div class="stat-ico blue">📚</div><div><div class="stat-val">${state.materi.length}</div><div class="stat-lbl">Materi</div></div></div>
+      <div class="stat"><div class="stat-ico purple">👥</div><div><div class="stat-val">${state.kader.length}</div><div class="stat-lbl">Kader</div></div></div>
     </div>
-    ${perluAbsen.length ? `
-    <div class="info-box warn">
-      <b>⚠️ ${perluAbsen.length} hari belum diisi absensinya</b>
-      <div style="margin-top:6px">
-        ${perluAbsen.map(k => {
-          if (k.items.length === 1) return `<div class="kegiatan-grup">• ${esc(k.items[0].nama)} (${formatDateShort(k.tanggal)})</div>`;
-          return `<div class="kegiatan-grup">• <b>${k.items.length} kegiatan pada ${formatDateShort(k.tanggal)}:</b>
-            <ul>${k.items.map(x => `<li>${esc(x.nama)}</li>`).join('')}</ul></div>`;
-        }).join('')}
-      </div>
-      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="goPage('absensi')">📋 Isi Sekarang</button>
-    </div>` : ''}
-    ${absenBerturut.length ? `
-    <div class="info-box danger">
-      <b>🔴 ${absenBerturut.length} anggota tidak hadir 3x berturut-turut</b>
-      <div style="margin-top:6px; font-size:12px">${absenBerturut.map(a => `• ${esc(a.nama)} (${a.count}x berturut)`).join('<br>')}</div>
-    </div>` : ''}
     <div class="grid grid-2">
       <div class="card">
         <div class="card-head"><span class="ico">🔔</span><h2>Agenda Terdekat</h2>
@@ -656,46 +548,8 @@ function renderDashboard(c) {
   `;
 }
 
-/* ============ HITUNG STATISTIK IDENTITAS OTOMATIS ============ */
-function hitungStatistikIdentitas() {
-  const kader = state.kader || [];
-  const allBinaan = [];
-  kader.forEach(k => (k.binaan || []).forEach(b => allBinaan.push({ ...b, naqib: b.naqib || k.naqib || '' })));
-  const cJenjang = j => kader.filter(k => k.jenjang === j).length;
-  const cLevel = lvl => allBinaan.filter(b => b.level === lvl).length;
-
-  // Kelompok dihitung dari Naqib yang berbeda pada setiap jenjang.
-  // Jika beberapa baris Data Kader memiliki Naqib dan jenjang yang sama,
-  // itu tetap satu kelompok. Naqib yang sama pada jenjang berbeda dihitung
-  // sebagai kelompok terpisah untuk masing-masing jenjang.
-  const cKelompok = lvl => {
-    const naqibUnik = new Set();
-    kader.forEach(k => {
-      if (k.jenjang === lvl && String(k.naqib || '').trim()) {
-        naqibUnik.add(String(k.naqib).trim().toLocaleLowerCase('id-ID'));
-      }
-    });
-    return naqibUnik.size;
-  };
-
-  return {
-    kMuntashib: cKelompok('Muntashib'),
-    kMuayyid: cKelompok('Muayyid'),
-    kTamhidi: cKelompok('Tamhidi'),
-    kMuhib: cKelompok('Muhib'),
-    allIkhwan: kader.length + allBinaan.length,
-    muntandhim: cJenjang('Muntandhim') + cLevel('Muntandhim'),
-    muntashib: cJenjang('Muntashib') + cLevel('Muntashib'),
-    muayyid: cJenjang('Muayyid') + cLevel('Muayyid'),
-    tamhidi: cJenjang('Tamhidi') + cLevel('Tamhidi'),
-    muhib: cJenjang('Muhib') + cLevel('Muhib')
-  };
-}
-
 /* ============ IDENTITAS ============ */
 function renderIdentitas(c) {
-  const autoStat = hitungStatistikIdentitas();
-  Object.assign(state.identitas, autoStat);
   const it = state.identitas;
   c.innerHTML = `
     <div class="section-head"><div><h2>Identitas UPA</h2></div>
@@ -726,53 +580,50 @@ function renderIdentitas(c) {
       </div>
     </div>
     <div class="card">
-      <div class="card-head"><span class="ico">👥</span><h2>Jumlah Kelompok & Kader</h2>
-        <span class="tag" style="margin-left:auto">🔄 Otomatis</span>
-      </div>
-      <div class="info-box" style="margin-bottom:14px">
-        Nilai di bawah <b>dihitung otomatis</b> dari <b>Data Kader</b> & <b>Data Binaan</b>. Tidak perlu diisi manual.
-        <button class="btn btn-outline btn-sm" id="recalcIdent" style="margin-top:8px">🔄 Hitung Ulang Sekarang</button>
+      <div class="card-head"><span class="ico">👥</span><h2>Jumlah Kelompok & Kader</h2></div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Kelompok Madya</label><input type="number" id="i_kMadya" value="${esc(it.kMadya)}"></div>
+        <div class="form-group"><label>Kelompok Pratama</label><input type="number" id="i_kPratama" value="${esc(it.kPratama)}"></div>
+        <div class="form-group"><label>Kelompok Muda</label><input type="number" id="i_kMuda" value="${esc(it.kMuda)}"></div>
       </div>
       <div class="form-row cols-3">
-        <div class="form-group"><label>Kelompok Muntashib</label><input type="number" id="i_kMuntashib" value="${autoStat.kMuntashib}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-        <div class="form-group"><label>Kelompok Muayyid</label><input type="number" id="i_kMuayyid" value="${autoStat.kMuayyid}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-        <div class="form-group"><label>Kelompok Tamhidi</label><input type="number" id="i_kTamhidi" value="${autoStat.kTamhidi}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-      </div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label>Kelompok Muhib</label><input type="number" id="i_kMuhib" value="${autoStat.kMuhib}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-      </div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label>All Kader</label><input type="number" id="i_all" value="${autoStat.allIkhwan}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-        <div class="form-group"><label>Muntandhim</label><input type="number" id="i_muntandhim" value="${autoStat.muntandhim}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-        <div class="form-group"><label>Muntashib</label><input type="number" id="i_muntashib" value="${autoStat.muntashib}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>All Kader</label><input type="number" id="i_all" value="${esc(it.allIkhwan)}"></div>
+        <div class="form-group"><label>Dewasa</label><input type="number" id="i_dewasa" value="${esc(it.dewasa)}"></div>
+        <div class="form-group"><label>Madya</label><input type="number" id="i_madya" value="${esc(it.madya)}"></div>
       </div>
       <div class="form-row cols-2">
-        <div class="form-group"><label>Muayyid</label><input type="number" id="i_muayyid" value="${autoStat.muayyid}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-        <div class="form-group"><label>Tamhidi</label><input type="number" id="i_tamhidi" value="${autoStat.tamhidi}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
-        <div class="form-group"><label>Muhib</label><input type="number" id="i_muhib" value="${autoStat.muhib}" readonly style="background:#f8fafc;cursor:not-allowed"></div>
+        <div class="form-group"><label>Pratama</label><input type="number" id="i_pratama" value="${esc(it.pratama)}"></div>
+        <div class="form-group"><label>Muda</label><input type="number" id="i_muda" value="${esc(it.muda)}"></div>
       </div>
     </div>
   `;
+  
+  // Simpan Manual (jika tombol ditekan)
   document.getElementById('saveIdent').onclick = () => {
     const g = id => document.getElementById(id).value;
     Object.assign(state.identitas, { nama:g('i_nama'), lahir:g('i_lahir'), visi:g('i_visi'), misi:g('i_misi'),
       provinsi:g('i_prov'), kota:g('i_kota'), dapil:g('i_dapil'), kecamatan:g('i_kec'),
-      jenjang:g('i_jenjang'), naqib:g('i_naqib'), amin:g('i_amin') });
-    Object.assign(state.identitas, hitungStatistikIdentitas());
+      jenjang:g('i_jenjang'), naqib:g('i_naqib'), amin:g('i_amin'),
+      kMadya:g('i_kMadya'), kPratama:g('i_kPratama'), kMuda:g('i_kMuda'),
+      allIkhwan:g('i_all'), dewasa:g('i_dewasa'), madya:g('i_madya'), pratama:g('i_pratama'), muda:g('i_muda') });
     saveState(); toast('Tersimpan', 'Identitas UPA disimpan.');
   };
-  const recalcBtn = document.getElementById('recalcIdent');
-  if (recalcBtn) recalcBtn.onclick = () => {
-    Object.assign(state.identitas, hitungStatistikIdentitas());
-    saveState();
-    renderIdentitas(document.getElementById('content'));
-    toast('Terhitung', 'Statistik diperbarui dari Data Kader & Binaan.');
-  };
+
+  // FITUR BARU: AUTO-SAVE SETIAP KETIK
   c.querySelectorAll('input, textarea').forEach(el => {
     el.oninput = () => {
       const id = el.id.replace('i_', '');
-      const mapping = { nama:'nama', lahir:'lahir', visi:'visi', misi:'misi', prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan', jenjang:'jenjang', naqib:'naqib', amin:'amin' };
-      if (mapping[id]) { state.identitas[mapping[id]] = el.value; saveState(); }
+      const mapping = { 
+        nama:'nama', lahir:'lahir', visi:'visi', misi:'misi', 
+        prov:'provinsi', kota:'kota', dapil:'dapil', kec:'kecamatan', 
+        jenjang:'jenjang', naqib:'naqib', amin:'amin', 
+        kMadya:'kMadya', kPratama:'kPratama', kMuda:'kMuda', 
+        all:'allIkhwan', dewasa:'dewasa', madya:'madya', pratama:'pratama', muda:'muda' 
+      };
+      if (mapping[id]) {
+        state.identitas[mapping[id]] = el.value;
+        saveState(); // Simpan otomatis ke cloud
+      }
     };
   });
 }
@@ -889,593 +740,120 @@ function renderMateri(c) {
 /* ============ KADER ============ */
 function renderKader(c) {
   c.innerHTML = `
-    <div class="section-head"><div><h2>Data Kader</h2><div class="sub">${state.kader.length} kader • ${(state.kader||[]).reduce((s,k)=>s+(k.binaan||[]).length,0)} binaan total</div></div>
+    <div class="section-head"><div><h2>Data Kader</h2><div class="sub">${state.kader.length} kader</div></div>
       <div style="display:flex; gap:8px; flex-wrap:wrap">
         <button class="btn btn-wa" onclick="sendWAKader()">📱</button>
-        <button class="btn btn-primary" id="addKader">➕ Tambah Kader</button></div></div>
+        <button class="btn btn-primary" id="addKader">➕ Tambah</button></div></div>
     <div class="card"><div class="tbl-wrap"><table>
-      <thead><tr><th>No</th><th class="col-nama">Nama</th><th>Naqib</th><th>Jenjang</th><th>HP</th><th>Kecamatan</th><th style="text-align:center">Binaan</th><th>Aksi</th></tr></thead>
+      <thead><tr><th>No</th><th class="col-nama">Nama</th><th>Naqib</th><th>Jenjang</th><th>TTL</th><th>Gol</th><th>HP</th>
+      <th>Alamat</th><th>Kelurahan</th><th>Kecamatan</th><th>Pendidikan</th><th>Kepakaran/Pekerjaan</th><th>Marital</th><th>Penghasilan</th><th>Aksi</th></tr></thead>
       <tbody id="kaderBody"></tbody></table></div></div>`;
   const tb = document.getElementById('kaderBody');
   if (!state.kader.length) {
-    tb.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="e-ico">👥</div><p>Belum ada data kader.</p></div></td></tr>`;
+    tb.innerHTML = `<tr><td colspan="15"><div class="empty"><div class="e-ico">👥</div><p>Belum ada data.</p></div></td></tr>`;
   } else {
     tb.innerHTML = state.kader.map((k, i) => `
       <tr>
         <td>${i+1}</td>
         <td class="col-nama"><input type="text" data-id="${k.id}" data-f="nama" value="${esc(k.nama)}" style="min-width:180px"></td>
         <td><input type="text" data-id="${k.id}" data-f="naqib" value="${esc(k.naqib)}" style="width:120px"></td>
-        <td><select data-id="${k.id}" data-f="jenjang" style="width:110px">${['','Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'].map(v => `<option ${k.jenjang===v?'selected':''}>${v}</option>`).join('')}</select></td>
+        <td><select data-id="${k.id}" data-f="jenjang" style="width:110px">${['','Muntazhim','Muntasib','Muayyid','Tamhidi','Madya','Pratama','Muda'].map(v => `<option ${k.jenjang===v?'selected':''}>${v}</option>`).join('')}</select></td>
+        <td><input type="text" data-id="${k.id}" data-f="ttl" value="${esc(k.ttl)}" style="width:150px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="goldar" value="${esc(k.goldar)}" style="width:50px"></td>
         <td><input type="tel" data-id="${k.id}" data-f="hp" value="${esc(k.hp)}" style="width:120px"></td>
-        <td><input type="text" data-id="${k.id}" data-f="kecamatan" value="${esc(k.kecamatan)}" style="width:110px"></td>
-        <td style="text-align:center">
-          <button class="btn btn-outline btn-sm" onclick="kelolaBinaan('${k.id}')" title="Kelola binaan">
-            🌳 <b>${(k.binaan||[]).length}</b>
-          </button>
-        </td>
-        <td><button class="mini-btn" data-del="${k.id}" title="Hapus kader">🗑️</button></td>
+        <td><input type="text" data-id="${k.id}" data-f="alamat" value="${esc(k.alamat)}" style="width:140px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="kelurahan" value="${esc(k.kelurahan)}" style="width:100px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="kecamatan" value="${esc(k.kecamatan)}" style="width:100px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="pend" value="${esc(k.pend)}" style="width:100px"></td>
+        <td><input type="text" data-id="${k.id}" data-f="kepakaran" value="${esc(k.kepakaran)}" style="width:130px"></td>
+        <td><select data-id="${k.id}" data-f="marital" style="width:120px">${['','Belum Menikah','Menikah','Duda/Janda'].map(v => `<option ${k.marital===v?'selected':''}>${v}</option>`).join('')}</select></td>
+        <td><input type="text" data-id="${k.id}" data-f="penghasilan" value="${esc(k.penghasilan)}" style="width:100px"></td>
+        <td><button class="mini-btn" data-del="${k.id}">🗑️</button></td>
       </tr>`).join('');
   }
   tb.querySelectorAll('input, select').forEach(el => {
     el.oninput = el.onchange = () => { const k = state.kader.find(x => x.id === el.dataset.id); if (k) { k[el.dataset.f] = el.value; saveState(); } };
   });
   tb.querySelectorAll('[data-del]').forEach(b => {
-    b.onclick = () => {
-      const k = state.kader.find(x => x.id === b.dataset.del);
-      if (!k) return;
-      const jml = (k.binaan || []).length;
-      const pesan = jml > 0 ? `Hapus kader ini? Dia punya ${jml} binaan yang akan ikut terhapus.` : 'Hapus kader ini?';
-      if (!confirm(pesan)) return;
-      state.kader = state.kader.filter(x => x.id !== b.dataset.del);
-      saveState(); renderKader(c);
-    };
+    b.onclick = () => { if (!confirm('Hapus?')) return; state.kader = state.kader.filter(x => x.id !== b.dataset.del); saveState(); renderKader(c); };
   });
   document.getElementById('addKader').onclick = () => {
-    state.kader.push({ id: uid(), nama:'', naqib:'', jenjang:'', ttl:'', goldar:'', hp:'', alamat:'', kelurahan:'', kecamatan:'', pend:'', kepakaran:'', marital:'', penghasilan:'', binaan:[] });
+    state.kader.push({ id: uid(), nama:'', naqib:'', jenjang:'', ttl:'', goldar:'', hp:'', alamat:'', kelurahan:'', kecamatan:'', pend:'', kepakaran:'', marital:'', penghasilan:'' });
     saveState(); renderKader(c);
   };
 }
 
-/* ============ KELOLA BINAAN ============ */
-window.kelolaBinaan = function(kaderId) {
-  const kader = state.kader.find(k => k.id === kaderId);
-  if (!kader) return;
-  if (!Array.isArray(kader.binaan)) kader.binaan = [];
-  openModal(`
-    <h3>🌳 Kelola Binaan — ${esc(kader.nama) || '(tanpa nama)'}</h3>
-    <div id="binaanListModal"></div>
-    <button class="btn btn-primary" id="btnTambahBinaan" style="margin-top:10px">➕ Tambah Binaan</button>
-    <div id="binaanFormModal" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid var(--border)">
-      <h4 style="font-size:14px; margin-bottom:12px" id="binaanFormTitle">Tambah Binaan Baru</h4>
-      <div class="form-row cols-2">
-        <div class="form-group"><label>Nama *</label><input type="text" id="binaan_nama"></div>
-        <div class="form-group"><label>Level</label>
-          <select id="binaan_level">${BINAAN_LEVELS.map(l => `<option>${l}</option>`).join('')}</select></div>
-      </div>
-      <div class="form-row cols-2">
-        <div class="form-group"><label>Tanggal Bergabung</label><input type="date" id="binaan_tgl" value="${new Date().toISOString().slice(0,10)}"></div>
-        <div class="form-group"><label>Status</label>
-          <select id="binaan_status">${BINAAN_STATUS.map(s => `<option>${s}</option>`).join('')}</select></div>
-      </div>
-      <div class="form-row cols-2">
-        <div class="form-group"><label>No HP</label><input type="tel" id="binaan_hp" placeholder="628..."></div>
-        <div class="form-group"><label>Usia</label><input type="text" id="binaan_usia" placeholder="contoh: 25"></div>
-      </div>
-      <div class="form-group" style="margin-bottom:14px"><label>Alamat</label><input type="text" id="binaan_alamat"></div>
-      <div class="form-group" style="margin-bottom:14px"><label>Pekerjaan</label><input type="text" id="binaan_pekerjaan"></div>
-      <div class="form-group" style="margin-bottom:14px"><label>Catatan</label><textarea id="binaan_catatan" rows="2" placeholder="Catatan perkembangan binaan..."></textarea></div>
-      <div class="modal-actions">
-        <button class="btn btn-outline" id="binaanCancel">Batal</button>
-        <button class="btn btn-primary" id="binaanSave">💾 Simpan</button>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" onclick="closeModal()">Tutup</button>
-    </div>
-  `);
-  let editingId = null;
-  function renderList() {
-    const listEl = document.getElementById('binaanListModal');
-    if (!kader.binaan.length) {
-      listEl.innerHTML = `<div class="empty" style="padding:20px"><div class="e-ico">🌱</div><p style="font-size:13px">Belum ada binaan. Klik tombol di bawah untuk menambah.</p></div>`;
-      return;
-    }
-    listEl.innerHTML = kader.binaan.map(b => `
-      <div class="binaan-item">
-        <div style="flex:1; min-width:150px">
-          <div class="binaan-nama">${esc(b.nama)||'(tanpa nama)'}</div>
-          <div class="binaan-meta">
-            <span class="lvl-chip lvl-${esc(b.level)}">${esc(b.level)}</span>
-            <span class="sts-chip sts-${esc(b.status)}" style="margin-left:4px">${esc(b.status)}</span>
-            ${b.tanggalGabung ? ` • Gabung ${formatDateShort(b.tanggalGabung)} (${hitungUmur(b.tanggalGabung)})` : ''}
-          </div>
-        </div>
-        <button class="mini-btn" onclick="editBinaanModal('${kaderId}','${b.id}')" title="Edit">✏️</button>
-        <button class="mini-btn" onclick="hapusBinaanModal('${kaderId}','${b.id}')" title="Hapus">🗑️</button>
-      </div>
-    `).join('');
-  }
-  renderList();
-  function resetForm() {
-    document.getElementById('binaan_nama').value = '';
-    document.getElementById('binaan_level').value = 'Muhib';
-    document.getElementById('binaan_tgl').value = new Date().toISOString().slice(0,10);
-    document.getElementById('binaan_status').value = 'Aktif';
-    document.getElementById('binaan_hp').value = '';
-    document.getElementById('binaan_usia').value = '';
-    document.getElementById('binaan_alamat').value = '';
-    document.getElementById('binaan_pekerjaan').value = '';
-    document.getElementById('binaan_catatan').value = '';
-    editingId = null;
-    document.getElementById('binaanFormTitle').textContent = 'Tambah Binaan Baru';
-  }
-  document.getElementById('btnTambahBinaan').onclick = () => {
-    resetForm();
-    document.getElementById('binaanFormModal').style.display = 'block';
-    document.getElementById('binaan_nama').focus();
-  };
-  document.getElementById('binaanCancel').onclick = () => {
-    document.getElementById('binaanFormModal').style.display = 'none';
-    resetForm();
-  };
-  document.getElementById('binaanSave').onclick = () => {
-    const nama = document.getElementById('binaan_nama').value.trim();
-    if (!nama) { alert('Nama binaan wajib diisi.'); return; }
-    const data = {
-      nama,
-      level: document.getElementById('binaan_level').value,
-      tanggalGabung: document.getElementById('binaan_tgl').value,
-      status: document.getElementById('binaan_status').value,
-      hp: document.getElementById('binaan_hp').value.trim(),
-      usia: document.getElementById('binaan_usia').value.trim(),
-      alamat: document.getElementById('binaan_alamat').value.trim(),
-      pekerjaan: document.getElementById('binaan_pekerjaan').value.trim(),
-      catatan: document.getElementById('binaan_catatan').value.trim()
-    };
-    if (editingId) {
-      const idx = kader.binaan.findIndex(b => b.id === editingId);
-      if (idx >= 0) kader.binaan[idx] = { ...kader.binaan[idx], ...data };
-      toast('Tersimpan', 'Binaan diperbarui.');
-    } else {
-      kader.binaan.push({ id: uid(), ...data });
-      toast('Tersimpan', 'Binaan ditambahkan.');
-    }
-    saveState();
-    document.getElementById('binaanFormModal').style.display = 'none';
-    resetForm();
-    renderList();
-    renderKader(document.getElementById('content'));
-  };
-  window.editBinaanModal = function(kid, bid) {
-    const k = state.kader.find(x => x.id === kid);
-    if (!k) return;
-    const b = k.binaan.find(x => x.id === bid);
-    if (!b) return;
-    editingId = bid;
-    document.getElementById('binaan_nama').value = b.nama || '';
-    document.getElementById('binaan_level').value = b.level || 'Muhib';
-    document.getElementById('binaan_tgl').value = b.tanggalGabung || '';
-    document.getElementById('binaan_status').value = b.status || 'Aktif';
-    document.getElementById('binaan_hp').value = b.hp || '';
-    document.getElementById('binaan_usia').value = b.usia || '';
-    document.getElementById('binaan_alamat').value = b.alamat || '';
-    document.getElementById('binaan_pekerjaan').value = b.pekerjaan || '';
-    document.getElementById('binaan_catatan').value = b.catatan || '';
-    document.getElementById('binaanFormTitle').textContent = '✏️ Edit Binaan';
-    document.getElementById('binaanFormModal').style.display = 'block';
-    document.getElementById('binaan_nama').focus();
-  };
-  window.hapusBinaanModal = function(kid, bid) {
-    if (!confirm('Hapus binaan ini?')) return;
-    const k = state.kader.find(x => x.id === kid);
-    if (!k) return;
-    k.binaan = k.binaan.filter(x => x.id !== bid);
-    saveState();
-    renderList();
-    renderKader(document.getElementById('content'));
-  };
-};
-
-/* ============ BINAAN (HALAMAN) ============ */
-function renderBinaan(c) {
-  const totalBinaan = state.kader.reduce((s, k) => s + (k.binaan || []).length, 0);
-  const tabs = [
-    { id: 'daftar', ico: '📋', label: 'Daftar Binaan' },
-    { id: 'pohon', ico: '🌳', label: 'Pohon Binaan' },
-    { id: 'statistik', ico: '📊', label: 'Statistik' },
-    { id: 'timeline', ico: '📅', label: 'Timeline' }
+/* ============ STATISTIK ============ */
+function renderStatistik(c) {
+  const usroh = state.statistik.usroh;
+  const totalKader = usroh.reduce((s, x) => s + (Number(x.jumlah) || 0), 0);
+  const chartData = [
+    { lbl: 'Muntazhim', ideal: 1, real: 1 }, { lbl: 'Muntasyib', ideal: 5, real: 7 },
+    { lbl: 'Muayyid', ideal: 25, real: 13 }, { lbl: 'Tamhidi', ideal: 125, real: 13 }
   ];
   c.innerHTML = `
-    <div class="section-head">
-      <div><h2>Binaan</h2><div class="sub">${totalBinaan} binaan dari ${state.kader.length} kader</div></div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap">
-        <button class="btn btn-outline" id="binaanExcel">📊 Excel</button>
-        <button class="btn btn-wa" id="binaanWA">📱 Kirim WA</button>
-        <button class="btn btn-outline" id="binaanPrint">🖨️ Cetak</button>
-      </div>
-    </div>
-    <div class="abs-tabs">
-      ${tabs.map(t => `<button class="abs-tab ${binaanTab === t.id ? 'active' : ''}" data-btab="${t.id}">${t.ico} ${t.label}</button>`).join('')}
-    </div>
-    <div id="binaanContent"></div>
-  `;
-  c.querySelectorAll('[data-btab]').forEach(btn => {
-    btn.onclick = () => { binaanTab = btn.dataset.btab; renderBinaan(c); };
-  });
-  const box = document.getElementById('binaanContent');
-  ({ daftar: renderBinaanDaftar, pohon: renderBinaanPohon, statistik: renderBinaanStatistik, timeline: renderBinaanTimeline }[binaanTab] || renderBinaanDaftar)(box);
-  document.getElementById('binaanExcel').onclick = exportBinaanExcel;
-  document.getElementById('binaanWA').onclick = sendWABinaan;
-  document.getElementById('binaanPrint').onclick = printBinaan;
-}
-
-function renderBinaanDaftar(c) {
-  const filterKader = c._bk || '';
-  const filterLevel = c._bl || '';
-  const filterStatus = c._bs || '';
-  const filterBulan = c._bb || '';
-  const rows = [];
-  state.kader.forEach(k => {
-    (k.binaan || []).forEach(b => {
-      if (filterKader && k.id !== filterKader) return;
-      if (filterLevel && b.level !== filterLevel) return;
-      if (filterStatus && b.status !== filterStatus) return;
-      if (filterBulan && !(b.tanggalGabung || '').startsWith(filterBulan)) return;
-      rows.push({ kader: k, binaan: b });
-    });
-  });
-  rows.sort((a, b) => (b.binaan.tanggalGabung || '').localeCompare(a.binaan.tanggalGabung || ''));
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">📋</span><h2>Daftar Binaan</h2><div style="margin-left:auto; font-size:13px; color:var(--muted)">${rows.length} baris</div></div>
-      <div class="form-row cols-2" style="grid-template-columns:1fr 1fr; gap:10px">
-        <div class="form-group"><label>Pembina</label>
-          <select id="bk"><option value="">— Semua Kader —</option>
-            ${state.kader.map(k => `<option value="${k.id}" ${filterKader===k.id?'selected':''}>${esc(k.nama)||'(tanpa nama)'}</option>`).join('')}
-          </select></div>
-        <div class="form-group"><label>Level</label>
-          <select id="bl"><option value="">— Semua Level —</option>
-            ${BINAAN_LEVELS.map(l => `<option ${filterLevel===l?'selected':''}>${l}</option>`).join('')}
-          </select></div>
-      </div>
-      <div class="form-row cols-2" style="grid-template-columns:1fr 1fr; gap:10px">
-        <div class="form-group"><label>Status</label>
-          <select id="bs"><option value="">— Semua Status —</option>
-            ${BINAAN_STATUS.map(s => `<option ${filterStatus===s?'selected':''}>${s}</option>`).join('')}
-          </select></div>
-        <div class="form-group"><label>Bulan Gabung</label><input type="month" id="bb" value="${filterBulan}"></div>
-      </div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>No</th><th>Nama</th><th>Level</th><th>Pembina</th><th>Gabung</th><th>Status</th><th>HP</th><th>Aksi</th></tr></thead>
-        <tbody>
-          ${rows.length ? rows.map((r, i) => `<tr>
-            <td>${i+1}</td>
-            <td><b>${esc(r.binaan.nama)}</b></td>
-            <td><span class="lvl-chip lvl-${esc(r.binaan.level)}">${esc(r.binaan.level)}</span></td>
-            <td>${esc(r.kader.nama)||'-'}</td>
-            <td>${formatDateShort(r.binaan.tanggalGabung)}<br><span style="font-size:11px;color:var(--muted)">${hitungUmur(r.binaan.tanggalGabung)}</span></td>
-            <td><span class="sts-chip sts-${esc(r.binaan.status)}">${esc(r.binaan.status)}</span></td>
-            <td>${esc(r.binaan.hp) || '-'}</td>
-            <td><button class="mini-btn" onclick="kelolaBinaan('${r.kader.id}')" title="Kelola">✏️</button></td>
-          </tr>`).join('') : `<tr><td colspan="8"><div class="empty"><div class="e-ico">🌱</div><p>Belum ada binaan yang cocok filter.</p></div></td></tr>`}
-        </tbody>
-      </table></div>
-    </div>
-  `;
-  document.getElementById('bk').onchange = e => { c._bk = e.target.value; renderBinaanDaftar(c); };
-  document.getElementById('bl').onchange = e => { c._bl = e.target.value; renderBinaanDaftar(c); };
-  document.getElementById('bs').onchange = e => { c._bs = e.target.value; renderBinaanDaftar(c); };
-  document.getElementById('bb').onchange = e => { c._bb = e.target.value; renderBinaanDaftar(c); };
-}
-
-function renderBinaanPohon(c) {
-  const sorted = [...state.kader].sort((a, b) => (b.binaan || []).length - (a.binaan || []).length);
-  const openState = c._open || {};
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">🌳</span><h2>Pohon Binaan</h2>
-        <div style="margin-left:auto; display:flex; gap:6px">
-          <button class="btn btn-outline btn-sm" id="pohonExpand">⬇️ Buka Semua</button>
-          <button class="btn btn-outline btn-sm" id="pohonCollapse">⬆️ Tutup Semua</button>
-        </div>
-      </div>
-      ${sorted.length ? sorted.map(k => {
-        const isOpen = !!openState[k.id];
-        const binaanAktif = (k.binaan || []).filter(b => b.status === 'Aktif');
-        return `<div class="pohon-kader ${isOpen ? 'open' : ''}" data-kid="${k.id}">
-          <div class="pohon-kader-head" data-toggle="${k.id}">
-            <div class="pohon-avatar">${initialOf(k.nama)}</div>
-            <div class="pohon-info">
-              <div class="pohon-nama">${esc(k.nama) || '(tanpa nama)'}</div>
-              <div class="pohon-sub">${esc(k.jenjang)||'Kader'} ${k.kecamatan ? '• ' + esc(k.kecamatan) : ''}</div>
-            </div>
-            <div class="pohon-count">${binaanAktif.length} aktif / ${(k.binaan||[]).length} total</div>
-            <div style="font-size:20px; color:var(--muted)">${isOpen ? '▾' : '▸'}</div>
-          </div>
-          <div class="pohon-kader-body">
-            ${(k.binaan || []).length ? (k.binaan).map(b => `
-              <div class="binaan-item">
-                <div style="flex:1; min-width:150px">
-                  <div class="binaan-nama">${esc(b.nama)}</div>
-                  <div class="binaan-meta">
-                    <span class="lvl-chip lvl-${esc(b.level)}">${esc(b.level)}</span>
-                    <span class="sts-chip sts-${esc(b.status)}" style="margin-left:4px">${esc(b.status)}</span>
-                    ${b.tanggalGabung ? ` • Gabung ${formatDateShort(b.tanggalGabung)} (${hitungUmur(b.tanggalGabung)})` : ''}
-                  </div>
-                  ${b.catatan ? `<div style="font-size:11px; color:var(--muted); margin-top:4px">📝 ${esc(b.catatan)}</div>` : ''}
-                </div>
-                <button class="mini-btn" onclick="kelolaBinaan('${k.id}')" title="Kelola">✏️</button>
-              </div>`).join('') : `<div style="padding:10px; color:var(--muted); font-size:13px; text-align:center">Belum ada binaan</div>`}
-            <button class="btn btn-outline btn-sm" onclick="kelolaBinaan('${k.id}')" style="margin-top:8px">➕ Tambah Binaan</button>
-          </div>
-        </div>`;
-      }).join('') : `<div class="empty"><div class="e-ico">👥</div><p>Belum ada kader. Tambah di menu Data Kader.</p></div>`}
-    </div>
-  `;
-  c.querySelectorAll('[data-toggle]').forEach(el => {
-    el.onclick = () => {
-      const kid = el.dataset.toggle;
-      c._open = c._open || {};
-      c._open[kid] = !c._open[kid];
-      renderBinaanPohon(c);
-    };
-  });
-  document.getElementById('pohonExpand').onclick = () => {
-    c._open = {};
-    state.kader.forEach(k => c._open[k.id] = true);
-    renderBinaanPohon(c);
-  };
-  document.getElementById('pohonCollapse').onclick = () => { c._open = {}; renderBinaanPohon(c); };
-}
-
-function renderBinaanStatistik(c) {
-  const perLevel = {};
-  BINAAN_LEVELS.forEach(l => perLevel[l] = 0);
-  const perStatus = {};
-  BINAAN_STATUS.forEach(s => perStatus[s] = 0);
-  const perKader = [];
-  state.kader.forEach(k => {
-    const total = (k.binaan || []).length;
-    const aktif = (k.binaan || []).filter(b => b.status === 'Aktif').length;
-    if (total > 0) perKader.push({ nama: k.nama, total, aktif, id: k.id });
-    (k.binaan || []).forEach(b => {
-      if (perLevel[b.level] !== undefined) perLevel[b.level]++;
-      if (perStatus[b.status] !== undefined) perStatus[b.status]++;
-    });
-  });
-  perKader.sort((a, b) => b.total - a.total);
-  const totalBinaan = Object.values(perLevel).reduce((s, v) => s + v, 0);
-  c.innerHTML = `
-    <div class="grid grid-4" style="margin-bottom:18px">
-      <div class="stat"><div class="stat-ico green">🌳</div><div><div class="stat-val">${totalBinaan}</div><div class="stat-lbl">Total Binaan</div></div></div>
-      <div class="stat"><div class="stat-ico blue">👤</div><div><div class="stat-val">${perKader.length}</div><div class="stat-lbl">Kader Punya Binaan</div></div></div>
-      <div class="stat"><div class="stat-ico amber">✅</div><div><div class="stat-val">${perStatus['Aktif'] || 0}</div><div class="stat-lbl">Binaan Aktif</div></div></div>
-      <div class="stat"><div class="stat-ico purple">📊</div><div><div class="stat-val">${perKader.length ? Math.round(totalBinaan / perKader.length * 10) / 10 : 0}</div><div class="stat-lbl">Rata per Kader</div></div></div>
-    </div>
-    <div class="grid grid-2">
-      <div class="card">
-        <div class="card-head"><span class="ico">🎯</span><h2>Per Level</h2></div>
-        ${BINAAN_LEVELS.map(l => {
-          const pct = totalBinaan ? Math.round(perLevel[l] / totalBinaan * 100) : 0;
-          return `<div style="margin-bottom:12px">
-            <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px">
-              <span><span class="lvl-chip lvl-${l}">${l}</span></span>
-              <span style="color:var(--muted)"><b style="color:var(--text)">${perLevel[l]}</b> orang</span>
-            </div>
-            <div class="progress"><div style="width:${pct}%"></div></div>
-          </div>`;
-        }).join('')}
-      </div>
-      <div class="card">
-        <div class="card-head"><span class="ico">📌</span><h2>Per Status</h2></div>
-        ${BINAAN_STATUS.map(s => `
-          <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #f1f5f9">
-            <span class="sts-chip sts-${s}" style="min-width:70px; text-align:center">${s}</span>
-            <div style="flex:1"></div>
-            <b style="font-size:15px">${perStatus[s]}</b>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="ico">🏆</span><h2>Peringkat Kader Berdasarkan Binaan</h2></div>
-      ${perKader.length ? `<div class="tbl-wrap"><table>
-        <thead><tr><th>No</th><th>Kader</th><th style="text-align:center">Total Binaan</th><th style="text-align:center">Aktif</th><th>Aksi</th></tr></thead>
-        <tbody>${perKader.map((k, i) => `<tr>
-          <td>${i+1}</td>
-          <td><b>${esc(k.nama) || '(tanpa nama)'}</b></td>
-          <td style="text-align:center"><span class="lvl-chip lvl-Muntandhim">${k.total}</span></td>
-          <td style="text-align:center">${k.aktif}</td>
-          <td><button class="mini-btn" onclick="kelolaBinaan('${k.id}')">✏️</button></td>
-        </tr>`).join('')}</tbody>
-      </table></div>` : '<div class="empty"><div class="e-ico">🌱</div><p>Belum ada binaan.</p></div>'}
-    </div>
-  `;
-}
-
-function renderBinaanTimeline(c) {
-  const filterBulan = c._tlineB || '';
-  const events = [];
-  state.kader.forEach(k => {
-    (k.binaan || []).forEach(b => {
-      if (!b.tanggalGabung) return;
-      if (filterBulan && !b.tanggalGabung.startsWith(filterBulan)) return;
-      events.push({ kader: k, binaan: b });
-    });
-  });
-  events.sort((a, b) => (b.binaan.tanggalGabung || '').localeCompare(a.binaan.tanggalGabung || ''));
-  const grouped = {};
-  events.forEach(e => {
-    const key = (e.binaan.tanggalGabung || '').slice(0, 7);
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(e);
-  });
-  const bulanID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">📅</span><h2>Timeline Bergabung</h2>
-        <input type="month" id="tlineB" value="${filterBulan}" style="margin-left:auto; width:auto; padding:6px 10px; font-size:12px">
-      </div>
-      ${Object.keys(grouped).length ? Object.entries(grouped).map(([bulan, list]) => {
-        const [y, m] = bulan.split('-');
-        return `<div style="margin-bottom:22px">
-          <div style="font-weight:800; font-size:15px; color:var(--primary-dark); margin-bottom:10px">📅 ${bulanID[Number(m)-1]} ${y}</div>
-          ${list.map(e => `
-            <div style="display:flex; gap:12px; padding:10px 12px; background:#fff; border:1px solid var(--border); border-left:4px solid var(--primary); border-radius:8px; margin-bottom:8px; align-items:center; flex-wrap:wrap">
-              <div style="font-size:18px">🌱</div>
-              <div style="flex:1; min-width:150px">
-                <div style="font-weight:700; font-size:14px">${esc(e.binaan.nama)}</div>
-                <div style="font-size:11px; color:var(--muted)">Bergabung sebagai <span class="lvl-chip lvl-${esc(e.binaan.level)}">${esc(e.binaan.level)}</span></div>
-              </div>
-              <div style="font-size:12px; color:var(--muted); text-align:right">
-                <div>${formatDateShort(e.binaan.tanggalGabung)}</div>
-                <div style="font-size:11px">Dibina oleh <b>${esc(e.kader.nama) || '-'}</b></div>
-              </div>
-            </div>
-          `).join('')}
-        </div>`;
-      }).join('') : `<div class="empty"><div class="e-ico">📅</div><p>Belum ada data timeline.</p></div>`}
-    </div>
-  `;
-  document.getElementById('tlineB').onchange = e => { c._tlineB = e.target.value; renderBinaanTimeline(c); };
-}
-
-function exportBinaanExcel() {
-  const rows = [['Pembina','Nama Binaan','Level','Status','Tanggal Gabung','Lama Bergabung','HP','Usia','Alamat','Pekerjaan','Catatan']];
-  state.kader.forEach(k => {
-    (k.binaan || []).forEach(b => {
-      rows.push([k.nama || '', b.nama || '', b.level || '', b.status || '', b.tanggalGabung || '', hitungUmur(b.tanggalGabung), b.hp || '', b.usia || '', b.alamat || '', b.pekerjaan || '', b.catatan || '']);
-    });
-  });
-  if (rows.length === 1) { alert('Belum ada data binaan untuk diekspor.'); return; }
-  const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
-  const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'Binaan_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  toast('Berhasil', 'File binaan diekspor.');
-}
-function sendWABinaan() {
-  const rows = [];
-  state.kader.forEach(k => {
-    if ((k.binaan || []).length === 0) return;
-    rows.push({ kader: k, binaan: k.binaan });
-  });
-  if (!rows.length) { alert('Belum ada binaan untuk dikirim.'); return; }
-  let msg = `*🌳 LAPORAN BINAAN*\n*UPA ${state.identitas.nama}*\n*${formatDateID(new Date())}*\n`;
-  rows.forEach(r => {
-    msg += `\n━━━━━━━━━━━━━━━━━━━━\n`;
-    msg += `👤 *${r.kader.nama || '(tanpa nama)'}*`;
-    if (r.kader.jenjang) msg += ` — ${r.kader.jenjang}`;
-    msg += `\n`;
-    msg += `━━━━━━━━━━━━━━━━━━━━\n`;
-    msg += `📊 Memiliki *${r.binaan.length}* binaan:\n\n`;
-    r.binaan.forEach((b, i) => {
-      msg += `${i + 1}. *${b.nama}*\n`;
-      msg += `   • Level: ${b.level}\n`;
-      msg += `   • Status: ${b.status}\n`;
-      if (b.tanggalGabung) msg += `   • Gabung: ${formatDateShort(b.tanggalGabung)} (${hitungUmur(b.tanggalGabung)})\n`;
-      if (b.hp) msg += `   • HP: ${b.hp}\n`;
-      msg += `\n`;
-    });
-  });
-  const totalBinaan = rows.reduce((s, r) => s + r.binaan.length, 0);
-  msg += `━━━━━━━━━━━━━━━━━━━━\n📊 *Total: ${totalBinaan} binaan dari ${rows.length} kader*`;
-  openWA(msg);
-}
-function printBinaan() {
-  const sections = state.kader.map(k => {
-    if ((k.binaan || []).length === 0) return '';
-    return `<section style="margin-bottom:26px; page-break-inside:avoid">
-      <div style="background:#0d9488; color:#fff; padding:10px 14px; border-radius:8px 8px 0 0">
-        <b style="font-size:14px">👤 ${esc(k.nama) || '(tanpa nama)'}</b>
-        ${k.jenjang ? ` <span style="font-size:11px; opacity:.85">(${esc(k.jenjang)})</span>` : ''}
-        <span style="float:right; font-size:12px">${k.binaan.length} binaan</span>
-      </div>
-      <table style="width:100%; border-collapse:collapse; border:1px solid #cbd5e1" cellpadding="6">
-        <tr style="background:#f1f5f9">
-          <th style="border:1px solid #cbd5e1">No</th>
-          <th style="border:1px solid #cbd5e1">Nama Binaan</th>
-          <th style="border:1px solid #cbd5e1">Level</th>
-          <th style="border:1px solid #cbd5e1">Status</th>
-          <th style="border:1px solid #cbd5e1">Tgl Gabung</th>
-          <th style="border:1px solid #cbd5e1">HP</th>
-        </tr>
-        ${k.binaan.map((b, i) => `<tr>
-          <td style="border:1px solid #cbd5e1; text-align:center">${i+1}</td>
-          <td style="border:1px solid #cbd5e1">${esc(b.nama)}</td>
-          <td style="border:1px solid #cbd5e1">${esc(b.level)}</td>
-          <td style="border:1px solid #cbd5e1">${esc(b.status)}</td>
-          <td style="border:1px solid #cbd5e1">${formatDateShort(b.tanggalGabung)}</td>
-          <td style="border:1px solid #cbd5e1">${esc(b.hp) || '-'}</td>
-        </tr>`).join('')}
-      </table>
-    </section>`;
-  }).join('');
-  if (!sections.trim()) { alert('Belum ada data binaan.'); return; }
-  const area = document.getElementById('printArea');
-  area.innerHTML = `<h2 style="text-align:center; margin-bottom:16px">Laporan Binaan — ${esc(state.identitas.nama)}</h2>${sections}`;
-  area.style.display = 'block'; window.print(); area.style.display = 'none';
-}
-
-/* ============ STATISTIK ============ */
-function getKomposisiKader() {
-  // Komposisi dihitung langsung dari Data Kader dan Binaan, bukan input manual.
-  const counts = new Map();
-  const add = (naqib, mustawa) => {
-    if (!MUSTAWA_LEVELS.includes(mustawa)) return;
-    const namaNaqib = String(naqib || '').trim() || '(Naqib belum diisi)';
-    const key = namaNaqib + '||' + mustawa;
-    if (!counts.has(key)) counts.set(key, { naqib: namaNaqib, mustawa, jumlah: 0 });
-    counts.get(key).jumlah++;
-  };
-  (state.kader || []).forEach(k => {
-    add(k.naqib, k.jenjang);
-    (k.binaan || []).forEach(b => add(k.naqib, b.level));
-  });
-  const order = new Map(MUSTAWA_LEVELS.map((v, i) => [v, i]));
-  return [...counts.values()].sort((a, b) => a.naqib.localeCompare(b.naqib, 'id') || order.get(a.mustawa) - order.get(b.mustawa));
-}
-function renderStatistik(c) {
-  const komposisi = getKomposisiKader();
-  const totalKader = komposisi.reduce((s, x) => s + x.jumlah, 0);
-  const realByLevel = Object.fromEntries(MUSTAWA_LEVELS.map(l => [l, 0]));
-  komposisi.forEach(x => { realByLevel[x.mustawa] += x.jumlah; });
-  const idealByLevel = { Muntandhim: 1, Muntashib: 5, Muayyid: 25, Tamhidi: 125, Muhib: 625 };
-  c.innerHTML = `
-    <div class="section-head"><div><h2>Statistik Usroh</h2><div class="sub">Komposisi otomatis dari Data Kader dan Binaan</div></div>
+    <div class="section-head"><div><h2>Statistik Usroh</h2></div>
       <button class="btn btn-wa" onclick="sendWAStatistik()">📱</button></div>
     <div class="grid grid-4" style="margin-bottom:18px">
-      <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${totalKader}</div><div class="stat-lbl">Total Kader + Binaan</div></div></div>
-      <div class="stat"><div class="stat-ico blue">🏅</div><div><div class="stat-val">${new Set(komposisi.map(x => x.mustawa)).size}</div><div class="stat-lbl">Mustawa Terisi</div></div></div>
+      <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${totalKader}</div><div class="stat-lbl">Total Kader</div></div></div>
+      <div class="stat"><div class="stat-ico blue">🏅</div><div><div class="stat-val">${usroh.length}</div><div class="stat-lbl">Mustawa</div></div></div>
       <div class="stat"><div class="stat-ico amber">🎯</div><div><div class="stat-val">${state.statistik.target.reduce((s,t)=>s+((+t.kader||0)*(+t.beban||0)),0)}</div><div class="stat-lbl">Total Target</div></div></div>
       <div class="stat"><div class="stat-ico purple">📈</div><div><div class="stat-val">${state.identitas.allIkhwan||0}</div><div class="stat-lbl">All Ikhwan</div></div></div>
     </div>
     <div class="grid grid-2">
       <div class="card">
-        <div class="card-head"><span class="ico">📊</span><h2>Komposisi Kader</h2></div>
-        <div class="info-box">Data di bagian ini mengikuti perubahan pada menu <b>Data Kader</b> dan <b>Binaan</b>. Jumlah tidak perlu diinput manual.</div>
+        <div class="card-head"><span class="ico">📊</span><h2>Komposisi Kader</h2>
+          <button class="btn btn-primary btn-sm" id="addUsroh">➕ Tambah Mustawa</button></div>
         <div class="tbl-wrap"><table>
-          <thead><tr><th>No</th><th>Naqib</th><th>Mustawa</th><th>Jumlah</th></tr></thead>
-          <tbody>${komposisi.length ? komposisi.map((u, i) => `<tr><td>${i+1}</td><td>${esc(u.naqib)}</td><td><span class="lvl-chip lvl-${esc(u.mustawa)}">${esc(u.mustawa)}</span></td><td style="text-align:center;font-weight:700">${u.jumlah}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">Belum ada data kader atau binaan dengan mustawa terisi.</td></tr>'}</tbody>
-        </table></div>
+          <thead><tr><th>No</th><th>Naqib</th><th>Mustawa</th><th>Jumlah</th><th></th></tr></thead>
+          <tbody id="usrohBody"></tbody></table></div>
       </div>
       <div class="card">
         <div class="card-head"><span class="ico">📈</span><h2>Grafik Ideal vs Real</h2></div>
-        ${MUSTAWA_LEVELS.map(lbl => {
-          const real = realByLevel[lbl] || 0;
-          const ideal = idealByLevel[lbl] || 0;
-          const pct = ideal ? Math.min(100, (real / ideal) * 100) : 0;
+        ${chartData.map(d => {
+          const pct = Math.min(100, (d.real/d.ideal)*100);
           return `<div style="margin-bottom:14px">
-            <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;margin-bottom:4px"><span>${lbl}</span><span style="color:var(--muted)">Real <b style="color:var(--text)">${real}</b> / Ideal ${ideal}</span></div>
-            <div class="progress"><div style="width:${pct}%"></div></div></div>`;
+            <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px">
+              <span>${d.lbl}</span><span style="color:var(--muted)">Real <b style="color:var(--text)">${d.real}</b> / Ideal ${d.ideal}</span>
+            </div><div class="progress"><div style="width:${pct}%"></div></div></div>`;
         }).join('')}
       </div>
     </div>`;
+  
+  const ub = document.getElementById('usrohBody');
+  ub.innerHTML = usroh.map((u, i) => `
+    <tr><td>${i+1}</td>
+      <td><input type="text" data-id="${u.id}" data-f="naqib" value="${esc(u.naqib)}" style="min-width:120px"></td>
+      <td><select data-id="${u.id}" data-f="mustawa" style="width:110px">${['Muntazhim','Muntasib','Muayyid','Tamhidi','Madya','Pratama','Muda'].map(v => `<option ${u.mustawa===v?'selected':''}>${v}</option>`).join('')}</select></td>
+      <td>
+        <div style="display:flex; align-items:center; gap:4px; justify-content:center;">
+          <button class="mini-btn" onclick="adjustKader('${u.id}', -1)">➖</button>
+          <input type="number" data-id="${u.id}" data-f="jumlah" value="${u.jumlah}" style="width:60px; text-align:center; padding:4px;">
+          <button class="mini-btn" onclick="adjustKader('${u.id}', 1)">➕</button>
+        </div>
+      </td>
+      <td><button class="mini-btn" data-del="${u.id}">🗑️</button></td></tr>`).join('');
+      
+  ub.querySelectorAll('input, select').forEach(el => {
+    el.oninput = el.onchange = () => { const u = usroh.find(x => x.id === el.dataset.id); if (u) { u[el.dataset.f] = el.value; saveState(); } };
+  });
+  ub.querySelectorAll('[data-del]').forEach(b => {
+    b.onclick = () => { state.statistik.usroh = usroh.filter(x => x.id !== b.dataset.del); saveState(); renderStatistik(c); };
+  });
+  document.getElementById('addUsroh').onclick = () => {
+    state.statistik.usroh.push({ id: uid(), naqib:'', mustawa:'Muntasib', jumlah:0 }); saveState(); renderStatistik(c);
+  };
 }
-window.adjustKader = function() {
-  toast('Otomatis', 'Komposisi kader dihitung dari Data Kader dan Binaan.', 'cloud');
+
+// FITUR BARU: Tombol Tambah / Kurang Kader
+window.adjustKader = function(id, delta) {
+  const usroh = state.statistik.usroh;
+  const item = usroh.find(x => x.id === id);
+  if (item) {
+    item.jumlah = Math.max(0, (Number(item.jumlah) || 0) + delta);
+    saveState();
+    renderStatistik(document.getElementById('content'));
+  }
 };
 
 /* ============ MUTABAAH ============ */
@@ -1514,443 +892,11 @@ function renderMutabaah(c) {
   c.querySelectorAll('[data-mi]').forEach(el => {
     el.oninput = () => { m.members[+el.dataset.mi] = el.value || '—'; saveState(); };
   });
-  document.getElementById('mut_count').onchange = () => {
-    const input = document.getElementById('mut_count');
-    const count = Math.max(1, Math.min(20, Number(input.value) || 1));
-    input.value = count;
-    const oldCount = m.members.length;
-    if (count > oldCount) for (let i = oldCount; i < count; i++) m.members.push('Anggota ' + (i + 1));
-    else if (count < oldCount) m.members = m.members.slice(0, count);
-    Object.keys(m.values).forEach(key => { const parts = key.split('-'); if (parts.length === 2 && Number(parts[1]) >= count) delete m.values[key]; });
-    saveState(); renderMutabaah(c);
-  };
   document.getElementById('saveMut').onclick = () => {
     m.tanggal = document.getElementById('mut_tgl').value;
     m.pekan = document.getElementById('mut_pekan').value;
     saveState(); toast('Tersimpan', 'Data mutabaah disimpan.');
   };
-}
-
-/* ============ ABSENSI ============ */
-function hitungRekapAbsensi(filter = {}) {
-  const records = state.absensi || [];
-  const filtered = records.filter(r => {
-    if (filter.bulan && !(r.tanggal || '').startsWith(filter.bulan)) return false;
-    if (filter.kegiatanId && r.kegiatanId !== filter.kegiatanId) return false;
-    return true;
-  });
-  const map = {};
-  state.anggota.forEach(a => { map[a.id] = { id: a.id, nama: a.nama, Hadir: 0, 'Tidak hadir': 0, Izin: 0, Sakit: 0, Dinas: 0, total: 0 }; });
-  filtered.forEach(r => {
-    (r.records || []).forEach(rec => {
-      if (!map[rec.anggotaId]) return;
-      if (map[rec.anggotaId][rec.status] === undefined) map[rec.anggotaId][rec.status] = 0;
-      map[rec.anggotaId][rec.status]++;
-      map[rec.anggotaId].total++;
-    });
-  });
-  return Object.values(map).map(v => {
-    const persen = v.total > 0 ? Math.round((v.Hadir / v.total) * 100) : 0;
-    return { ...v, persen };
-  });
-}
-function getAnggotaAbsenBerturut(minBerturut = 3) {
-  const records = [...(state.absensi || [])].sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
-  const hasil = [];
-  state.anggota.forEach(a => {
-    let count = 0;
-    for (const r of records) {
-      const rec = (r.records || []).find(x => x.anggotaId === a.id);
-      if (!rec) break;
-      if (rec.status === 'Tidak hadir') count++;
-      else break;
-    }
-    if (count >= minBerturut) hasil.push({ ...a, count });
-  });
-  return hasil.sort((a, b) => b.count - a.count);
-}
-function getKegiatanPerluAbsensi() {
-  if (!state.absensiReminder || !state.absensiReminder.enabled) return [];
-  const now = new Date();
-  const afterMs = (state.absensiReminder.afterMinutes || 60) * 60000;
-  const dilacak = state.absensiReminder.kegiatanIds || [];
-  const perTanggal = {};
-  state.progja.forEach(p => {
-    if (!p.hari || !p.jam) return;
-    if (dilacak.length > 0 && !dilacak.includes(p.id)) return;
-    const td = DAYS.indexOf(p.hari);
-    if (td < 0) return;
-    const [h, mi] = p.jam.split(':').map(Number);
-    if (isNaN(h)) return;
-    let diff = (now.getDay() - td + 7) % 7;
-    const kejadian = new Date(now);
-    kejadian.setHours(h, mi || 0, 0, 0);
-    kejadian.setDate(now.getDate() - diff);
-    if (kejadian > now) kejadian.setDate(kejadian.getDate() - 7);
-    if (now - kejadian < afterMs) return;
-    const tglStr = kejadian.toISOString().slice(0, 10);
-    const sudahAda = (state.absensi || []).some(r => r.tanggal === tglStr);
-    if (sudahAda) return;
-    if (!perTanggal[tglStr]) perTanggal[tglStr] = { tanggal: tglStr, items: [] };
-    perTanggal[tglStr].items.push({ id: p.id, nama: p.nama, jam: p.jam, ico: p.ico });
-  });
-  return Object.values(perTanggal).map(g => ({
-    id: g.items[0].id,
-    tanggal: g.tanggal,
-    jam: g.items[0].jam,
-    ico: g.items[0].ico,
-    items: g.items
-  }));
-}
-
-function renderAbsensi(c) {
-  const tabs = [
-    { id: 'input', ico: '📝', label: 'Input Absensi' },
-    { id: 'rekap', ico: '📊', label: 'Rekap Anggota' },
-    { id: 'riwayat', ico: '📚', label: 'Riwayat' },
-    { id: 'grafik', ico: '📈', label: 'Grafik' },
-    { id: 'setting', ico: '⚙️', label: 'Reminder' }
-  ];
-  c.innerHTML = `
-    <div class="section-head">
-      <div><h2>Absensi Khusus</h2><div class="sub">Catat kehadiran anggota per kegiatan.</div></div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap">
-        <button class="btn btn-outline" id="absExportExcel">📊 Excel</button>
-        <button class="btn btn-wa" id="absExportWA">📱 Kirim WA</button>
-        <button class="btn btn-outline" id="absPrint">🖨️ Cetak</button>
-      </div>
-    </div>
-    <div class="abs-tabs">
-      ${tabs.map(t => `<button class="abs-tab ${absensiTab === t.id ? 'active' : ''}" data-tab="${t.id}">${t.ico} ${t.label}</button>`).join('')}
-    </div>
-    <div id="absContent"></div>
-  `;
-  c.querySelectorAll('.abs-tab').forEach(btn => {
-    btn.onclick = () => { absensiTab = btn.dataset.tab; editingAbsensiId = null; renderAbsensi(c); };
-  });
-  const box = document.getElementById('absContent');
-  ({ input: renderAbsensiInput, rekap: renderAbsensiRekap, riwayat: renderAbsensiRiwayat, grafik: renderAbsensiGrafik, setting: renderAbsensiSetting }[absensiTab] || renderAbsensiInput)(box);
-  document.getElementById('absExportExcel').onclick = exportAbsensiExcel;
-  document.getElementById('absExportWA').onclick = sendWAAbsensiRekap;
-  document.getElementById('absPrint').onclick = printAbsensi;
-}
-
-function renderAbsensiInput(c) {
-  const editing = editingAbsensiId ? (state.absensi || []).find(r => r.id === editingAbsensiId) : null;
-  const today = new Date().toISOString().slice(0, 10);
-  const defaultProg = state.progja[0] || {};
-  const selectedKeg = editing?.kegiatanId || defaultProg.id || '';
-  const selectedKegObj = state.progja.find(p => p.id === selectedKeg) || defaultProg;
-  const selectedTgl = editing?.tanggal || today;
-  const selectedJam = editing?.jam || selectedKegObj.jam || '';
-  const catatan = editing?.catatan || '';
-  const existingRecords = editing?.records || state.anggota.map(a => ({ anggotaId: a.id, nama: a.nama, status: 'Hadir', alasan: '' }));
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">📝</span><h2>${editing ? '✏️ Edit Absensi' : 'Absensi Cepat'}</h2>
-        ${editing ? '<button class="btn btn-outline btn-sm" id="absCancelEdit">✖ Batal Edit</button>' : ''}
-      </div>
-      <div class="form-row cols-3">
-        <div class="form-group"><label>Kegiatan</label>
-          <select id="abs_kegiatan">
-            ${state.progja.map(p => `<option value="${p.id}" ${p.id === selectedKeg ? 'selected' : ''}>${p.ico||''} ${esc(p.nama)}</option>`).join('')}
-          </select></div>
-        <div class="form-group"><label>Tanggal</label><input type="date" id="abs_tanggal" value="${selectedTgl}"></div>
-        <div class="form-group"><label>Jam</label><input type="time" id="abs_jam" value="${selectedJam}"></div>
-      </div>
-      <div class="form-group" style="margin-bottom:14px"><label>Catatan (opsional)</label><input type="text" id="abs_catatan" value="${esc(catatan)}" placeholder="Keterangan tambahan..."></div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px">
-        <button class="btn btn-primary btn-sm" id="absSemuaHadir">✅ Semua Hadir</button>
-        <button class="btn btn-outline btn-sm" id="absResetStatus">🔄 Reset</button>
-      </div>
-      <div id="absDaftarAnggota"></div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px">
-        <button class="btn btn-primary" id="absSimpan">💾 Simpan Absensi</button>
-      </div>
-    </div>
-  `;
-  const daftarEl = document.getElementById('absDaftarAnggota');
-  const draftStatus = {}; const draftAlasan = {};
-  existingRecords.forEach(r => { draftStatus[r.anggotaId] = r.status; draftAlasan[r.anggotaId] = r.alasan || ''; });
-  state.anggota.forEach(a => { if (!draftStatus[a.id]) draftStatus[a.id] = 'Hadir'; if (!draftAlasan[a.id]) draftAlasan[a.id] = ''; });
-  function renderDaftar() {
-    daftarEl.innerHTML = state.anggota.map(a => {
-      const status = draftStatus[a.id] || 'Hadir';
-      const alasan = draftAlasan[a.id] || '';
-      const needReason = status !== 'Hadir';
-      return `<div class="abs-person-row" data-person="${a.id}">
-        <div class="abs-person-name">${esc(a.nama) || '(tanpa nama)'}</div>
-        <div class="abs-person-status">
-          ${ABSENSI_STATUS.map(s => `<button type="button" class="abs-status-btn ${status === s ? 'active' : ''}" data-status="${s}" data-person="${a.id}">${ABSENSI_EMOJI[s]} ${s}</button>`).join('')}
-        </div>
-        <input type="text" class="abs-person-reason ${needReason ? 'show' : ''}" data-reason="${a.id}" value="${esc(alasan)}" placeholder="Alasan ${status.toLowerCase()}...">
-      </div>`;
-    }).join('');
-    daftarEl.querySelectorAll('.abs-status-btn').forEach(btn => {
-      btn.onclick = () => { draftStatus[btn.dataset.person] = btn.dataset.status; renderDaftar(); };
-    });
-    daftarEl.querySelectorAll('[data-reason]').forEach(inp => {
-      inp.oninput = () => { draftAlasan[inp.dataset.reason] = inp.value; };
-    });
-  }
-  renderDaftar();
-  document.getElementById('absSemuaHadir').onclick = () => { state.anggota.forEach(a => { draftStatus[a.id] = 'Hadir'; draftAlasan[a.id] = ''; }); renderDaftar(); };
-  document.getElementById('absResetStatus').onclick = () => { state.anggota.forEach(a => { draftStatus[a.id] = 'Hadir'; draftAlasan[a.id] = ''; }); renderDaftar(); };
-  if (editing) document.getElementById('absCancelEdit').onclick = () => { editingAbsensiId = null; renderAbsensi(document.getElementById('content')); };
-  document.getElementById('absSimpan').onclick = () => {
-    const kegiatanId = document.getElementById('abs_kegiatan').value;
-    const kegiatanObj = state.progja.find(p => p.id === kegiatanId);
-    const tanggal = document.getElementById('abs_tanggal').value;
-    if (!kegiatanObj || !tanggal) { alert('Kegiatan dan tanggal wajib diisi.'); return; }
-    const records = state.anggota.map(a => ({ anggotaId: a.id, nama: a.nama, status: draftStatus[a.id] || 'Hadir', alasan: (draftAlasan[a.id] || '').trim() }));
-    if (editing) {
-      const idx = state.absensi.findIndex(r => r.id === editing.id);
-      if (idx >= 0) state.absensi[idx] = { ...state.absensi[idx], kegiatanId, kegiatanNama: kegiatanObj.nama, ico: kegiatanObj.ico, tanggal, jam: document.getElementById('abs_jam').value, catatan: document.getElementById('abs_catatan').value.trim(), records };
-      toast('Tersimpan', 'Absensi diperbarui.');
-      editingAbsensiId = null;
-    } else {
-      state.absensi.unshift({ id: uid(), kegiatanId, kegiatanNama: kegiatanObj.nama, ico: kegiatanObj.ico, tanggal, jam: document.getElementById('abs_jam').value, catatan: document.getElementById('abs_catatan').value.trim(), records });
-      toast('Tersimpan', 'Absensi berhasil dicatat.');
-    }
-    saveState();
-    renderAbsensi(document.getElementById('content'));
-  };
-}
-
-function renderAbsensiRekap(c) {
-  const bulanIni = new Date().toISOString().slice(0, 7);
-  const bulan = c._absBulan || bulanIni;
-  const kegFilter = c._absKeg || '';
-  const rekap = hitungRekapAbsensi({ bulan, kegiatanId: kegFilter });
-  const sorted = [...rekap].sort((a, b) => b.persen - a.persen);
-  const rata = rekap.length > 0 ? Math.round(rekap.reduce((s, r) => s + r.persen, 0) / rekap.length) : 0;
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">📊</span><h2>Rekap Kehadiran Anggota</h2></div>
-      <div class="form-row cols-2">
-        <div class="form-group"><label>Bulan</label><input type="month" id="rekap_bulan" value="${bulan}"></div>
-        <div class="form-group"><label>Kegiatan (opsional)</label>
-          <select id="rekap_keg"><option value="">— Semua Kegiatan —</option>
-            ${state.progja.map(p => `<option value="${p.id}" ${kegFilter === p.id ? 'selected' : ''}>${p.ico||''} ${esc(p.nama)}</option>`).join('')}
-          </select></div>
-      </div>
-      <div class="grid grid-4" style="margin:10px 0 16px">
-        <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${rekap.length}</div><div class="stat-lbl">Anggota</div></div></div>
-        <div class="stat"><div class="stat-ico amber">📋</div><div><div class="stat-val">${(state.absensi||[]).filter(r => (r.tanggal||'').startsWith(bulan) && (!kegFilter || r.kegiatanId === kegFilter)).length}</div><div class="stat-lbl">Kegiatan</div></div></div>
-        <div class="stat"><div class="stat-ico blue">📈</div><div><div class="stat-val">${rata}%</div><div class="stat-lbl">Rata Kehadiran</div></div></div>
-        <div class="stat"><div class="stat-ico purple">⭐</div><div><div class="stat-val">${sorted[0]?.nama?.split(' ')[0] || '-'}</div><div class="stat-lbl">Paling Rajin</div></div></div>
-      </div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>No</th><th>Nama</th><th style="text-align:center">✅</th><th style="text-align:center">❌</th><th style="text-align:center">🟡</th><th style="text-align:center">🟠</th><th style="text-align:center">🔵</th><th style="text-align:center">Total</th><th style="text-align:center">%</th></tr></thead>
-        <tbody>
-          ${sorted.map((r, i) => `<tr>
-            <td>${i+1}</td><td><b>${esc(r.nama)}</b></td>
-            <td style="text-align:center">${r.Hadir || 0}</td>
-            <td style="text-align:center">${r['Tidak hadir'] || 0}</td>
-            <td style="text-align:center">${r.Izin || 0}</td>
-            <td style="text-align:center">${r.Sakit || 0}</td>
-            <td style="text-align:center">${r.Dinas || 0}</td>
-            <td style="text-align:center"><b>${r.total}</b></td>
-            <td style="text-align:center"><span class="abs-chip" style="background:${r.persen >= 75 ? '#d1fae5;color:#065f46' : r.persen >= 50 ? '#fef3c7;color:#92400e' : '#fee2e2;color:#991b1b'}">${r.persen}%</span></td>
-          </tr>`).join('') || `<tr><td colspan="9"><div class="empty"><div class="e-ico">📭</div><p>Belum ada data absensi bulan ini.</p></div></td></tr>`}
-        </tbody>
-      </table></div>
-    </div>
-  `;
-  document.getElementById('rekap_bulan').onchange = e => { c._absBulan = e.target.value; renderAbsensiRekap(c); };
-  document.getElementById('rekap_keg').onchange = e => { c._absKeg = e.target.value; renderAbsensiRekap(c); };
-}
-
-function renderAbsensiRiwayat(c) {
-  const records = [...(state.absensi || [])].sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">📚</span><h2>Riwayat Absensi</h2><div class="sub" style="margin-left:auto">${records.length} kegiatan tercatat</div></div>
-      ${records.length ? records.map(r => {
-        const hadir = (r.records || []).filter(x => x.status === 'Hadir').length;
-        const tidak = (r.records || []).filter(x => x.status === 'Tidak hadir').length;
-        const izin = (r.records || []).filter(x => x.status === 'Izin').length;
-        const sakit = (r.records || []).filter(x => x.status === 'Sakit').length;
-        const dinas = (r.records || []).filter(x => x.status === 'Dinas').length;
-        return `<details class="card" style="margin-bottom:10px; padding:14px">
-          <summary style="cursor:pointer; font-weight:600; font-size:14px; list-style:none; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
-            <span>${r.ico || '📌'}</span>
-            <span style="flex:1; min-width:140px">${esc(r.kegiatanNama || '-')}</span>
-            <span style="font-size:12px; color:var(--muted)">${formatDateShort(r.tanggal)} ${r.jam || ''}</span>
-            <span class="abs-chip Hadir">✅ ${hadir}</span>
-            ${tidak ? `<span class="abs-chip" style="background:#fee2e2;color:#991b1b">❌ ${tidak}</span>` : ''}
-            ${izin ? `<span class="abs-chip Izin">🟡 ${izin}</span>` : ''}
-            ${sakit ? `<span class="abs-chip Sakit">🟠 ${sakit}</span>` : ''}
-            ${dinas ? `<span class="abs-chip Dinas">🔵 ${dinas}</span>` : ''}
-          </summary>
-          <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border)">
-            ${r.catatan ? `<div style="font-size:12px; color:var(--muted); margin-bottom:10px"><b>Catatan:</b> ${esc(r.catatan)}</div>` : ''}
-            <div class="tbl-wrap"><table><thead><tr><th>No</th><th>Nama</th><th>Status</th><th>Alasan</th></tr></thead>
-              <tbody>${(r.records || []).map((x, j) => `<tr><td>${j+1}</td><td>${esc(x.nama)}</td><td><span class="abs-chip" style="background:${ABSENSI_COLOR[x.status]}22;color:${ABSENSI_COLOR[x.status]}">${ABSENSI_EMOJI[x.status]||''} ${esc(x.status)}</span></td><td>${esc(x.alasan) || '-'}</td></tr>`).join('')}</tbody>
-            </table></div>
-            <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
-              <button class="btn btn-outline btn-sm" onclick="editAbsensi('${r.id}')">✏️ Edit</button>
-              <button class="btn btn-wa btn-sm" onclick="sendWAAbsensiSingle('${r.id}')">📱 Kirim WA</button>
-              <button class="btn btn-danger btn-sm" onclick="hapusAbsensi('${r.id}')">🗑️ Hapus</button>
-            </div>
-          </div>
-        </details>`;
-      }).join('') : `<div class="empty"><div class="e-ico">📭</div><p>Belum ada riwayat absensi.</p></div>`}
-    </div>
-  `;
-}
-window.editAbsensi = function(id) { editingAbsensiId = id; absensiTab = 'input'; renderAbsensi(document.getElementById('content')); };
-window.hapusAbsensi = function(id) { if (!confirm('Hapus absensi ini?')) return; state.absensi = state.absensi.filter(r => r.id !== id); saveState(); renderAbsensi(document.getElementById('content')); };
-window.sendWAAbsensiSingle = function(id) {
-  const r = state.absensi.find(x => x.id === id);
-  if (!r) return;
-  const hitung = st => (r.records || []).filter(x => x.status === st).length;
-  const daftar = (r.records || []).map((x, i) => `${i + 1}. ${x.nama}: ${ABSENSI_EMOJI[x.status] || ''}${x.alasan ? ' (' + x.alasan + ')' : ''}`).join('\n');
-  const text = `Absensi ${r.kegiatanNama || '-'}
-Tanggal : ${formatDateShort(r.tanggal)} ${r.jam || ''}
-${r.catatan ? 'Catatan : ' + r.catatan + '\n' : ''}
-Daftar Hadir :
-
-${daftar || '-'}
-
-Rekap :
-✅ Hadir : ${hitung('Hadir')}
-❌ Tidak hadir : ${hitung('Tidak hadir')}
-🟡 Izin : ${hitung('Izin')}
-🟠 Sakit : ${hitung('Sakit')}
-🔵 Dinas : ${hitung('Dinas')}`;
-  openWA(text);
-};
-
-function renderAbsensiGrafik(c) {
-  const records = [...(state.absensi || [])].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || ''));
-  const perKegiatan = {};
-  records.forEach(r => {
-    const key = r.kegiatanNama || 'Lainnya';
-    if (!perKegiatan[key]) perKegiatan[key] = { hadir: 0, total: 0 };
-    (r.records || []).forEach(x => { perKegiatan[key].total++; if (x.status === 'Hadir') perKegiatan[key].hadir++; });
-  });
-  const perKegArr = Object.entries(perKegiatan).map(([k, v]) => ({ nama: k, persen: v.total > 0 ? Math.round(v.hadir/v.total*100) : 0, ...v })).sort((a, b) => b.persen - a.persen);
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">📈</span><h2>Kehadiran per Kegiatan</h2></div>
-      ${perKegArr.length ? perKegArr.map(k => `<div style="margin-bottom:14px">
-          <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px">
-            <span>${esc(k.nama)}</span><span style="color:var(--muted)">${k.hadir}/${k.total} (${k.persen}%)</span>
-          </div>
-          <div class="progress"><div style="width:${k.persen}%"></div></div>
-        </div>`).join('') : '<div class="empty"><div class="e-ico">📊</div><p>Belum ada data.</p></div>'}
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="ico">🔥</span><h2>Heatmap Kehadiran Anggota</h2></div>
-      <div class="tbl-wrap"><table class="heat-table">
-        <thead><tr><th>Nama</th>${records.slice(-15).map(r => `<th title="${esc(r.kegiatanNama)} ${formatDateShort(r.tanggal)}">${formatDateShort(r.tanggal).slice(0,6)}</th>`).join('')}</tr></thead>
-        <tbody>${state.anggota.map(a => `<tr>
-          <td style="text-align:left; font-weight:600">${esc(a.nama)}</td>
-          ${records.slice(-15).map(r => {
-            const rec = (r.records || []).find(x => x.anggotaId === a.id);
-            const status = rec ? rec.status : '-';
-            const bg = rec ? (ABSENSI_COLOR[status] || '#cbd5e1') : '#e2e8f0';
-            const em = rec ? (ABSENSI_EMOJI[status] || '?') : '·';
-            return `<td><span class="heat-cell" style="background:${bg}" title="${status}">${em}</span></td>`;
-          }).join('')}
-        </tr>`).join('')}</tbody>
-      </table></div>
-      <div style="margin-top:12px; font-size:11px; color:var(--muted)">✅ Hadir • ❌ Tidak hadir • 🟡 Izin • 🟠 Sakit • 🔵 Dinas</div>
-    </div>
-  `;
-}
-
-function renderAbsensiSetting(c) {
-  const s = state.absensiReminder || {};
-  const dilacak = s.kegiatanIds || [];
-  c.innerHTML = `
-    <div class="card">
-      <div class="card-head"><span class="ico">⚙️</span><h2>Pengaturan Reminder Absensi</h2></div>
-      <div class="info-box">Reminder muncul di Dashboard kalau <b>sudah lewat X menit</b> setelah kegiatan dan <b>belum ada absensi di tanggal itu</b>. Kalau 1 tanggal punya beberapa kegiatan, cukup input <b>1 absensi saja</b> untuk menutup semuanya.</div>
-      <div class="form-row cols-2">
-        <div class="form-group"><label>Status Reminder</label>
-          <select id="set_enabled"><option value="1" ${s.enabled ? 'selected' : ''}>Aktif</option><option value="0" ${!s.enabled ? 'selected' : ''}>Nonaktif</option></select></div>
-        <div class="form-group"><label>Ingatkan Setelah (menit)</label><input type="number" id="set_after" min="5" max="720" value="${s.afterMinutes || 60}"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="ico">🎯</span><h2>Kegiatan yang Dilacak</h2></div>
-      <div class="info-box">Kalau <b>tidak ada</b> yang dicentang → <b>semua</b> program kerja akan dilacak.</div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px">
-        <button class="btn btn-outline btn-sm" id="setCheckAll">✅ Centang Semua</button>
-        <button class="btn btn-outline btn-sm" id="setUncheckAll">⬜ Kosongkan Semua</button>
-      </div>
-      <div id="kegiatanList"></div>
-      <button class="btn btn-primary" style="margin-top:14px" id="setSimpan">💾 Simpan Pengaturan</button>
-    </div>
-  `;
-  const listEl = document.getElementById('kegiatanList');
-  const draft = new Set(dilacak);
-  function renderList() {
-    listEl.innerHTML = state.progja.map(p => `
-      <label style="display:flex; align-items:center; gap:10px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; cursor:pointer; background:#fff">
-        <input type="checkbox" data-keg="${p.id}" ${draft.has(p.id) ? 'checked' : ''} style="width:18px; height:18px; margin:0">
-        <span style="font-size:14px">${p.ico||'📌'} ${esc(p.nama)}</span>
-        <span style="margin-left:auto; font-size:11px; color:var(--muted)">${esc(p.hari||'-')} ${esc(p.jam||'')}</span>
-      </label>
-    `).join('');
-    listEl.querySelectorAll('[data-keg]').forEach(inp => {
-      inp.onchange = () => { if (inp.checked) draft.add(inp.dataset.keg); else draft.delete(inp.dataset.keg); };
-    });
-  }
-  renderList();
-  document.getElementById('setCheckAll').onclick = () => { state.progja.forEach(p => draft.add(p.id)); renderList(); };
-  document.getElementById('setUncheckAll').onclick = () => { draft.clear(); renderList(); };
-  document.getElementById('setSimpan').onclick = () => {
-    state.absensiReminder = {
-      enabled: document.getElementById('set_enabled').value === '1',
-      afterMinutes: Math.max(5, Math.min(720, Number(document.getElementById('set_after').value) || 60)),
-      kegiatanIds: Array.from(draft),
-      tampilkanKonfirmasi: true
-    };
-    saveState(); toast('Tersimpan', 'Pengaturan reminder disimpan.');
-  };
-}
-
-function exportAbsensiExcel() {
-  if (!state.absensi.length) { alert('Belum ada data absensi untuk diekspor.'); return; }
-  const rows = [['Tanggal','Jam','Kegiatan','Catatan','Nama','Status','Alasan']];
-  state.absensi.forEach(r => { (r.records || []).forEach(x => { rows.push([r.tanggal, r.jam || '', r.kegiatanNama || '', r.catatan || '', x.nama || '', x.status || '', x.alasan || '']); }); });
-  const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
-  const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'Absensi_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  toast('Berhasil', 'File absensi diekspor.');
-}
-function sendWAAbsensiRekap() {
-  const bulan = new Date().toISOString().slice(0, 7);
-  const rekap = hitungRekapAbsensi({ bulan }).sort((a, b) => b.persen - a.persen);
-  if (!rekap.length) { alert('Belum ada data absensi bulan ini.'); return; }
-  let msg = `*📋 REKAP ABSENSI BULANAN*\n*UPA ${state.identitas.nama}*\nBulan: ${bulan}\n━━━━━━━━━━━━━━━━━━━━\n\n`;
-  rekap.forEach((r, i) => {
-    msg += `${i+1}. *${r.nama}*\n   ✅ ${r.Hadir||0} | ❌ ${r['Tidak hadir']||0} | 🟡 ${r.Izin||0} | 🟠 ${r.Sakit||0} | 🔵 ${r.Dinas||0}\n   Kehadiran: *${r.persen}%*\n\n`;
-  });
-  const rata = Math.round(rekap.reduce((s, r) => s + r.persen, 0) / rekap.length);
-  msg += `━━━━━━━━━━━━━━━━━━━━\n*Rata-rata UPA: ${rata}%*`;
-  openWA(msg);
-}
-function printAbsensi() {
-  if (!state.absensi.length) { alert('Belum ada data absensi untuk dicetak.'); return; }
-  const rows = [...state.absensi].sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || '')).map(r => `
-    <section style="margin-bottom:22px; page-break-inside:avoid">
-      <h3>${esc(r.kegiatanNama || '-')} — ${formatDateShort(r.tanggal)} ${r.jam || ''}</h3>
-      ${r.catatan ? `<p><b>Catatan:</b> ${esc(r.catatan)}</p>` : ''}
-      <table style="width:100%; border-collapse:collapse" border="1" cellpadding="6">
-        <tr><th>No</th><th>Nama</th><th>Status</th><th>Alasan</th></tr>
-        ${(r.records || []).map((x, j) => `<tr><td>${j+1}</td><td>${esc(x.nama)}</td><td>${esc(x.status)}</td><td>${esc(x.alasan) || '-'}</td></tr>`).join('')}
-      </table>
-    </section>`).join('');
-  const area = document.getElementById('printArea');
-  area.innerHTML = `<h2>Absensi UPA — ${esc(state.identitas.nama)}</h2>${rows}`;
-  area.style.display = 'block'; window.print(); area.style.display = 'none';
 }
 
 /* ============ REMINDER ============ */
@@ -1988,6 +934,7 @@ function getUpcomingActivities() {
   list.sort((a, b) => a.diff - b.diff);
   return list;
 }
+
 function renderReminder(c) {
   const list = getUpcomingActivities();
   c.innerHTML = `
@@ -2023,165 +970,6 @@ function renderReminder(c) {
   };
 }
 
-/* ============ LAPORAN UPA ============ */
-function renderLaporanUPA(c) {
-  const records = state.laporanUPA || (state.laporanUPA = []);
-  c.innerHTML = `
-    <div class="section-head"><div><h2>Laporan UPA</h2><div class="sub">Catat kegiatan, materi, infaq, dan absensi anggota.</div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-outline" id="exportUPAExcel">📊 Export Excel</button>
-        <button class="btn btn-wa" id="sendUPAWA">📱 Kirim WA</button>
-        <button class="btn btn-outline" id="printUPA">🖨️ Cetak</button>
-      </div></div>
-    <div class="card">
-      <div class="card-head"><span class="ico">📝</span><h2>Tambah Laporan Kegiatan</h2></div>
-      <div class="form-row cols-2">
-        <div class="form-group"><label>Tanggal</label><input type="date" id="upa_tanggal" value="${new Date().toISOString().slice(0,10)}"></div>
-        <div class="form-group"><label>Tempat</label><input type="text" id="upa_tempat" placeholder="Tempat kegiatan"></div>
-      </div>
-      <div class="form-group" style="margin-bottom:14px"><label>Materi</label><textarea id="upa_materi" placeholder="Materi yang dibahas"></textarea></div>
-      <div class="form-group" style="margin-bottom:14px"><label>Infaq (Rp)</label><input type="text" id="upa_infaq" inputmode="numeric" autocomplete="off" value="" placeholder="Contoh: 100.000"></div>
-      <div class="form-group" style="margin-bottom:14px"><label>Absensi Anggota</label>
-        <div class="tbl-wrap"><table><thead><tr><th>Nama Anggota</th><th>Status</th><th>Alasan jika tidak hadir</th></tr></thead>
-        <tbody id="upa_absensi"></tbody></table></div>
-      </div>
-      <button class="btn btn-primary" id="saveUPA">💾 Simpan Laporan</button>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="ico">📚</span><h2>Riwayat Laporan</h2></div>
-      ${records.length ? `<div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Tempat</th><th>Materi</th><th>Infaq</th><th>Absensi</th><th>Aksi</th></tr></thead>
-        <tbody>${records.map((r,i)=>`<tr><td>${esc(r.tanggal)}</td><td>${esc(r.tempat)||'-'}</td><td>${esc(r.materi)||'-'}</td><td>Rp ${formatRupiah(r.infaq)}</td><td>${(r.absensi||[]).filter(a=>a.status==='Hadir').length} hadir / ${(r.absensi||[]).filter(a=>a.status==='Tidak hadir').length} tidak hadir</td><td><button class="mini-btn" data-upa-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` :
-        `<div class="empty"><div class="e-ico">📝</div><p>Belum ada laporan UPA.</p></div>`}
-    </div>`;
-  let saveDraftIfReady = () => {};
-  const infaqInput = document.getElementById('upa_infaq');
-  const digitsOnly = value => String(value ?? '').replace(/[^0-9]/g, '');
-  const formatRupiahInput = value => {
-    let digits = digitsOnly(value);
-    digits = digits.replace(/^0+(?=\d)/, '');
-    if (!digits) return '';
-    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  };
-  infaqInput.value = formatRupiahInput(infaqInput.value);
-  infaqInput.addEventListener('input', () => {
-    const digits = digitsOnly(infaqInput.value);
-    const formatted = formatRupiahInput(digits);
-    infaqInput.value = formatted;
-    try { infaqInput.setSelectionRange(formatted.length, formatted.length); } catch (_) {}
-    saveDraftIfReady();
-  });
-  const absensiBody = document.getElementById('upa_absensi');
-  const statusMap = {};
-  state.anggota.forEach(a => { statusMap[a.id] = 'Hadir'; });
-  absensiBody.innerHTML = state.anggota.map(a => `<tr>
-    <td>${esc(a.nama)||'(Nama belum diisi)'}</td>
-    <td>
-      <div style="display:flex;gap:5px;flex-wrap:wrap">
-        <button type="button" class="upa-status-pill active" data-upa-status="${esc(a.id)}" data-val="Hadir">✅ Hadir</button>
-        <button type="button" class="upa-status-pill" data-upa-status="${esc(a.id)}" data-val="Tidak hadir">❌ Tidak</button>
-      </div>
-    </td>
-    <td><input type="text" data-upa-reason="${esc(a.id)}" placeholder="Alasan tidak hadir" disabled></td>
-  </tr>`).join('');
-  absensiBody.querySelectorAll('.upa-status-pill').forEach(btn => {
-    btn.onclick = () => {
-      const id = btn.dataset.upaStatus;
-      const val = btn.dataset.val;
-      statusMap[id] = val;
-      absensiBody.querySelectorAll(`[data-upa-status="${id}"]`).forEach(b => {
-        b.classList.toggle('active', b.dataset.val === val);
-      });
-      const reason = absensiBody.querySelector(`[data-upa-reason="${id}"]`);
-      reason.disabled = val !== 'Tidak hadir';
-      if (reason.disabled) reason.value = '';
-      saveDraftIfReady();
-    };
-  });
-  const draftKey = 'upaDraft';
-  const saveDraft = () => {
-    const draft = {
-      tanggal: document.getElementById('upa_tanggal').value,
-      tempat: document.getElementById('upa_tempat').value,
-      materi: document.getElementById('upa_materi').value,
-      infaq: document.getElementById('upa_infaq').value,
-      absensi: state.anggota.map(a => ({ anggotaId: a.id, status: statusMap[a.id] || 'Hadir', alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`)?.value || '' }))
-    };
-    try { localStorage.setItem('raker_upa_jsonbin_v1_' + draftKey, JSON.stringify(draft)); } catch (_) {}
-  };
-  saveDraftIfReady = saveDraft;
-  ['upa_tanggal','upa_tempat','upa_materi','upa_infaq'].forEach(id => { const el = document.getElementById(id); el.addEventListener('input', saveDraft); el.addEventListener('change', saveDraft); });
-  absensiBody.querySelectorAll('input').forEach(el => { el.addEventListener('input', saveDraft); el.addEventListener('change', saveDraft); });
-  try {
-    const draft = JSON.parse(localStorage.getItem('raker_upa_jsonbin_v1_' + draftKey) || 'null');
-    if (draft) {
-      if (draft.tanggal) document.getElementById('upa_tanggal').value = draft.tanggal;
-      if (draft.tempat) document.getElementById('upa_tempat').value = draft.tempat;
-      if (draft.materi) document.getElementById('upa_materi').value = draft.materi;
-      if (draft.infaq !== undefined) document.getElementById('upa_infaq').value = formatRupiahInput(draft.infaq);
-      (draft.absensi || []).forEach(a => {
-        statusMap[a.anggotaId] = a.status || 'Hadir';
-        absensiBody.querySelectorAll(`[data-upa-status="${a.anggotaId}"]`).forEach(b => {
-          b.classList.toggle('active', b.dataset.val === statusMap[a.anggotaId]);
-        });
-        const reason = absensiBody.querySelector(`[data-upa-reason="${a.anggotaId}"]`);
-        if (reason) { reason.value = a.alasan || ''; reason.disabled = statusMap[a.anggotaId] !== 'Tidak hadir'; }
-      });
-    }
-  } catch (_) {}
-  document.getElementById('saveUPA').onclick = () => {
-    const tanggal = document.getElementById('upa_tanggal').value;
-    if (!tanggal) { alert('Tanggal wajib diisi.'); return; }
-    const absensi = state.anggota.map(a => ({
-      anggotaId: a.id, nama: a.nama,
-      status: statusMap[a.id] || 'Hadir',
-      alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`).value.trim()
-    }));
-    records.unshift({ id: uid(), tanggal, tempat: document.getElementById('upa_tempat').value.trim(), materi: document.getElementById('upa_materi').value.trim(), infaq: Math.max(0, Number(digitsOnly(document.getElementById('upa_infaq').value)) || 0), absensi });
-    saveState(); try { localStorage.removeItem('raker_upa_jsonbin_v1_upaDraft'); } catch (_) {} toast('Tersimpan', 'Laporan UPA berhasil disimpan.'); renderLaporanUPA(c);
-  };
-  c.querySelectorAll('[data-upa-del]').forEach(btn => btn.onclick = () => { if (!confirm('Hapus laporan ini?')) return; records.splice(Number(btn.dataset.upaDel), 1); saveState(); renderLaporanUPA(c); });
-  document.getElementById('exportUPAExcel').onclick = () => {
-    if (!records.length) { alert('Belum ada laporan UPA untuk diekspor.'); return; }
-    const rows = [['Tanggal','Tempat','Materi','Infaq (Rp)','Nama Anggota','Absensi','Alasan Tidak Hadir']];
-    records.forEach(r => { if (r.absensi && r.absensi.length) r.absensi.forEach(a => rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), a.nama || '', a.status || '', a.alasan || ''])); else rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), '', '', '']); });
-    const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
-    const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'Laporan_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
-    toast('Berhasil', 'File laporan UPA berhasil diekspor.');
-  };
-  document.getElementById('sendUPAWA').onclick = () => {
-    if (!records.length) { alert('Belum ada laporan UPA untuk dikirim.'); return; }
-    const text = records.map(r => {
-      const hadir = (r.absensi || []).filter(a => a.status === 'Hadir');
-      const tidak = (r.absensi || []).filter(a => a.status === 'Tidak hadir');
-      const daftarAbsensi = (r.absensi || []).map((a, i) => `${i + 1}. ${a.nama || '-'}: ${a.status === 'Hadir' ? '✅️' : '❌️'}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`).join('\n');
-      const parts = String(r.tanggal || '').split('-');
-      const tanggalID = parts.length === 3 ? new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : (r.tanggal || '-');
-      const nilaiInfaq = formatRupiah(r.infaq);
-      return `Laporan UPA :
-Tanggal : ${tanggalID}
-Tempat : ${r.tempat || '-'}
-Infaq : Rp ${nilaiInfaq}
-Materi : ${r.materi || '-'}
-
-Absensi :
-
-${daftarAbsensi || '-'}
-
-Rekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
-    }).join('\n\n');
-    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-  };
-  document.getElementById('printUPA').onclick = () => {
-    const rows = records.map(r => `<section style="margin-bottom:22px"><h3>${esc(r.tanggal)} — ${esc(r.tempat)||'-'}</h3><p><b>Materi:</b> ${esc(r.materi)||'-'}</p><p><b>Infaq:</b> Rp ${formatRupiah(r.infaq)}</p><table style="width:100%;border-collapse:collapse" border="1" cellpadding="6"><tr><th>Nama</th><th>Status</th><th>Alasan</th></tr>${(r.absensi||[]).map(a=>`<tr><td>${esc(a.nama)}</td><td>${esc(a.status)}</td><td>${esc(a.alasan)||'-'}</td></tr>`).join('')}</table></section>`).join('');
-    const area = document.getElementById('printArea');
-    area.innerHTML = `<h2>Laporan UPA — ${esc(state.identitas.nama)}</h2>${rows || '<p>Belum ada laporan.</p>'}`;
-    area.style.display = 'block'; window.print(); area.style.display = 'none';
-  };
-}
-
 /* ============ LAPORAN ============ */
 function renderLaporan(c) {
   c.innerHTML = `
@@ -2189,9 +977,9 @@ function renderLaporan(c) {
     <div class="report-grid">
       <div class="report-card" onclick="sendWAStruktur()"><span class="r-ico">📱</span><div class="r-title">Struktur via WA</div><div class="r-desc">Daftar anggota</div></div>
       <div class="report-card" onclick="sendWAKader()"><span class="r-ico">📱</span><div class="r-title">Kader via WA</div><div class="r-desc">Data kader</div></div>
-      <div class="report-card" onclick="sendWABinaan()"><span class="r-ico">🌳</span><div class="r-title">Binaan via WA</div><div class="r-desc">Laporan binaan</div></div>
       <div class="report-card" onclick="sendWAReminder()"><span class="r-ico">📱</span><div class="r-title">Reminder via WA</div><div class="r-desc">Agenda terdekat</div></div>
-      <div class="report-card" onclick="goPage('absensi')"><span class="r-ico">📋</span><div class="r-title">Absensi Khusus</div><div class="r-desc">Rekap kehadiran</div></div>
+      <div class="report-card" onclick="sendWAStatistik()"><span class="r-ico">📱</span><div class="r-title">Statistik via WA</div><div class="r-desc">Ringkasan kader</div></div>
+      <div class="report-card" onclick="sendWAMutabaah()"><span class="r-ico">📱</span><div class="r-title">Mutabaah via WA</div><div class="r-desc">Rekap mutabaah</div></div>
       <div class="report-card" onclick="exportExcel()"><span class="r-ico">📊</span><div class="r-title">Export Excel</div><div class="r-desc">Download .xls</div></div>
       <div class="report-card" onclick="exportPDF()"><span class="r-ico">📄</span><div class="r-title">Export PDF</div><div class="r-desc">Cetak laporan</div></div>
     </div>
@@ -2201,7 +989,6 @@ function renderLaporan(c) {
       <div style="font-size:13px; line-height:1.7">${buildReportHTML()}</div>
     </div>`;
 }
-window.sendWABinaan = sendWABinaan;
 
 function buildReportHTML() {
   const it = state.identitas;
@@ -2245,7 +1032,12 @@ function openWA(text) {
 }
 function sendWAStruktur() {
   let msg = `*📋 STRUKTUR ANGGOTA*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
-  state.anggota.forEach((a,i) => { msg += `${i+1}. *${a.nama||'(belum diisi)'}*\n   Amanah: ${a.amanah}\n`; if (a.idSik) msg += `   ID SIK: ${a.idSik}\n`; if (a.hp) msg += `   HP: ${a.hp}\n`; msg += `\n`; });
+  state.anggota.forEach((a,i) => {
+    msg += `${i+1}. *${a.nama||'(belum diisi)'}*\n   Amanah: ${a.amanah}\n`;
+    if (a.idSik) msg += `   ID SIK: ${a.idSik}\n`;
+    if (a.hp) msg += `   HP: ${a.hp}\n`;
+    msg += `\n`;
+  });
   msg += `━━━━━━━━━━━━━━━━━━━━\nTotal: ${state.anggota.length} anggota\n${formatDateID(new Date())}`;
   openWA(msg);
 }
@@ -2257,7 +1049,6 @@ function sendWAKader() {
     if (k.naqib) msg += `   Naqib: ${k.naqib}\n`;
     if (k.jenjang) msg += `   Jenjang: ${k.jenjang}\n`;
     if (k.hp) msg += `   HP: ${k.hp}\n`;
-    if ((k.binaan||[]).length) msg += `   Binaan: ${k.binaan.length} orang\n`;
     msg += `\n`;
   });
   msg += `━━━━━━━━━━━━━━━━━━━━\nTotal: ${state.kader.length} kader`;
@@ -2267,7 +1058,9 @@ function sendWAReminder() {
   const list = getUpcomingActivities();
   if (!list.length) { toast('Kosong', 'Belum ada agenda.', 'warn'); return; }
   let msg = `*🔔 REMINDER KEGIATAN*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\n\nAssalamu'alaikum,\n\nAgenda terdekat:\n\n`;
-  list.slice(0,10).forEach(a => { msg += `${a.ico||'📌'} *${a.nama}*\n   🗓️ ${a.hari}, ${a.jam}\n   ⏳ ${a.label} lagi\n   👤 PIC: ${a.pic}\n\n`; });
+  list.slice(0,10).forEach(a => {
+    msg += `${a.ico||'📌'} *${a.nama}*\n   🗓️ ${a.hari}, ${a.jam}\n   ⏳ ${a.label} lagi\n   👤 PIC: ${a.pic}\n\n`;
+  });
   msg += `━━━━━━━━━━━━━━━━━━━━\nJazakumullahu khairan 🤲`;
   openWA(msg);
 }
@@ -2290,7 +1083,10 @@ function sendWAStatistik() {
 function sendWAMutabaah() {
   const m = state.mutabaah;
   let msg = `*✅ MUTABAAH YAUMIAH*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\nTanggal: ${m.tanggal}\nPekan: ${m.pekan}\n\n*Anggota:* ${m.members.join(', ')}\n\n`;
-  m.agenda.forEach((a, i) => { const scores = m.members.map((_, ci) => m.values[i+'-'+ci] || '-'); msg += `${i+1}. ${a.nama} (target: ${a.target||'-'})\n   [${scores.join('|')}]\n`; });
+  m.agenda.forEach((a, i) => {
+    const scores = m.members.map((_, ci) => m.values[i+'-'+ci] || '-');
+    msg += `${i+1}. ${a.nama} (target: ${a.target||'-'})\n   [${scores.join('|')}]\n`;
+  });
   msg += `\n━━━━━━━━━━━━━━━━━━━━\nBarakallahu fiikum 🤲`;
   openWA(msg);
 }
@@ -2325,14 +1121,8 @@ function exportExcel() {
   <table><tr><th>No</th><th>Periode</th><th>Materi</th><th>Pemateri</th></tr>
   ${state.materi.map((m,i)=>`<tr><td>${i+1}</td><td>${esc(m.periode)}</td><td>${esc(m.nama)}</td><td>${esc(m.pemateri)}</td></tr>`).join('')}</table>
   <h2>5. Kader</h2>
-  <table><tr><th>No</th><th>Nama</th><th>Naqib</th><th>Jenjang</th><th>HP</th><th>Kecamatan</th><th>Jml Binaan</th></tr>
-  ${state.kader.length ? state.kader.map((k,i)=>`<tr><td>${i+1}</td><td>${esc(k.nama)}</td><td>${esc(k.naqib)}</td><td>${esc(k.jenjang)}</td><td>${esc(k.hp)}</td><td>${esc(k.kecamatan)}</td><td>${(k.binaan||[]).length}</td></tr>`).join('') : '<tr><td colspan="7">Belum ada data</td></tr>'}</table>
-  <h2>6. Binaan</h2>
-  <table><tr><th>No</th><th>Pembina</th><th>Nama Binaan</th><th>Level</th><th>Status</th><th>Tanggal Gabung</th><th>HP</th></tr>
-  ${(() => { let i = 0; let rows = ''; state.kader.forEach(k => { (k.binaan || []).forEach(b => { i++; rows += `<tr><td>${i}</td><td>${esc(k.nama)}</td><td>${esc(b.nama)}</td><td>${esc(b.level)}</td><td>${esc(b.status)}</td><td>${formatDateShort(b.tanggalGabung)}</td><td>${esc(b.hp)}</td></tr>`; }); }); return rows || '<tr><td colspan="7">Belum ada data</td></tr>'; })()}</table>
-  <h2>7. Rekap Absensi</h2>
-  <table><tr><th>Nama</th><th>Hadir</th><th>Tidak Hadir</th><th>Izin</th><th>Sakit</th><th>Dinas</th><th>Total</th><th>%</th></tr>
-  ${hitungRekapAbsensi({}).map(r=>`<tr><td>${esc(r.nama)}</td><td>${r.Hadir||0}</td><td>${r['Tidak hadir']||0}</td><td>${r.Izin||0}</td><td>${r.Sakit||0}</td><td>${r.Dinas||0}</td><td>${r.total}</td><td>${r.persen}%</td></tr>`).join('')}</table>
+  <table><tr><th>No</th><th>Nama</th><th>Naqib</th><th>Jenjang</th><th>HP</th><th>Kecamatan</th></tr>
+  ${state.kader.length ? state.kader.map((k,i)=>`<tr><td>${i+1}</td><td>${esc(k.nama)}</td><td>${esc(k.naqib)}</td><td>${esc(k.jenjang)}</td><td>${esc(k.hp)}</td><td>${esc(k.kecamatan)}</td></tr>`).join('') : '<tr><td colspan="6">Belum ada data</td></tr>'}</table>
   </body></html>`;
   const blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
   const a = document.createElement('a');
@@ -2346,7 +1136,11 @@ function exportPDF() {
   area.innerHTML = buildReportHTML();
   area.style.display = 'block';
   document.title = `Laporan-Raker-UPA`;
-  setTimeout(() => { window.print(); area.style.display = 'none'; document.title = 'Raker UPA A.H Nasution — Online'; }, 200);
+  setTimeout(() => {
+    window.print();
+    area.style.display = 'none';
+    document.title = 'Raker UPA A.H Nasution — Online';
+  }, 200);
   toast('Cetak PDF', 'Pilih "Save as PDF".');
 }
 window.exportExcel = exportExcel;
@@ -2357,25 +1151,41 @@ function renderPengaturan(c) {
   const connected = state.cloud.binId && state.cloud.masterKey;
   c.innerHTML = `
     <div class="section-head"><div><h2>Pengaturan Cloud</h2><div class="sub">Hubungkan ke JSONBin.io</div></div></div>
+
     ${!connected ? `
     <div class="card">
       <div class="card-head"><span class="ico">📖</span><h2>Cara Setup (3 Menit dari HP)</h2></div>
       <div style="font-size:13px; line-height:1.8">
-        <div style="margin-bottom:10px"><b>1.</b> Buka <a href="https://jsonbin.io" target="_blank" style="color:var(--primary)"><b>jsonbin.io</b></a> di Chrome → <b>Sign Up</b></div>
+        <div style="margin-bottom:10px"><b>1.</b> Buka <a href="https://jsonbin.io" target="_blank" style="color:var(--primary)"><b>jsonbin.io</b></a> di Chrome → <b>Sign Up</b> (gratis, pakai Google/email)</div>
         <div style="margin-bottom:10px"><b>2.</b> Tap <b>Bins</b> → <b>Create Bin</b> → paste: <code>{"app":"raker-upa","data":null}</code> → <b>Create</b></div>
-        <div style="margin-bottom:10px"><b>3.</b> Copy <b>BIN ID</b></div>
+        <div style="margin-bottom:10px"><b>3.</b> Copy <b>BIN ID</b> yang muncul (di URL, format seperti <code>65abc123...</code>)</div>
         <div style="margin-bottom:10px"><b>4.</b> Tap foto profil → <b>API Keys</b> → copy <b>X-MASTER-KEY</b></div>
         <div><b>5.</b> Paste keduanya di bawah 👇</div>
       </div>
     </div>
-    ` : `<div class="info-box success"><b>✅ Terhubung ke JSONBin Cloud</b><br>Data disinkronkan ke cloud.</div>`}
+    ` : `
+    <div class="info-box success">
+      <b>✅ Terhubung ke JSONBin Cloud</b><br>
+      Data disinkronkan ke cloud. Bagi Bin ID & Master Key ke pengurus lain agar mereka bisa akses data yang sama.
+    </div>
+    `}
+
     <div class="card">
       <div class="card-head"><span class="ico">🔑</span><h2>Kredensial JSONBin</h2></div>
-      <div class="form-row"><div class="form-group"><label>Bin ID</label><input type="text" id="cloud_bin" value="${esc(state.cloud.binId)}" placeholder="65abc123def456..."></div></div>
-      <div class="form-row"><div class="form-group"><label>Master Key (X-MASTER-KEY)</label><input type="password" id="cloud_key" value="${esc(state.cloud.masterKey)}" placeholder="$2b$10$..."></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Bin ID</label>
+          <input type="text" id="cloud_bin" value="${esc(state.cloud.binId)}" placeholder="65abc123def456..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Master Key (X-MASTER-KEY)</label>
+          <input type="password" id="cloud_key" value="${esc(state.cloud.masterKey)}" placeholder="$2b$10$..."></div>
+      </div>
       <div class="form-row cols-2">
         <div class="form-group"><label>Auto-Sync (setelah edit)</label>
-          <select id="cloud_auto"><option value="1" ${state.cloud.autoSync?'selected':''}>Aktif</option><option value="0" ${!state.cloud.autoSync?'selected':''}>Nonaktif</option></select></div>
+          <select id="cloud_auto">
+            <option value="1" ${state.cloud.autoSync?'selected':''}>Aktif (rekomendasi)</option>
+            <option value="0" ${!state.cloud.autoSync?'selected':''}>Nonaktif</option>
+          </select></div>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px">
         <button class="btn btn-outline" id="btnTest">🔌 Test Koneksi</button>
@@ -2384,44 +1194,67 @@ function renderPengaturan(c) {
         <button class="btn btn-primary" id="btnDownload">⬇️ Tarik dari Cloud</button>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-head"><span class="ico">📤</span><h2>Export Laporan</h2></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportExcel()">📊 Excel</button>
+        <button class="btn btn-primary" onclick="exportPDF()">📄 PDF</button>
+        <button class="btn btn-wa" onclick="goPage('laporan')">📱 Laporan WA</button>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-head"><span class="ico">💾</span><h2>Backup Lokal</h2></div>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:14px">Backup data ke file JSON di HP Anda.</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap">
         <button class="btn btn-primary" id="btnBackup">⬇️ Backup JSON</button>
-        <label class="btn btn-outline" style="cursor:pointer">⬆️ Restore JSON<input type="file" id="fileRestore" accept=".json" style="display:none"></label>
+        <label class="btn btn-outline" style="cursor:pointer">⬆️ Restore JSON
+          <input type="file" id="fileRestore" accept=".json" style="display:none"></label>
         <button class="btn btn-danger" id="btnReset">🗑️ Reset Semua</button>
       </div>
     </div>
+
     <div class="card">
       <div class="card-head"><span class="ico">🔔</span><h2>Izin Notifikasi Browser</h2></div>
       <p style="font-size:13px; color:var(--muted); margin-bottom:10px">Status: <b>${('Notification' in window) ? Notification.permission : 'tidak didukung'}</b></p>
       <button class="btn btn-primary" onclick="requestNotifPerm()">🔔 Minta Izin</button>
     </div>
   `;
+
   const binEl = document.getElementById('cloud_bin');
   const keyEl = document.getElementById('cloud_key');
+
   document.getElementById('btnTest').onclick = testCloud;
   document.getElementById('btnSaveCloud').onclick = () => {
-    state.cloud.binId = binEl.value.trim(); state.cloud.masterKey = keyEl.value.trim();
+    state.cloud.binId = binEl.value.trim();
+    state.cloud.masterKey = keyEl.value.trim();
     state.cloud.autoSync = document.getElementById('cloud_auto').value === '1';
-    saveState(); toast('Tersimpan', 'Kredensial cloud disimpan.'); renderPage();
+    saveState();
+    toast('Tersimpan', 'Kredensial cloud disimpan.');
+    renderPage();
   };
   document.getElementById('btnUpload').onclick = () => {
-    state.cloud.binId = binEl.value.trim(); state.cloud.masterKey = keyEl.value.trim();
+    state.cloud.binId = binEl.value.trim();
+    state.cloud.masterKey = keyEl.value.trim();
     state.cloud.autoSync = document.getElementById('cloud_auto').value === '1';
-    saveState(); syncToCloud(false);
+    saveState();
+    syncToCloud(false);
   };
   document.getElementById('btnDownload').onclick = () => {
-    state.cloud.binId = binEl.value.trim(); state.cloud.masterKey = keyEl.value.trim();
+    state.cloud.binId = binEl.value.trim();
+    state.cloud.masterKey = keyEl.value.trim();
     state.cloud.autoSync = document.getElementById('cloud_auto').value === '1';
-    saveState(); syncFromCloud(false);
+    saveState();
+    syncFromCloud(false);
   };
   document.getElementById('btnBackup').onclick = () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `backup-raker-upa-${new Date().toISOString().slice(0,10)}.json`;
-    a.click(); toast('Berhasil', 'Backup diunduh.');
+    a.click();
+    toast('Berhasil', 'Backup diunduh.');
   };
   document.getElementById('fileRestore').onchange = e => {
     const f = e.target.files[0]; if (!f) return;
@@ -2432,7 +1265,6 @@ function renderPengaturan(c) {
         const myBin = state.cloud.binId, myKey = state.cloud.masterKey;
         state = deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), imp);
         state.cloud.binId = myBin; state.cloud.masterKey = myKey;
-        state.kader.forEach(k => { if (!Array.isArray(k.binaan)) k.binaan = []; });
         saveState(); toast('Berhasil', 'Data dipulihkan.'); renderPage();
       } catch(err) { toast('Gagal', 'File tidak valid.', 'danger'); }
     };
@@ -2443,14 +1275,21 @@ function renderPengaturan(c) {
     const bin = state.cloud.binId, key = state.cloud.masterKey;
     state = JSON.parse(JSON.stringify(DEFAULT_STATE));
     state.cloud.binId = bin; state.cloud.masterKey = key;
-    saveState(); toast('Direset', 'Semua data telah direset.'); goPage('dashboard');
+    saveState();
+    toast('Direset', 'Semua data telah direset.');
+    goPage('dashboard');
   };
 }
+
 function requestNotifPerm() {
   if (!('Notification' in window)) { toast('Tidak Didukung', 'Browser tidak mendukung notif.', 'danger'); return; }
   Notification.requestPermission().then(p => {
-    if (p === 'granted') { toast('Berhasil', 'Notifikasi diaktifkan.'); new Notification('🕌 Raker UPA', { body: 'Notifikasi siap.' }); }
-    else toast('Ditolak', 'Buka pengaturan browser untuk izinkan.', 'danger');
+    if (p === 'granted') {
+      toast('Berhasil', 'Notifikasi diaktifkan.');
+      new Notification('🕌 Raker UPA', { body: 'Notifikasi siap.' });
+    } else {
+      toast('Ditolak', 'Buka pengaturan browser untuk izinkan.', 'danger');
+    }
     renderPage();
   });
 }
@@ -2458,7 +1297,6 @@ window.requestNotifPerm = requestNotifPerm;
 
 /* ============ REMINDER ENGINE ============ */
 const notifiedKeys = new Set();
-const notifiedAbsenKeys = new Set();
 function checkReminders(silent) {
   if (!state.settings.reminderEnabled) return;
   const now = new Date();
@@ -2482,78 +1320,45 @@ function checkReminders(silent) {
       }
     }
   });
-  if (state.absensiReminder && state.absensiReminder.enabled) {
-    const perlu = getKegiatanPerluAbsensi();
-    perlu.forEach(k => {
-      const key = 'abs|' + k.tanggal;
-      if (!notifiedAbsenKeys.has(key)) {
-        notifiedAbsenKeys.add(key);
-        if (!silent) {
-          const label = k.items.length > 1 ? `${k.items.length} kegiatan pada ${formatDateShort(k.tanggal)}` : `${k.items[0].nama} (${formatDateShort(k.tanggal)})`;
-          toast(`📋 Absensi belum diisi`, label, 'warn');
-        }
-      }
-    });
-  }
   const badge = document.getElementById('bellBadge');
   if (badge) {
-    const perluAbs = getKegiatanPerluAbsensi().length;
-    const total = upcomingCount + perluAbs;
-    if (total > 0) { badge.textContent = total; badge.classList.remove('hidden'); }
+    if (upcomingCount > 0) { badge.textContent = upcomingCount; badge.classList.remove('hidden'); }
     else badge.classList.add('hidden');
   }
 }
 
-/* ============ AUTO UPDATE ============ */
-(async function autoUpdate() {
-  try {
-    const res = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
-    const serverLM = res.headers.get('last-modified');
-    const pageLM = document.lastModified;
-    if (!serverLM || !pageLM) return;
-    if (new Date(serverLM).getTime() > new Date(pageLM).getTime() + 2000) {
-      const url = new URL(location.href);
-      url.searchParams.set('v', Date.now());
-      location.replace(url.toString());
-    }
-  } catch (e) {}
-})();
-setInterval(() => {
-  (async () => {
-    try {
-      const res = await fetch(location.pathname, { method: 'HEAD', cache: 'no-store' });
-      const serverLM = res.headers.get('last-modified');
-      const pageLM = document.lastModified;
-      if (!serverLM || !pageLM) return;
-      if (new Date(serverLM).getTime() > new Date(pageLM).getTime() + 2000) {
-        const url = new URL(location.href);
-        url.searchParams.set('v', Date.now());
-        location.replace(url.toString());
-      }
-    } catch (e) {}
-  })();
-}, 5 * 60 * 1000);
-
 /* ============ INIT ============ */
 document.getElementById('menuBtn').onclick = () => document.getElementById('sidebar').classList.toggle('open');
-document.getElementById('bellBtn').onclick = () => goPage('absensi');
+document.getElementById('bellBtn').onclick = () => goPage('reminder');
 document.getElementById('waReportBtn').onclick = () => goPage('laporan');
 document.getElementById('cloudPill').onclick = () => {
   if (!state.cloud.binId || !state.cloud.masterKey) goPage('pengaturan');
   else syncFromCloud(false);
 };
+
 renderNav();
 renderPage();
 checkReminders(true);
 setInterval(() => checkReminders(false), 30000);
+
+// Init cloud status
 if (state.cloud.binId && state.cloud.masterKey) {
   setCloudStatus('online');
+  // Auto-fetch saat buka
   setTimeout(() => syncFromCloud(true), 1500);
-} else setCloudStatus('offline');
-setInterval(() => { if (state.cloud.binId && state.cloud.masterKey) syncFromCloud(true); }, 60000);
+} else {
+  setCloudStatus('offline');
+}
+
+// Auto-poll (kalau diaktifkan)
+setInterval(() => {
+  if (state.cloud.binId && state.cloud.masterKey) {
+    // Cek perubahan dari user lain (silent)
+    syncFromCloud(true);
+  }
+}, 60000);
+
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
-document.getElementById('appVersion').textContent = `v${APP_VERSION} — Auto Statistik`;
-console.log(`%cRaker UPA v${APP_VERSION} — Auto Statistik loaded ✅`, 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
