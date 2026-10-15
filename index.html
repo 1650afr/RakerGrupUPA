@@ -165,7 +165,6 @@
   .abs-chip.Dinas { background: #dbeafe; color: #1e40af; }
   .heat-table td, .heat-table th { padding: 6px; font-size: 11px; text-align: center; }
   .heat-cell { display: inline-block; width: 24px; height: 24px; border-radius: 5px; line-height: 24px; color: #fff; font-size: 12px; font-weight: 700; }
-  /* Binaan */
   .lvl-chip { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
   .lvl-Muhib { background: #fce7f3; color: #9d174d; }
   .lvl-Muayyid { background: #e0e7ff; color: #3730a3; }
@@ -191,6 +190,9 @@
   .binaan-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; background: #fff; flex-wrap: wrap; }
   .binaan-nama { flex: 1; min-width: 130px; font-weight: 600; font-size: 13px; }
   .binaan-meta { font-size: 11px; color: var(--muted); }
+  .kegiatan-grup { padding: 8px 0; }
+  .kegiatan-grup ul { margin: 4px 0 0 20px; padding: 0; }
+  .kegiatan-grup li { font-size: 12px; margin-bottom: 2px; }
   @media print {
     body * { visibility: hidden; }
     #printArea, #printArea * { visibility: visible; }
@@ -221,7 +223,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v3.4 — Fitur Binaan</div>
+    <div class="sidebar-footer">v3.5 — Absensi per-Tanggal</div>
   </aside>
 
   <main class="main">
@@ -309,19 +311,7 @@ const DEFAULT_STATE = {
     { id: uid(), periode:'Pekanan 4 (Keluarga)', nama:'1. Seputar Keluarga Dan Pernikahan', pemateri:'' },
     { id: uid(), periode:'Pekanan 4 (Keluarga)', nama:'2. Keluarga Muslim Teladan', pemateri:'' }
   ],
-  kader: [
-    { id: uid(), nama: 'Ahmad Fauzi', naqib:'', jenjang:'Muntazhim', ttl:'', goldar:'', hp:'', alamat:'', kelurahan:'', kecamatan:'', pend:'', kepakaran:'', marital:'', penghasilan:'',
-      binaan: [
-        { id: uid(), nama: 'Muhajir', level: 'Muhib', tanggalGabung: '2026-10-15', status: 'Aktif', hp:'', alamat:'', usia:'', pekerjaan:'', catatan:'' },
-        { id: uid(), nama: 'Rizal H', level: 'Muayyid', tanggalGabung: '2026-10-20', status: 'Aktif', hp:'', alamat:'', usia:'', pekerjaan:'', catatan:'' }
-      ]
-    },
-    { id: uid(), nama: 'Budi Santoso', naqib:'', jenjang:'Muntasib', ttl:'', goldar:'', hp:'', alamat:'', kelurahan:'', kecamatan:'', pend:'', kepakaran:'', marital:'', penghasilan:'',
-      binaan: [
-        { id: uid(), nama: 'Syafruddin', level: 'Muhib', tanggalGabung: '2026-10-05', status: 'Aktif', hp:'', alamat:'', usia:'', pekerjaan:'', catatan:'' }
-      ]
-    }
-  ],
+  kader: [],
   laporanUPA: [],
   absensi: [],
   absensiReminder: { enabled: true, afterMinutes: 60, kegiatanIds: [], tampilkanKonfirmasi: true },
@@ -364,7 +354,6 @@ if (!Array.isArray(state.laporanUPA)) state.laporanUPA = [];
 if (!Array.isArray(state.absensi)) state.absensi = [];
 if (!state.absensiReminder) state.absensiReminder = { enabled: true, afterMinutes: 60, kegiatanIds: [], tampilkanKonfirmasi: true };
 if (!Array.isArray(state.absensiReminder.kegiatanIds)) state.absensiReminder.kegiatanIds = [];
-// Pastikan semua kader punya array binaan
 state.kader.forEach(k => { if (!Array.isArray(k.binaan)) k.binaan = []; });
 
 function loadState() {
@@ -424,7 +413,7 @@ async function syncFromCloud(silent) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const record = await res.json();
     const payload = record && record.data ? record.data : record;
-    if (!payload || !payload.appData) { setCloudStatus('online'); if (!silent) toast('Cloud Kosong', 'Belum ada data tersimpan. Klik "Kirim ke Cloud" untuk upload.', 'warn'); return false; }
+    if (!payload || !payload.appData) { setCloudStatus('online'); if (!silent) toast('Cloud Kosong', 'Belum ada data tersimpan.', 'warn'); return false; }
     applyCloudData(payload.appData);
     state.cloud.lastSync = new Date().toISOString();
     localStorage.setItem(LS_KEY, JSON.stringify(state));
@@ -601,8 +590,14 @@ function renderDashboard(c) {
     </div>
     ${perluAbsen.length ? `
     <div class="info-box warn">
-      <b>⚠️ ${perluAbsen.length} kegiatan belum diisi absensinya</b>
-      <div style="margin-top:6px; font-size:12px">${perluAbsen.map(k => `• ${esc(k.nama)} (${formatDateShort(k.tanggal)})`).join('<br>')}</div>
+      <b>⚠️ ${perluAbsen.length} hari belum diisi absensinya</b>
+      <div style="margin-top:6px">
+        ${perluAbsen.map(k => {
+          if (k.items.length === 1) return `<div class="kegiatan-grup">• ${esc(k.items[0].nama)} (${formatDateShort(k.tanggal)})</div>`;
+          return `<div class="kegiatan-grup">• <b>${k.items.length} kegiatan pada ${formatDateShort(k.tanggal)}:</b>
+            <ul>${k.items.map(x => `<li>${esc(x.nama)}</li>`).join('')}</ul></div>`;
+        }).join('')}
+      </div>
       <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="goPage('absensi')">📋 Isi Sekarang</button>
     </div>` : ''}
     ${absenBerturut.length ? `
@@ -862,7 +857,7 @@ function renderKader(c) {
   };
 }
 
-/* ============ KELOLA BINAAN (MODAL) ============ */
+/* ============ KELOLA BINAAN ============ */
 window.kelolaBinaan = function(kaderId) {
   const kader = state.kader.find(k => k.id === kaderId);
   if (!kader) return;
@@ -1001,7 +996,6 @@ window.kelolaBinaan = function(kaderId) {
     renderKader(document.getElementById('content'));
   };
 };
-window.closeModal = closeModal;
 
 /* ============ BINAAN (HALAMAN) ============ */
 function renderBinaan(c) {
@@ -1267,7 +1261,6 @@ function renderBinaanTimeline(c) {
   document.getElementById('tlineB').onchange = e => { c._tlineB = e.target.value; renderBinaanTimeline(c); };
 }
 
-/* Export/WA Binaan */
 function exportBinaanExcel() {
   const rows = [['Nama Binaan','Level','Status','Tanggal Gabung','Lama Bergabung','Pembina','HP','Usia','Alamat','Pekerjaan','Catatan']];
   state.kader.forEach(k => {
@@ -1436,7 +1429,7 @@ function renderMutabaah(c) {
   };
 }
 
-/* ============ ABSENSI KHUSUS ============ */
+/* ============ ABSENSI ============ */
 function hitungRekapAbsensi(filter = {}) {
   const records = state.absensi || [];
   const filtered = records.filter(r => {
@@ -1474,12 +1467,14 @@ function getAnggotaAbsenBerturut(minBerturut = 3) {
   });
   return hasil.sort((a, b) => b.count - a.count);
 }
+
+/* ✅ v3.5: Group per TANGGAL, bukan per kegiatan */
 function getKegiatanPerluAbsensi() {
   if (!state.absensiReminder || !state.absensiReminder.enabled) return [];
   const now = new Date();
   const afterMs = (state.absensiReminder.afterMinutes || 60) * 60000;
   const dilacak = state.absensiReminder.kegiatanIds || [];
-  const hasil = [];
+  const perTanggal = {};
   state.progja.forEach(p => {
     if (!p.hari || !p.jam) return;
     if (dilacak.length > 0 && !dilacak.includes(p.id)) return;
@@ -1494,10 +1489,19 @@ function getKegiatanPerluAbsensi() {
     if (kejadian > now) kejadian.setDate(kejadian.getDate() - 7);
     if (now - kejadian < afterMs) return;
     const tglStr = kejadian.toISOString().slice(0, 10);
-    const sudahAda = (state.absensi || []).some(r => r.kegiatanId === p.id && r.tanggal === tglStr);
-    if (!sudahAda) hasil.push({ id: p.id, nama: p.nama, tanggal: tglStr, jam: p.jam, ico: p.ico });
+    // ✅ Cek per TANGGAL: kalau sudah ada 1 absensi di tanggal itu, semua kegiatan di tanggal itu selesai
+    const sudahAda = (state.absensi || []).some(r => r.tanggal === tglStr);
+    if (sudahAda) return;
+    if (!perTanggal[tglStr]) perTanggal[tglStr] = { tanggal: tglStr, items: [] };
+    perTanggal[tglStr].items.push({ id: p.id, nama: p.nama, jam: p.jam, ico: p.ico });
   });
-  return hasil;
+  return Object.values(perTanggal).map(g => ({
+    id: g.items[0].id,
+    tanggal: g.tanggal,
+    jam: g.items[0].jam,
+    ico: g.items[0].ico,
+    items: g.items
+  }));
 }
 
 function renderAbsensi(c) {
@@ -1542,7 +1546,6 @@ function renderAbsensiInput(c) {
   const selectedJam = editing?.jam || selectedKegObj.jam || '';
   const catatan = editing?.catatan || '';
   const existingRecords = editing?.records || state.anggota.map(a => ({ anggotaId: a.id, nama: a.nama, status: 'Hadir', alasan: '' }));
-
   c.innerHTML = `
     <div class="card">
       <div class="card-head"><span class="ico">📝</span><h2>${editing ? '✏️ Edit Absensi' : 'Absensi Cepat'}</h2>
@@ -1765,7 +1768,7 @@ function renderAbsensiSetting(c) {
   c.innerHTML = `
     <div class="card">
       <div class="card-head"><span class="ico">⚙️</span><h2>Pengaturan Reminder Absensi</h2></div>
-      <div class="info-box">Reminder akan muncul di Dashboard ketika <b>kegiatan sudah lewat</b> dan <b>absensinya belum diisi</b>.</div>
+      <div class="info-box">Reminder muncul di Dashboard kalau <b>sudah lewat X menit</b> setelah kegiatan dan <b>belum ada absensi di tanggal itu</b>. Kalau 1 tanggal punya beberapa kegiatan, cukup input <b>1 absensi saja</b> untuk menutup semuanya.</div>
       <div class="form-row cols-2">
         <div class="form-group"><label>Status Reminder</label>
           <select id="set_enabled"><option value="1" ${s.enabled ? 'selected' : ''}>Aktif</option><option value="0" ${!s.enabled ? 'selected' : ''}>Nonaktif</option></select></div>
@@ -2367,10 +2370,14 @@ function checkReminders(silent) {
   if (state.absensiReminder && state.absensiReminder.enabled) {
     const perlu = getKegiatanPerluAbsensi();
     perlu.forEach(k => {
-      const key = 'abs|' + k.id + '|' + k.tanggal;
+      // ✅ v3.5: key per TANGGAL saja, bukan per kegiatan
+      const key = 'abs|' + k.tanggal;
       if (!notifiedAbsenKeys.has(key)) {
         notifiedAbsenKeys.add(key);
-        if (!silent) toast(`📋 Absensi belum diisi`, `${k.nama} (${formatDateShort(k.tanggal)})`, 'warn');
+        if (!silent) {
+          const label = k.items.length > 1 ? `${k.items.length} kegiatan pada ${formatDateShort(k.tanggal)}` : `${k.items[0].nama} (${formatDateShort(k.tanggal)})`;
+          toast(`📋 Absensi belum diisi`, label, 'warn');
+        }
       }
     });
   }
@@ -2431,7 +2438,7 @@ if (state.cloud.binId && state.cloud.masterKey) {
 } else setCloudStatus('offline');
 setInterval(() => { if (state.cloud.binId && state.cloud.masterKey) syncFromCloud(true); }, 60000);
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
-console.log('%cRaker UPA v3.4 — Fitur Binaan loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
+console.log('%cRaker UPA v3.5 — Absensi per-Tanggal loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
