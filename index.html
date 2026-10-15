@@ -171,7 +171,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v3.0 JSONBin</div>
+    <div class="sidebar-footer">v3.1 — Infaq Fix</div>
   </aside>
 
   <main class="main">
@@ -199,6 +199,19 @@
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 function uid() { return Math.random().toString(36).slice(2, 10); }
+
+/* ============ FORMAT RUPIAH (ANTI-GAGAL) ============ */
+function formatRupiah(val) {
+  let num;
+  if (typeof val === 'number' && isFinite(val)) {
+    num = Math.floor(val);
+  } else {
+    const digits = String(val ?? '').replace(/[^0-9]/g, '');
+    num = Number(digits) || 0;
+  }
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+window.formatRupiah = formatRupiah;
 
 const DEFAULT_STATE = {
   identitas: {
@@ -1016,7 +1029,7 @@ function renderLaporanUPA(c) {
     <div class="card">
       <div class="card-head"><span class="ico">📚</span><h2>Riwayat Laporan</h2></div>
       ${records.length ? `<div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Tempat</th><th>Materi</th><th>Infaq</th><th>Absensi</th><th>Aksi</th></tr></thead>
-        <tbody>${records.map((r,i)=>`<tr><td>${esc(r.tanggal)}</td><td>${esc(r.tempat)||'-'}</td><td>${esc(r.materi)||'-'}</td><td>Rp ${Number(r.infaq||0).toLocaleString('id-ID')}</td><td>${(r.absensi||[]).filter(a=>a.status==='Hadir').length} hadir / ${(r.absensi||[]).filter(a=>a.status==='Tidak hadir').length} tidak hadir</td><td><button class="mini-btn" data-upa-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` :
+        <tbody>${records.map((r,i)=>`<tr><td>${esc(r.tanggal)}</td><td>${esc(r.tempat)||'-'}</td><td>${esc(r.materi)||'-'}</td><td>Rp ${formatRupiah(r.infaq)}</td><td>${(r.absensi||[]).filter(a=>a.status==='Hadir').length} hadir / ${(r.absensi||[]).filter(a=>a.status==='Tidak hadir').length} tidak hadir</td><td><button class="mini-btn" data-upa-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` :
         `<div class="empty"><div class="e-ico">📝</div><p>Belum ada laporan UPA.</p></div>`}
     </div>`;
   let saveDraftIfReady = () => {};
@@ -1146,9 +1159,8 @@ function renderLaporanUPA(c) {
         }
         return r.tanggal;
       })();
-      // ✅ FIX: nilai infaq penuh (tanpa dibagi 1000), dengan pemisah ribuan
-      const nilaiInfaq = Number(String(r.infaq ?? 0).replace(/\D/g, '') || 0).toLocaleString('id-ID');
-      // Gunakan baris baru ASLI (multi-line template literal) supaya tidak salah escape.
+      // ✅ FIX TOTAL: gunakan formatRupiah() manual — tidak ada pembagian, tidak bergantung locale browser
+      const nilaiInfaq = formatRupiah(r.infaq);
       return `Laporan UPA :
 Tanggal : ${tanggalIndonesia}
 Tempat : ${r.tempat || '-'}
@@ -1164,7 +1176,7 @@ Rekap : ${hadir.length} hadir, ${tidak.length} tidak hadir`;
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   };
   document.getElementById('printUPA').onclick = () => {
-    const rows = records.map(r => `<section style="margin-bottom:22px"><h3>${esc(r.tanggal)} — ${esc(r.tempat)||'-'}</h3><p><b>Materi:</b> ${esc(r.materi)||'-'}</p><p><b>Infaq:</b> Rp ${Number(r.infaq||0).toLocaleString('id-ID')}</p><table style="width:100%;border-collapse:collapse" border="1" cellpadding="6"><tr><th>Nama</th><th>Status</th><th>Alasan</th></tr>${(r.absensi||[]).map(a=>`<tr><td>${esc(a.nama)}</td><td>${esc(a.status)}</td><td>${esc(a.alasan)||'-'}</td></tr>`).join('')}</table></section>`).join('');
+    const rows = records.map(r => `<section style="margin-bottom:22px"><h3>${esc(r.tanggal)} — ${esc(r.tempat)||'-'}</h3><p><b>Materi:</b> ${esc(r.materi)||'-'}</p><p><b>Infaq:</b> Rp ${formatRupiah(r.infaq)}</p><table style="width:100%;border-collapse:collapse" border="1" cellpadding="6"><tr><th>Nama</th><th>Status</th><th>Alasan</th></tr>${(r.absensi||[]).map(a=>`<tr><td>${esc(a.nama)}</td><td>${esc(a.status)}</td><td>${esc(a.alasan)||'-'}</td></tr>`).join('')}</table></section>`).join('');
     const area = document.getElementById('printArea');
     area.innerHTML = `<h2>Laporan UPA — ${esc(state.identitas.nama)}</h2>${rows || '<p>Belum ada laporan.</p>'}`;
     area.style.display = 'block'; window.print(); area.style.display = 'none';
@@ -1556,6 +1568,9 @@ setInterval(() => {
 }, 60000);
 
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
+
+/* Log versi supaya bisa dicek di Console (F12) */
+console.log('%cRaker UPA v3.1 — Infaq Fix loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
