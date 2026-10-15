@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Raker UPA A.H Nasution — Online</title>
+<title>UPA — Online</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -161,8 +161,8 @@
     <div class="brand">
       <div class="brand-logo">🕌</div>
       <div>
-        <div class="brand-title">RAKER UPA</div>
-        <div class="brand-sub">A.H Nasution</div>
+        <div class="brand-title">UPA</div>
+        <div class="brand-sub">UPA</div>
       </div>
     </div>
     <nav id="nav"></nav>
@@ -220,7 +220,6 @@ const DEFAULT_STATE = {
     { id: uid(), pic:'AMIN : ATS', nama:'Liqo Amin / P2UPA', periode:'Triwulan', jadwal:'Triwulanan', hari:'', jam:'', ico:'🤝' },
     { id: uid(), pic:'AMIN : ATS', nama:'Evaluasi Manhaj KKP', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Jumat', jam:'16:00', ico:'📊' },
     { id: uid(), pic:'AMIN : ATS', nama:'SKJA', periode:'Semester', jadwal:'Ikut BK DPD', hari:'', jam:'', ico:'🎓' },
-    { id: uid(), pic:'AMIN : ATS', nama:'Dokumentasi Liqo Usroh', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Rabu', jam:'19:30', ico:'📷' },
     { id: uid(), pic:'MAAL', nama:'Setoran IWAI di USROH', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Rabu', jam:'19:30', ico:'💰' },
     { id: uid(), pic:'MAAL', nama:'Setor IWAI ke DPD', periode:'Bulanan', jadwal:'Tiap tgl 15', hari:'', jam:'', ico:'🏦' },
     { id: uid(), pic:'MAAL', nama:'Kondisi Keuangan Usroh', periode:'Pekanan', jadwal:'Setiap Pekan', hari:'Sabtu', jam:'20:00', ico:'📉' },
@@ -244,6 +243,7 @@ const DEFAULT_STATE = {
     { id: uid(), periode:'Pekanan 4 (Keluarga)', nama:'2. Keluarga Muslim Teladan', pemateri:'' }
   ],
   kader: [],
+  laporanUPA: [],
   statistik: {
     usroh: [
       { id: uid(), naqib:'', mustawa:'Muntazhim', jumlah:1 },
@@ -278,6 +278,9 @@ const DEFAULT_STATE = {
 };
 
 let state = loadState();
+// Hilangkan program dokumentasi usroh dari data lama maupun data awal.
+state.progja = (state.progja || []).filter(p => !/dokumentasi.*usroh|dokumentasi liqo usroh/i.test(p.nama || ''));
+if (!Array.isArray(state.laporanUPA)) state.laporanUPA = [];
 
 function loadState() {
   try {
@@ -426,6 +429,7 @@ function applyCloudData(data) {
   if (Array.isArray(data.progja))     state.progja = data.progja;
   if (Array.isArray(data.materi))     state.materi = data.materi;
   if (Array.isArray(data.kader))      state.kader = data.kader;
+  if (Array.isArray(data.laporanUPA)) state.laporanUPA = data.laporanUPA;
   if (data.statistik) {
     if (Array.isArray(data.statistik.usroh))  state.statistik.usroh = data.statistik.usroh;
     if (Array.isArray(data.statistik.target)) state.statistik.target = data.statistik.target;
@@ -468,6 +472,7 @@ const MENU = [
   { id:'statistik', ico:'📊', label:'Statistik' },
   { id:'mutabaah',  ico:'✅', label:'Mutabaah Yaumiah' },
   { id:'reminder',  ico:'🔔', label:'Reminder & Jadwal' },
+  { id:'laporanUPA', ico:'📝', label:'Laporan UPA' },
   { id:'laporan',   ico:'📤', label:'Laporan & Export' },
   { id:'pengaturan',ico:'⚙️', label:'Pengaturan Cloud' }
 ];
@@ -494,7 +499,7 @@ function renderPage() {
   c.innerHTML = '';
   ({ dashboard: renderDashboard, identitas: renderIdentitas, anggota: renderAnggota,
      progja: renderProgja, materi: renderMateri, kader: renderKader, statistik: renderStatistik,
-     mutabaah: renderMutabaah, reminder: renderReminder, laporan: renderLaporan,
+     mutabaah: renderMutabaah, reminder: renderReminder, laporanUPA: renderLaporanUPA, laporan: renderLaporan,
      pengaturan: renderPengaturan }[currentPage] || (()=>{}))(c);
 }
 function goPage(p) { currentPage = p; renderNav(); renderPage(); }
@@ -892,6 +897,24 @@ function renderMutabaah(c) {
   c.querySelectorAll('[data-mi]').forEach(el => {
     el.oninput = () => { m.members[+el.dataset.mi] = el.value || '—'; saveState(); };
   });
+  document.getElementById('mut_count').onchange = () => {
+    const input = document.getElementById('mut_count');
+    const count = Math.max(1, Math.min(20, Number(input.value) || 1));
+    input.value = count;
+    const oldCount = m.members.length;
+    if (count > oldCount) {
+      for (let i = oldCount; i < count; i++) m.members.push('Anggota ' + (i + 1));
+    } else if (count < oldCount) {
+      m.members = m.members.slice(0, count);
+    }
+    // Buang nilai sel yang sudah tidak memiliki kolom anggota.
+    Object.keys(m.values).forEach(key => {
+      const parts = key.split('-');
+      if (parts.length === 2 && Number(parts[1]) >= count) delete m.values[key];
+    });
+    saveState();
+    renderMutabaah(c);
+  };
   document.getElementById('saveMut').onclick = () => {
     m.tanggal = document.getElementById('mut_tgl').value;
     m.pekan = document.getElementById('mut_pekan').value;
@@ -967,6 +990,105 @@ function renderReminder(c) {
     state.wa.defaultNumber = document.getElementById('wa_num').value.trim().replace(/\D/g,'');
     state.wa.groupName = document.getElementById('wa_group').value.trim();
     saveState(); toast('Tersimpan', 'Pengaturan WA diperbarui.');
+  };
+}
+
+/* ============ LAPORAN UPA ============ */
+function renderLaporanUPA(c) {
+  const records = state.laporanUPA || (state.laporanUPA = []);
+  c.innerHTML = `
+    <div class="section-head"><div><h2>Laporan UPA</h2><div class="sub">Catat kegiatan, materi, infaq, dan absensi anggota.</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" id="exportUPAExcel">📊 Export Excel</button>
+        <button class="btn btn-wa" id="sendUPAWA">📱 Kirim WA</button>
+        <button class="btn btn-outline" id="printUPA">🖨️ Cetak</button>
+      </div></div>
+    <div class="card">
+      <div class="card-head"><span class="ico">📝</span><h2>Tambah Laporan Kegiatan</h2></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Tanggal</label><input type="date" id="upa_tanggal" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="form-group"><label>Tempat</label><input type="text" id="upa_tempat" placeholder="Tempat kegiatan"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px"><label>Materi</label><textarea id="upa_materi" placeholder="Materi yang dibahas"></textarea></div>
+      <div class="form-group" style="margin-bottom:14px"><label>Infaq (Rp)</label><input type="number" id="upa_infaq" min="0" value="0"></div>
+      <div class="form-group" style="margin-bottom:14px"><label>Absensi Anggota</label>
+        <div class="tbl-wrap"><table><thead><tr><th>Nama Anggota</th><th>Status</th><th>Alasan jika tidak hadir</th></tr></thead>
+        <tbody id="upa_absensi"></tbody></table></div>
+      </div>
+      <button class="btn btn-primary" id="saveUPA">💾 Simpan Laporan</button>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="ico">📚</span><h2>Riwayat Laporan</h2></div>
+      ${records.length ? `<div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Tempat</th><th>Materi</th><th>Infaq</th><th>Absensi</th><th>Aksi</th></tr></thead>
+        <tbody>${records.map((r,i)=>`<tr><td>${esc(r.tanggal)}</td><td>${esc(r.tempat)||'-'}</td><td>${esc(r.materi)||'-'}</td><td>Rp ${Number(r.infaq||0).toLocaleString('id-ID')}</td><td>${(r.absensi||[]).filter(a=>a.status==='Hadir').length} hadir / ${(r.absensi||[]).filter(a=>a.status==='Tidak hadir').length} tidak hadir</td><td><button class="mini-btn" data-upa-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` :
+        `<div class="empty"><div class="e-ico">📝</div><p>Belum ada laporan UPA.</p></div>`}
+    </div>`;
+  const absensiBody = document.getElementById('upa_absensi');
+  absensiBody.innerHTML = state.anggota.map(a => `<tr>
+    <td>${esc(a.nama)||'(Nama belum diisi)'}</td>
+    <td><select data-upa-status="${esc(a.id)}"><option>Hadir</option><option>Tidak hadir</option></select></td>
+    <td><input type="text" data-upa-reason="${esc(a.id)}" placeholder="Alasan tidak hadir" disabled></td>
+  </tr>`).join('');
+  absensiBody.querySelectorAll('[data-upa-status]').forEach(sel => {
+    sel.onchange = () => {
+      const reason = absensiBody.querySelector(`[data-upa-reason="${sel.dataset.upaStatus}"]`);
+      reason.disabled = sel.value !== 'Tidak hadir';
+      if (reason.disabled) reason.value = '';
+    };
+  });
+  document.getElementById('saveUPA').onclick = () => {
+    const tanggal = document.getElementById('upa_tanggal').value;
+    if (!tanggal) { alert('Tanggal wajib diisi.'); return; }
+    const absensi = state.anggota.map(a => ({
+      anggotaId: a.id, nama: a.nama,
+      status: absensiBody.querySelector(`[data-upa-status="${a.id}"]`).value,
+      alasan: absensiBody.querySelector(`[data-upa-reason="${a.id}"]`).value.trim()
+    }));
+    records.unshift({
+      id: uid(), tanggal, tempat: document.getElementById('upa_tempat').value.trim(),
+      materi: document.getElementById('upa_materi').value.trim(),
+      infaq: Math.max(0, Number(document.getElementById('upa_infaq').value) || 0), absensi
+    });
+    saveState(); toast('Tersimpan', 'Laporan UPA berhasil disimpan.'); renderLaporanUPA(c);
+  };
+  c.querySelectorAll('[data-upa-del]').forEach(btn => btn.onclick = () => {
+    if (!confirm('Hapus laporan ini?')) return;
+    records.splice(Number(btn.dataset.upaDel), 1); saveState(); renderLaporanUPA(c);
+  });
+  document.getElementById('exportUPAExcel').onclick = () => {
+    if (!records.length) { alert('Belum ada laporan UPA untuk diekspor.'); return; }
+    const rows = [['Tanggal','Tempat','Materi','Infaq (Rp)','Nama Anggota','Absensi','Alasan Tidak Hadir']];
+    records.forEach(r => {
+      if (r.absensi && r.absensi.length) {
+        r.absensi.forEach(a => rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), a.nama || '', a.status || '', a.alasan || '']));
+      } else {
+        rows.push([r.tanggal, r.tempat || '', r.materi || '', Number(r.infaq || 0), '', '', '']);
+      }
+    });
+    const csv = '\\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\\r\\n');
+    const blob = new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'Laporan_UPA_' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    toast('Berhasil', 'File laporan UPA berhasil diekspor. Buka file dengan Excel.');
+  };
+  document.getElementById('sendUPAWA').onclick = () => {
+    if (!records.length) { alert('Belum ada laporan UPA untuk dikirim.'); return; }
+    const text = records.map((r, idx) => {
+      const hadir = (r.absensi || []).filter(a => a.status === 'Hadir');
+      const tidak = (r.absensi || []).filter(a => a.status === 'Tidak hadir');
+      return `*LAPORAN UPA ${idx + 1}*\\nTanggal: ${r.tanggal}\\nTempat: ${r.tempat || '-'}\\nMateri: ${r.materi || '-'}\\nInfaq: Rp ${Number(r.infaq || 0).toLocaleString('id-ID')}\\n\\n*Absensi:*\\n` +
+        ((r.absensi || []).map(a => `- ${a.nama}: ${a.status}${a.status === 'Tidak hadir' && a.alasan ? ' (Alasan: ' + a.alasan + ')' : ''}`).join('\\n') || '-') +
+        `\\n\\nRekap: ${hadir.length} hadir, ${tidak.length} tidak hadir`;
+    }).join('\\n\\n--------------------\\n\\n');
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  };
+  document.getElementById('printUPA').onclick = () => {
+    const rows = records.map(r => `<section style="margin-bottom:22px"><h3>${esc(r.tanggal)} — ${esc(r.tempat)||'-'}</h3><p><b>Materi:</b> ${esc(r.materi)||'-'}</p><p><b>Infaq:</b> Rp ${Number(r.infaq||0).toLocaleString('id-ID')}</p><table style="width:100%;border-collapse:collapse" border="1" cellpadding="6"><tr><th>Nama</th><th>Status</th><th>Alasan</th></tr>${(r.absensi||[]).map(a=>`<tr><td>${esc(a.nama)}</td><td>${esc(a.status)}</td><td>${esc(a.alasan)||'-'}</td></tr>`).join('')}</table></section>`).join('');
+    const area = document.getElementById('printArea');
+    area.innerHTML = `<h2>Laporan UPA — ${esc(state.identitas.nama)}</h2>${rows || '<p>Belum ada laporan.</p>'}`;
+    area.style.display = 'block'; window.print(); area.style.display = 'none';
   };
 }
 
