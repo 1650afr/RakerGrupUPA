@@ -236,7 +236,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer">v3.6 — Auto Statistik</div>
+    <div class="sidebar-footer" id="appVersion">v3.7 — Auto Statistik</div>
   </aside>
 
   <main class="main">
@@ -263,6 +263,8 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const APP_VERSION = '3.7';
+const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
 const ABSENSI_STATUS = ['Hadir', 'Tidak hadir', 'Izin', 'Sakit', 'Dinas'];
@@ -1403,66 +1405,62 @@ function printBinaan() {
 }
 
 /* ============ STATISTIK ============ */
+function getKomposisiKader() {
+  // Komposisi dihitung langsung dari Data Kader dan Binaan, bukan input manual.
+  const counts = new Map();
+  const add = (naqib, mustawa) => {
+    if (!MUSTAWA_LEVELS.includes(mustawa)) return;
+    const namaNaqib = String(naqib || '').trim() || '(Naqib belum diisi)';
+    const key = namaNaqib + '||' + mustawa;
+    if (!counts.has(key)) counts.set(key, { naqib: namaNaqib, mustawa, jumlah: 0 });
+    counts.get(key).jumlah++;
+  };
+  (state.kader || []).forEach(k => {
+    add(k.naqib, k.jenjang);
+    (k.binaan || []).forEach(b => add(k.naqib, b.level));
+  });
+  const order = new Map(MUSTAWA_LEVELS.map((v, i) => [v, i]));
+  return [...counts.values()].sort((a, b) => a.naqib.localeCompare(b.naqib, 'id') || order.get(a.mustawa) - order.get(b.mustawa));
+}
 function renderStatistik(c) {
-  const usroh = state.statistik.usroh;
-  const totalKader = usroh.reduce((s, x) => s + (Number(x.jumlah) || 0), 0);
-  const chartData = [
-    { lbl: 'Muntandhim', ideal: 1, real: 1 }, { lbl: 'Muntashib', ideal: 5, real: 7 },
-    { lbl: 'Muayyid', ideal: 25, real: 13 }, { lbl: 'Tamhidi', ideal: 125, real: 13 }
-  ];
+  const komposisi = getKomposisiKader();
+  const totalKader = komposisi.reduce((s, x) => s + x.jumlah, 0);
+  const realByLevel = Object.fromEntries(MUSTAWA_LEVELS.map(l => [l, 0]));
+  komposisi.forEach(x => { realByLevel[x.mustawa] += x.jumlah; });
+  const idealByLevel = { Muntandhim: 1, Muntashib: 5, Muayyid: 25, Tamhidi: 125, Muhib: 625 };
   c.innerHTML = `
-    <div class="section-head"><div><h2>Statistik Usroh</h2></div>
+    <div class="section-head"><div><h2>Statistik Usroh</h2><div class="sub">Komposisi otomatis dari Data Kader dan Binaan</div></div>
       <button class="btn btn-wa" onclick="sendWAStatistik()">📱</button></div>
     <div class="grid grid-4" style="margin-bottom:18px">
-      <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${totalKader}</div><div class="stat-lbl">Total Kader</div></div></div>
-      <div class="stat"><div class="stat-ico blue">🏅</div><div><div class="stat-val">${usroh.length}</div><div class="stat-lbl">Mustawa</div></div></div>
+      <div class="stat"><div class="stat-ico green">👥</div><div><div class="stat-val">${totalKader}</div><div class="stat-lbl">Total Kader + Binaan</div></div></div>
+      <div class="stat"><div class="stat-ico blue">🏅</div><div><div class="stat-val">${new Set(komposisi.map(x => x.mustawa)).size}</div><div class="stat-lbl">Mustawa Terisi</div></div></div>
       <div class="stat"><div class="stat-ico amber">🎯</div><div><div class="stat-val">${state.statistik.target.reduce((s,t)=>s+((+t.kader||0)*(+t.beban||0)),0)}</div><div class="stat-lbl">Total Target</div></div></div>
       <div class="stat"><div class="stat-ico purple">📈</div><div><div class="stat-val">${state.identitas.allIkhwan||0}</div><div class="stat-lbl">All Ikhwan</div></div></div>
     </div>
     <div class="grid grid-2">
       <div class="card">
-        <div class="card-head"><span class="ico">📊</span><h2>Komposisi Kader</h2>
-          <button class="btn btn-primary btn-sm" id="addUsroh">➕ Tambah Mustawa</button></div>
+        <div class="card-head"><span class="ico">📊</span><h2>Komposisi Kader</h2></div>
+        <div class="info-box">Data di bagian ini mengikuti perubahan pada menu <b>Data Kader</b> dan <b>Binaan</b>. Jumlah tidak perlu diinput manual.</div>
         <div class="tbl-wrap"><table>
-          <thead><tr><th>No</th><th>Naqib</th><th>Mustawa</th><th>Jumlah</th><th></th></tr></thead>
-          <tbody id="usrohBody"></tbody></table></div>
+          <thead><tr><th>No</th><th>Naqib</th><th>Mustawa</th><th>Jumlah</th></tr></thead>
+          <tbody>${komposisi.length ? komposisi.map((u, i) => `<tr><td>${i+1}</td><td>${esc(u.naqib)}</td><td><span class="lvl-chip lvl-${esc(u.mustawa)}">${esc(u.mustawa)}</span></td><td style="text-align:center;font-weight:700">${u.jumlah}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">Belum ada data kader atau binaan dengan mustawa terisi.</td></tr>'}</tbody>
+        </table></div>
       </div>
       <div class="card">
         <div class="card-head"><span class="ico">📈</span><h2>Grafik Ideal vs Real</h2></div>
-        ${chartData.map(d => {
-          const pct = Math.min(100, (d.real/d.ideal)*100);
+        ${MUSTAWA_LEVELS.map(lbl => {
+          const real = realByLevel[lbl] || 0;
+          const ideal = idealByLevel[lbl] || 0;
+          const pct = ideal ? Math.min(100, (real / ideal) * 100) : 0;
           return `<div style="margin-bottom:14px">
-            <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px">
-              <span>${d.lbl}</span><span style="color:var(--muted)">Real <b style="color:var(--text)">${d.real}</b> / Ideal ${d.ideal}</span>
-            </div><div class="progress"><div style="width:${pct}%"></div></div></div>`;
+            <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;margin-bottom:4px"><span>${lbl}</span><span style="color:var(--muted)">Real <b style="color:var(--text)">${real}</b> / Ideal ${ideal}</span></div>
+            <div class="progress"><div style="width:${pct}%"></div></div></div>`;
         }).join('')}
       </div>
     </div>`;
-  const ub = document.getElementById('usrohBody');
-  ub.innerHTML = usroh.map((u, i) => `
-    <tr><td>${i+1}</td>
-      <td><input type="text" data-id="${u.id}" data-f="naqib" value="${esc(u.naqib)}" style="min-width:120px"></td>
-      <td><select data-id="${u.id}" data-f="mustawa" style="width:110px">${['Muntandhim','Muntashib','Muayyid','Tamhidi','Madya','Pratama','Muda'].map(v => `<option ${u.mustawa===v?'selected':''}>${v}</option>`).join('')}</select></td>
-      <td><div style="display:flex; align-items:center; gap:4px; justify-content:center;">
-          <button class="mini-btn" onclick="adjustKader('${u.id}', -1)">➖</button>
-          <input type="number" data-id="${u.id}" data-f="jumlah" value="${u.jumlah}" style="width:60px; text-align:center; padding:4px;">
-          <button class="mini-btn" onclick="adjustKader('${u.id}', 1)">➕</button>
-        </div></td>
-      <td><button class="mini-btn" data-del="${u.id}">🗑️</button></td></tr>`).join('');
-  ub.querySelectorAll('input, select').forEach(el => {
-    el.oninput = el.onchange = () => { const u = usroh.find(x => x.id === el.dataset.id); if (u) { u[el.dataset.f] = el.value; saveState(); } };
-  });
-  ub.querySelectorAll('[data-del]').forEach(b => {
-    b.onclick = () => { state.statistik.usroh = usroh.filter(x => x.id !== b.dataset.del); saveState(); renderStatistik(c); };
-  });
-  document.getElementById('addUsroh').onclick = () => {
-    state.statistik.usroh.push({ id: uid(), naqib:'', mustawa:'Muntashib', jumlah:0 }); saveState(); renderStatistik(c);
-  };
 }
-window.adjustKader = function(id, delta) {
-  const usroh = state.statistik.usroh;
-  const item = usroh.find(x => x.id === id);
-  if (item) { item.jumlah = Math.max(0, (Number(item.jumlah) || 0) + delta); saveState(); renderStatistik(document.getElementById('content')); }
+window.adjustKader = function() {
+  toast('Otomatis', 'Komposisi kader dihitung dari Data Kader dan Binaan.', 'cloud');
 };
 
 /* ============ MUTABAAH ============ */
@@ -2539,7 +2537,8 @@ if (state.cloud.binId && state.cloud.masterKey) {
 } else setCloudStatus('offline');
 setInterval(() => { if (state.cloud.binId && state.cloud.masterKey) syncFromCloud(true); }, 60000);
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
-console.log('%cRaker UPA v3.6 — Auto Statistik loaded ✅', 'color:#0d9488;font-weight:bold;font-size:14px');
+document.getElementById('appVersion').textContent = `v${APP_VERSION} — Auto Statistik`;
+console.log(`%cRaker UPA v${APP_VERSION} — Auto Statistik loaded ✅`, 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
 </html>
