@@ -236,7 +236,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer" id="appVersion">v3.11 — Auto Statistik</div>
+    <div class="sidebar-footer" id="appVersion">v3.12 — Periode Mutabaah</div>
   </aside>
 
   <main class="main">
@@ -263,7 +263,7 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.11';
+const APP_VERSION = '3.12';
 const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
@@ -344,6 +344,7 @@ const DEFAULT_STATE = {
   },
   mutabaah: {
     tanggal: new Date().toISOString().slice(0,10), pekan: '1',
+    periodeMulai: '', periodeAkhir: '',
     members: ['AS','DM','DI','SB','IS','ND','HN'],
     agenda: [
       { id: uid(), nama:'Sholat berjamaah di mesjid', target:'21/ Pekan' },
@@ -477,22 +478,7 @@ function applyCloudData(data) {
   if (Array.isArray(data.progja))     state.progja = data.progja;
   if (Array.isArray(data.materi))     state.materi = data.materi;
   if (Array.isArray(data.kader)) {
-    state.kader = data.kader.map(k => {
-      const jenjang = LEVEL_MIGRATION[k.jenjang] || k.jenjang;
-      const binaan = (Array.isArray(k.binaan) ? k.binaan : []).map(b => ({
-        ...b, level: LEVEL_MIGRATION[b.level] || b.level
-      }));
-      return { ...k, jenjang, binaan };
-    });
-  }
-  if (data.statistik) {
-    ['usroh','target'].forEach(group => {
-      if (Array.isArray(data.statistik[group])) {
-        data.statistik[group].forEach(item => {
-          if (item.mustawa && LEVEL_MIGRATION[item.mustawa]) item.mustawa = LEVEL_MIGRATION[item.mustawa];
-        });
-      }
-    });
+    state.kader = data.kader.map(k => ({ ...k, binaan: Array.isArray(k.binaan) ? k.binaan : [] }));
   }
   if (Array.isArray(data.laporanUPA)) state.laporanUPA = data.laporanUPA;
   if (Array.isArray(data.absensi))    state.absensi = data.absensi;
@@ -1496,6 +1482,10 @@ window.adjustKader = function() {
 /* ============ MUTABAAH ============ */
 function renderMutabaah(c) {
   const m = state.mutabaah;
+  const tglDasar = m.tanggal || new Date().toISOString().slice(0,10);
+  const mulai = m.periodeMulai || tglDasar;
+  const akhir = m.periodeAkhir || (() => { const d = new Date(mulai + 'T12:00:00'); d.setDate(d.getDate()+6); return d.toISOString().slice(0,10); })();
+  const formatTanggal = (s) => { if (!s) return '-'; const d = new Date(s+'T12:00:00'); return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}); };
   c.innerHTML = `
     <div class="section-head"><div><h2>Mutabaah Yaumiah</h2></div>
       <div style="display:flex; gap:8px; flex-wrap:wrap">
@@ -1503,10 +1493,15 @@ function renderMutabaah(c) {
         <button class="btn btn-primary" id="saveMut">💾 Simpan</button></div></div>
     <div class="card">
       <div class="form-row cols-3">
-        <div class="form-group"><label>Tanggal</label><input type="date" id="mut_tgl" value="${m.tanggal}"></div>
-        <div class="form-group"><label>Pekan</label><input type="number" id="mut_pekan" value="${m.pekan}" min="1" max="5"></div>
+        <div class="form-group"><label>Tanggal Pengisian</label><input type="date" id="mut_tgl" value="${m.tanggal || tglDasar}"></div>
+        <div class="form-group"><label>Pekan ke-</label><input type="number" id="mut_pekan" value="${m.pekan}" min="1" max="5"></div>
         <div class="form-group"><label>Jumlah Anggota</label><input type="number" id="mut_count" value="${m.members.length}" min="1" max="20"></div>
       </div>
+      <div class="form-row cols-2" style="margin-top:12px">
+        <div class="form-group"><label>Periode Mulai</label><input type="date" id="mut_mulai" value="${mulai}"></div>
+        <div class="form-group"><label>Periode Selesai</label><input type="date" id="mut_akhir" value="${akhir}"></div>
+      </div>
+      <div style="margin-top:10px;padding:12px 14px;background:#ccfbf1;border-radius:10px;color:#115e59;font-weight:700">🗓️ Periode Pengisian: ${formatTanggal(mulai)} – ${formatTanggal(akhir)}</div>
     </div>
     <div class="card"><div class="card-head"><span class="ico">📋</span><h2>Tabel Mutabaah</h2></div>
       <div class="tbl-wrap"><table class="mut-table">
@@ -1542,7 +1537,10 @@ function renderMutabaah(c) {
   document.getElementById('saveMut').onclick = () => {
     m.tanggal = document.getElementById('mut_tgl').value;
     m.pekan = document.getElementById('mut_pekan').value;
-    saveState(); toast('Tersimpan', 'Data mutabaah disimpan.');
+    m.periodeMulai = document.getElementById('mut_mulai').value;
+    m.periodeAkhir = document.getElementById('mut_akhir').value;
+    if (m.periodeMulai && m.periodeAkhir && m.periodeAkhir < m.periodeMulai) { toast('Periksa periode', 'Tanggal selesai tidak boleh sebelum tanggal mulai.'); return; }
+    saveState(); renderMutabaah(c); toast('Tersimpan', 'Periode dan data mutabaah disimpan.');
   };
 }
 
@@ -2302,9 +2300,10 @@ function sendWAStatistik() {
   msg += `\n*Total: ${total} kader*\n\n━━━━━━━━━━━━━━━━━━━━\n${formatDateID(new Date())}`;
   openWA(msg);
 }
+function formatTanggalMut(s) { if (!s) return '-'; const d = new Date(s+'T12:00:00'); return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}); }
 function sendWAMutabaah() {
   const m = state.mutabaah;
-  let msg = `*✅ MUTABAAH YAUMIAH*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\nTanggal: ${m.tanggal}\nPekan: ${m.pekan}\n\n*Anggota:* ${m.members.join(', ')}\n\n`;
+  let msg = `*✅ MUTABAAH YAUMIAH*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\nTanggal pengisian: ${m.tanggal}\nPekan: ${m.pekan}\nPeriode: ${formatTanggalMut(m.periodeMulai || m.tanggal)} – ${formatTanggalMut(m.periodeAkhir || m.tanggal)}\n\n*Anggota:* ${m.members.join(', ')}\n\n`;
   m.agenda.forEach((a, i) => { const scores = m.members.map((_, ci) => m.values[i+'-'+ci] || '-'); msg += `${i+1}. ${a.nama} (target: ${a.target||'-'})\n   [${scores.join('|')}]\n`; });
   msg += `\n━━━━━━━━━━━━━━━━━━━━\nBarakallahu fiikum 🤲`;
   openWA(msg);
