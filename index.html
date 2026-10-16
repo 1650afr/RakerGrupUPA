@@ -236,7 +236,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer" id="appVersion">v3.7 — Auto Statistik</div>
+    <div class="sidebar-footer" id="appVersion">v3.11 — Auto Statistik</div>
   </aside>
 
   <main class="main">
@@ -263,7 +263,7 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.10';
+const APP_VERSION = '3.11';
 const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
@@ -477,7 +477,22 @@ function applyCloudData(data) {
   if (Array.isArray(data.progja))     state.progja = data.progja;
   if (Array.isArray(data.materi))     state.materi = data.materi;
   if (Array.isArray(data.kader)) {
-    state.kader = data.kader.map(k => ({ ...k, binaan: Array.isArray(k.binaan) ? k.binaan : [] }));
+    state.kader = data.kader.map(k => {
+      const jenjang = LEVEL_MIGRATION[k.jenjang] || k.jenjang;
+      const binaan = (Array.isArray(k.binaan) ? k.binaan : []).map(b => ({
+        ...b, level: LEVEL_MIGRATION[b.level] || b.level
+      }));
+      return { ...k, jenjang, binaan };
+    });
+  }
+  if (data.statistik) {
+    ['usroh','target'].forEach(group => {
+      if (Array.isArray(data.statistik[group])) {
+        data.statistik[group].forEach(item => {
+          if (item.mustawa && LEVEL_MIGRATION[item.mustawa]) item.mustawa = LEVEL_MIGRATION[item.mustawa];
+        });
+      }
+    });
   }
   if (Array.isArray(data.laporanUPA)) state.laporanUPA = data.laporanUPA;
   if (Array.isArray(data.absensi))    state.absensi = data.absensi;
