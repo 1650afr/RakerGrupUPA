@@ -236,7 +236,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer" id="appVersion">v3.12 — Periode Mutabaah</div>
+    <div class="sidebar-footer" id="appVersion">v3.13 — Mutabaah Angka & Grafik<br><span style="display:block;margin-top:5px;color:#94a3b8;font-weight:600">by Muhajir,ST</span></div>
   </aside>
 
   <main class="main">
@@ -263,7 +263,7 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.12';
+const APP_VERSION = '3.13';
 const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
@@ -1480,6 +1480,21 @@ window.adjustKader = function() {
 };
 
 /* ============ MUTABAAH ============ */
+function mutTarget(a) {
+  const match = String(a.target || '').match(/[0-9]+(?:[.,][0-9]+)?/);
+  return match ? Number(match[0].replace(',', '.')) : 0;
+}
+function mutValueStatus(a, raw) {
+  if (raw === undefined || raw === null || String(raw).trim() === '') return 'empty';
+  const val = Number(String(raw).trim().replace(',', '.'));
+  if (!Number.isFinite(val)) return 'low';
+  return val >= mutTarget(a) ? 'ok' : 'low';
+}
+function mutStatusMark(status) {
+  if (status === 'ok') return '<span title="Sesuai target" style="color:#059669;font-weight:800">✅</span>';
+  if (status === 'low') return '<span title="Belum sesuai target" style="color:#d97706;font-weight:800">🟠</span>';
+  return '<span title="Belum diisi" style="color:#dc2626;font-weight:800">🔴</span>';
+}
 function renderMutabaah(c) {
   const m = state.mutabaah;
   const tglDasar = m.tanggal || new Date().toISOString().slice(0,10);
@@ -1504,30 +1519,51 @@ function renderMutabaah(c) {
       <div style="margin-top:10px;padding:12px 14px;background:#ccfbf1;border-radius:10px;color:#115e59;font-weight:700">🗓️ Periode Pengisian: ${formatTanggal(mulai)} – ${formatTanggal(akhir)}</div>
     </div>
     <div class="card"><div class="card-head"><span class="ico">📋</span><h2>Tabel Mutabaah</h2></div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Isi setiap kolom anggota dengan angka pencapaian. Contoh target 21 kali, isi 21 bila tercapai atau angka sebenarnya bila belum.</p>
       <div class="tbl-wrap"><table class="mut-table">
         <thead><tr><th>Agenda</th><th>Target</th>
           ${m.members.map((mem, i) => `<th><input type="text" data-mi="${i}" value="${esc(mem)}" style="width:56px; text-align:center; font-size:11px; padding:3px"></th>`).join('')}
         </tr></thead><tbody id="mutBody"></tbody></table></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--text)">
+        <span>✅ Sesuai atau melebihi target</span><span>🟠 Belum mencapai target</span><span>🔴 Belum diisi</span>
+      </div>
+    </div>
+    <div class="card"><div class="card-head"><span class="ico">📊</span><h2>Grafik Pencapaian Anggota</h2></div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Persentase agenda yang mencapai target. Agenda kosong atau belum diisi tetap dihitung belum tercapai.</p>
+      <div id="mutChart"></div>
     </div>`;
   const tb = document.getElementById('mutBody');
-  tb.innerHTML = m.agenda.map((a, ri) => `
-    <tr><td><input type="text" data-ai="${a.id}" data-f="nama" value="${esc(a.nama)}"></td>
-      <td><input type="text" data-ai="${a.id}" data-f="target" value="${esc(a.target)}" style="width:90px"></td>
-      ${m.members.map((_, ci) => `<td><input type="text" data-cell="${ri}-${ci}" value="${esc((m.values[ri+'-'+ci]) || '')}" placeholder="✓"></td>`).join('')}
-    </tr>`).join('');
-  tb.querySelectorAll('[data-ai]').forEach(el => {
-    el.oninput = () => { const a = m.agenda.find(x => x.id === el.dataset.ai); if (a) { a[el.dataset.f] = el.value; saveState(); } };
-  });
-  tb.querySelectorAll('[data-cell]').forEach(el => {
-    el.oninput = () => { m.values[el.dataset.cell] = el.value; saveState(); };
-  });
+  const drawRows = () => {
+    tb.innerHTML = m.agenda.map((a, ri) => `
+      <tr><td><input type="text" data-ai="${a.id}" data-f="nama" value="${esc(a.nama)}"></td>
+        <td><input type="text" data-ai="${a.id}" data-f="target" value="${esc(a.target)}" style="width:90px"></td>
+        ${m.members.map((_, ci) => { const raw = m.values[ri+'-'+ci] ?? ''; const st = mutValueStatus(a, raw); return `<td style="min-width:84px;text-align:center"><input type="number" min="0" step="any" data-cell="${ri}-${ci}" value="${esc(raw)}" placeholder="angka" style="width:58px;display:inline-block"><span data-mark="${ri}-${ci}" style="display:inline-block;margin-left:3px">${mutStatusMark(st)}</span></td>`; }).join('')}
+      </tr>`).join('');
+    tb.querySelectorAll('[data-ai]').forEach(el => {
+      el.oninput = () => { const a = m.agenda.find(x => x.id === el.dataset.ai); if (a) { a[el.dataset.f] = el.value; saveState(); updateMutChart(); updateMutMarks(); } };
+    });
+    tb.querySelectorAll('[data-cell]').forEach(el => {
+      el.oninput = () => { m.values[el.dataset.cell] = el.value; const [ri,ci] = el.dataset.cell.split('-').map(Number); const mark = tb.querySelector(`[data-mark="${ri}-${ci}"]`); if (mark) mark.innerHTML = mutStatusMark(mutValueStatus(m.agenda[ri], el.value)); saveState(); updateMutChart(); };
+    });
+  };
+  const updateMutMarks = () => tb.querySelectorAll('[data-cell]').forEach(el => { const [ri,ci] = el.dataset.cell.split('-').map(Number); const mark = tb.querySelector(`[data-mark="${ri}-${ci}"]`); if (mark) mark.innerHTML = mutStatusMark(mutValueStatus(m.agenda[ri], el.value)); });
+  const updateMutChart = () => {
+    const el = document.getElementById('mutChart'); if (!el) return;
+    const total = Math.max(1, m.agenda.length);
+    el.innerHTML = m.members.map((name, ci) => {
+      let good = 0, low = 0, empty = 0;
+      m.agenda.forEach((a, ri) => { const st = mutValueStatus(a, m.values[ri+'-'+ci]); if (st === 'ok') good++; else if (st === 'empty') empty++; else low++; });
+      const pct = Math.round(good / total * 100);
+      return `<div style="margin:0 0 15px"><div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:5px"><b>${esc(name || 'Anggota '+(ci+1))}</b><span>${good}/${m.agenda.length} agenda · ${pct}%</span></div><div style="height:12px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${pct}%;background:#10b981;border-radius:99px"></div></div><div style="font-size:11px;color:var(--muted);margin-top:4px">✅ ${good} · 🟠 ${low} · 🔴 ${empty}</div></div>`;
+    }).join('');
+  };
+  drawRows(); updateMutChart();
   c.querySelectorAll('[data-mi]').forEach(el => {
-    el.oninput = () => { m.members[+el.dataset.mi] = el.value || '—'; saveState(); };
+    el.oninput = () => { m.members[+el.dataset.mi] = el.value || '—'; saveState(); updateMutChart(); };
   });
   document.getElementById('mut_count').onchange = () => {
     const input = document.getElementById('mut_count');
-    const count = Math.max(1, Math.min(20, Number(input.value) || 1));
-    input.value = count;
+    const count = Math.max(1, Math.min(20, Number(input.value) || 1)); input.value = count;
     const oldCount = m.members.length;
     if (count > oldCount) for (let i = oldCount; i < count; i++) m.members.push('Anggota ' + (i + 1));
     else if (count < oldCount) m.members = m.members.slice(0, count);
@@ -1535,10 +1571,8 @@ function renderMutabaah(c) {
     saveState(); renderMutabaah(c);
   };
   document.getElementById('saveMut').onclick = () => {
-    m.tanggal = document.getElementById('mut_tgl').value;
-    m.pekan = document.getElementById('mut_pekan').value;
-    m.periodeMulai = document.getElementById('mut_mulai').value;
-    m.periodeAkhir = document.getElementById('mut_akhir').value;
+    m.tanggal = document.getElementById('mut_tgl').value; m.pekan = document.getElementById('mut_pekan').value;
+    m.periodeMulai = document.getElementById('mut_mulai').value; m.periodeAkhir = document.getElementById('mut_akhir').value;
     if (m.periodeMulai && m.periodeAkhir && m.periodeAkhir < m.periodeMulai) { toast('Periksa periode', 'Tanggal selesai tidak boleh sebelum tanggal mulai.'); return; }
     saveState(); renderMutabaah(c); toast('Tersimpan', 'Periode dan data mutabaah disimpan.');
   };
@@ -2304,7 +2338,7 @@ function formatTanggalMut(s) { if (!s) return '-'; const d = new Date(s+'T12:00:
 function sendWAMutabaah() {
   const m = state.mutabaah;
   let msg = `*✅ MUTABAAH YAUMIAH*\n*UPA ${state.identitas.nama}*\n━━━━━━━━━━━━━━━━━━━━\nTanggal pengisian: ${m.tanggal}\nPekan: ${m.pekan}\nPeriode: ${formatTanggalMut(m.periodeMulai || m.tanggal)} – ${formatTanggalMut(m.periodeAkhir || m.tanggal)}\n\n*Anggota:* ${m.members.join(', ')}\n\n`;
-  m.agenda.forEach((a, i) => { const scores = m.members.map((_, ci) => m.values[i+'-'+ci] || '-'); msg += `${i+1}. ${a.nama} (target: ${a.target||'-'})\n   [${scores.join('|')}]\n`; });
+  m.agenda.forEach((a, i) => { const scores = m.members.map((_, ci) => { const raw = m.values[i+'-'+ci] ?? ''; const st = mutValueStatus(a, raw); const mark = st === 'ok' ? '✅' : st === 'low' ? '🟠' : '🔴'; return `${raw === '' ? '-' : raw}${mark}`; }); msg += `${i+1}. ${a.nama} (target: ${a.target||'-'})\n   [${scores.join('|')}]\n`; });
   msg += `\n━━━━━━━━━━━━━━━━━━━━\nBarakallahu fiikum 🤲`;
   openWA(msg);
 }
@@ -2566,7 +2600,7 @@ if (state.cloud.binId && state.cloud.masterKey) {
 } else setCloudStatus('offline');
 setInterval(() => { if (state.cloud.binId && state.cloud.masterKey) syncFromCloud(true); }, 60000);
 setTimeout(() => toast('🕌 Selamat Datang', `Sistem Raker UPA ${state.identitas.nama}.`), 800);
-document.getElementById('appVersion').textContent = `v${APP_VERSION} — Auto Statistik`;
+document.getElementById('appVersion').innerHTML = `v${APP_VERSION} — Mutabaah Angka & Grafik<br><span style="display:block;margin-top:5px;color:#94a3b8;font-weight:600">by Muhajir,ST</span>`;
 console.log(`%cRaker UPA v${APP_VERSION} — Auto Statistik loaded ✅`, 'color:#0d9488;font-weight:bold;font-size:14px');
 </script>
 </body>
