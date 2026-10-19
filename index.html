@@ -263,7 +263,7 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.16';
+const APP_VERSION = '3.17';
 const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
@@ -2152,7 +2152,7 @@ function renderLaporanBinaanSaya(c) {
       <div class="form-row cols-2"><div class="form-group"><label>Nama Binaan</label><input id="bsNamaBaru" placeholder="Masukkan nama binaan"></div><div class="form-group"><label>Jenjang / keterangan (opsional)</label><input id="bsJenjangBaru" placeholder="Contoh: Muayyid"></div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" id="bsTambah">➕ Tambah Binaan</button><button class="btn btn-outline" id="bsSinkron">🔄 Ambil otomatis dari Data Binaan</button></div>
       <div class="tbl-wrap" style="margin-top:14px"><table><thead><tr><th>No</th><th>Nama Binaan</th><th>Jenjang</th><th>Aksi</th></tr></thead><tbody id="bsDaftar"></tbody></table></div>
-      <p class="sub">Nama binaan dapat diambil otomatis dari menu Data Binaan berdasarkan nama pembina. Nama yang sudah ada dan nilai mutabaahnya tetap dipertahankan.</p>
+      <p class="sub">Sinkronisasi mengikuti jenjang: Muntashib/Muntandhim memakai Naqib/Pembimbing; Muayyid/Tamhidi/Muhib memakai Pembina. Nama dan gelar dicocokkan secara fleksibel. Nilai mutabaah yang sudah ada tetap dipertahankan.</p>
     </div>
     <div class="card"><div class="card-head"><span class="ico">📊</span><h2>Rekap Mutabaah Binaan</h2></div>
       <p>Rekap ini memakai indikator dan data angka pada tabel Mutabaah Yaumiah saat ini. Pilih binaan untuk membuat laporan individual.</p>
@@ -2176,22 +2176,42 @@ function renderLaporanBinaanSaya(c) {
   const sinkronBinaanOtomatis = (showNotice=true) => {
     const namaPembina=document.getElementById('bsPembina').value.trim() || data.pembina || 'Muhajir, ST';
     const found=[];
+    const levelNorm = v => String(v||'').trim().toLowerCase().replace(/\s+/g,'');
+    const upperLevels = new Set(['muntashib','muntandhim']);
+    const lowerLevels = new Set(['muayyid','tamhidi','muhib']);
+    const pushPerson = (person, level, sourceKaderId, sourceBinaanId) => {
+      if(!person || !String(person.nama||'').trim()) return;
+      const name=String(person.nama).trim();
+      const key=normNamaPembina(name);
+      if(found.some(x => normNamaPembina(x.nama)===key && levelNorm(x.jenjang)===levelNorm(level))) return;
+      found.push({nama:name,jenjang:level||'',sourceKaderId,sourceBinaanId});
+    };
     (state.kader||[]).forEach(k=>{
-      if(!cocokPembina(namaPembina,k.nama)) return;
-      (k.binaan||[]).forEach(b=>{
-        if(!b.nama) return;
-        found.push({nama:b.nama.trim(),jenjang:b.level||b.jenjang||'',sourceKaderId:k.id,sourceBinaanId:b.id});
-      });
+      const kaderLevel=levelNorm(k.jenjang || k.level);
+      // Jenjang Muntashib/Muntandhim memakai identitas Naqib/Pembimbing.
+      if(upperLevels.has(kaderLevel) && cocokPembina(namaPembina, k.naqib || k.pembimbing || '')) {
+        pushPerson(k, k.jenjang || k.level, k.id, `kader:${k.id}`);
+      }
+      // Jenjang Muayyid/Tamhidi/Muhib memakai identitas Pembina, yaitu kader pemilik daftar binaan.
+      if(cocokPembina(namaPembina, k.nama)) {
+        (k.binaan||[]).forEach(b=>{
+          const lv=b.level||b.jenjang||'';
+          if(!lowerLevels.has(levelNorm(lv)) && !lv) return;
+          pushPerson(b, lv, k.id, b.id || `binaan:${k.id}:${normNamaPembina(b.nama)}`);
+        });
+      }
     });
     let added=0, updated=0;
     found.forEach(src=>{
-      let existing=data.anggota.find(a=>a.sourceBinaanId===src.sourceBinaanId) || data.anggota.find(a=>normNamaPembina(a.nama)===normNamaPembina(src.nama));
+      let existing=data.anggota.find(a=>a.sourceBinaanId===src.sourceBinaanId) || data.anggota.find(a=>normNamaPembina(a.nama)===normNamaPembina(src.nama) && levelNorm(a.jenjang)===levelNorm(src.jenjang));
       if(existing){
-        if(existing.nama!==src.nama || (src.jenjang && existing.jenjang!==src.jenjang)){existing.nama=src.nama; if(src.jenjang) existing.jenjang=src.jenjang; existing.sourceBinaanId=src.sourceBinaanId; existing.sourceKaderId=src.sourceKaderId; updated++;}
+        const changed=existing.nama!==src.nama || (src.jenjang && existing.jenjang!==src.jenjang) || existing.sourceKaderId!==src.sourceKaderId || existing.sourceBinaanId!==src.sourceBinaanId;
+        existing.nama=src.nama; if(src.jenjang) existing.jenjang=src.jenjang; existing.sourceBinaanId=src.sourceBinaanId; existing.sourceKaderId=src.sourceKaderId;
+        if(changed) updated++;
       } else { data.anggota.push({id:uid(),...src,values:{}}); added++; }
     });
     saveState();
-    if(showNotice) toast('Sinkronisasi binaan selesai', `${found.length} binaan cocok dengan pembina “${namaPembina}”; ${added} ditambahkan, ${updated} diperbarui.`);
+    if(showNotice) toast('Sinkronisasi binaan selesai', `${found.length} binaan cocok dengan pembina “${namaPembina}”; ${added} ditambahkan, ${updated} diperbarui. Jenjang Muntashib/Muntandhim dicocokkan lewat Naqib/Pembimbing; Muayyid/Tamhidi/Muhib lewat Pembina.`);
     return found.length;
   };
   const persistMeta = () => { data.pembina = document.getElementById('bsPembina').value.trim() || 'Muhajir, ST'; saveState(); };
