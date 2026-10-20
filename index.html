@@ -236,7 +236,7 @@
       </div>
     </div>
     <nav id="nav"></nav>
-    <div class="sidebar-footer" id="appVersion">v3.13 — Mutabaah Angka & Grafik<br><span style="display:block;margin-top:5px;color:#94a3b8;font-weight:600">by Muhajir,ST</span></div>
+    <div class="sidebar-footer" id="appVersion">v3.19 — Simpan Binaan & Sinkronisasi Cloud<br><span style="display:block;margin-top:5px;color:#94a3b8;font-weight:600">by Muhajir,ST</span></div>
   </aside>
 
   <main class="main">
@@ -263,7 +263,7 @@
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
 const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-const APP_VERSION = '3.17';
+const APP_VERSION = '3.19';
 const MUSTAWA_LEVELS = ['Muntandhim','Muntashib','Muayyid','Tamhidi','Muhib'];
 const BINAAN_LEVELS = ['Muhib','Muayyid','Muntashib','Muntandhim','Tamhidi'];
 const BINAAN_STATUS = ['Aktif','Lulus','Keluar','Mubarak','Hijrah'];
@@ -1028,7 +1028,8 @@ window.kelolaBinaan = function(kaderId) {
     document.getElementById('binaanFormModal').style.display = 'none';
     resetForm();
   };
-  document.getElementById('binaanSave').onclick = () => {
+  document.getElementById('binaanSave').onclick = async () => {
+    const saveBtn = document.getElementById('binaanSave');
     const nama = document.getElementById('binaan_nama').value.trim();
     if (!nama) { alert('Nama binaan wajib diisi.'); return; }
     const data = {
@@ -1045,16 +1046,29 @@ window.kelolaBinaan = function(kaderId) {
     if (editingId) {
       const idx = kader.binaan.findIndex(b => b.id === editingId);
       if (idx >= 0) kader.binaan[idx] = { ...kader.binaan[idx], ...data };
-      toast('Tersimpan', 'Binaan diperbarui.');
+      else { alert('Data binaan yang diedit tidak ditemukan. Silakan buka kembali formulir.'); return; }
     } else {
       kader.binaan.push({ id: uid(), ...data });
-      toast('Tersimpan', 'Binaan ditambahkan.');
     }
+    // Simpan lokal terlebih dahulu agar perubahan tidak hilang jika koneksi cloud bermasalah.
     saveState();
+    const totalTerkini = state.kader.reduce((n, k) => n + (Array.isArray(k.binaan) ? k.binaan.length : 0), 0);
     document.getElementById('binaanFormModal').style.display = 'none';
     resetForm();
     renderList();
     renderKader(document.getElementById('content'));
+    renderPage();
+    if (state.cloud.binId && state.cloud.masterKey) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳ Menyimpan ke cloud...';
+      const ok = await syncToCloud(true);
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 Simpan';
+      if (ok) toast('Tersimpan', `Binaan ${data.nama} tersimpan di perangkat dan cloud. Total ${totalTerkini} binaan.`, 'cloud');
+      else toast('Tersimpan lokal, cloud gagal', `Binaan ${data.nama} tersimpan di perangkat, tetapi belum terkonfirmasi di cloud. Periksa koneksi lalu klik Online untuk sinkronisasi.`, 'warn');
+    } else {
+      toast('Tersimpan lokal', `Binaan ${data.nama} tersimpan di perangkat ini saja. Atur cloud agar data tersedia di perangkat lain.`, 'warn');
+    }
   };
   window.editBinaanModal = function(kid, bid) {
     const k = state.kader.find(x => x.id === kid);
@@ -2160,7 +2174,7 @@ function renderLaporanBinaanSaya(c) {
       <div id="bsRekap"></div>
     </div>
     <div class="card"><div class="card-head"><span class="ico">🗂️</span><h2>Riwayat Laporan Binaan</h2></div>
-      ${data.riwayat.length ? `<div class="tbl-wrap"><table><thead><tr><th>Periode</th><th>Binaan</th><th>Pencapaian</th><th>Aksi</th></tr></thead><tbody>${data.riwayat.map((r,i)=>`<tr><td>${esc(r.periode||'-')}</td><td>${esc(r.nama||'-')}</td><td>${r.persen||0}%</td><td><button class="mini-btn" data-bs-wa="${i}" title="Kirim ulang">📱</button> <button class="mini-btn" data-bs-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="empty"><div class="e-ico">🗂️</div><p>Belum ada laporan yang disimpan. Gunakan tombol Simpan Laporan pada rekap binaan.</p></div>`}
+      ${data.riwayat.length ? `<div class="tbl-wrap"><table><thead><tr><th>Periode</th><th>Binaan</th><th>Pencapaian</th><th>Aksi</th></tr></thead><tbody>${data.riwayat.map((r,i)=>`<tr><td>${esc(r.periode||'-')}</td><td>${esc(r.nama||'-')}</td><td>${Number.isFinite(Number(r.persen)) && r.persen !== undefined && r.persen !== null ? Number(r.persen) : Number(r.stats?.persen ?? 0)}%</td><td><button class="mini-btn" data-bs-wa="${i}" title="Kirim ulang">📱</button> <button class="mini-btn" data-bs-del="${i}" title="Hapus">🗑️</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="empty"><div class="e-ico">🗂️</div><p>Belum ada laporan yang disimpan. Gunakan tombol Simpan Laporan pada rekap binaan.</p></div>`}
     </div>`;
   const normNamaPembina = (v) => String(v||'').toLowerCase()
     .replace(/\b(dr|drs|ir|h|hj|ust|ustadz|ustaz|prof|m|s|st|se|sh|sp|skm|mm|mt|mba)\b/g,' ')
@@ -2232,7 +2246,7 @@ function renderLaporanBinaanSaya(c) {
     let msg=`*🌱 LAPORAN MUTABAAH BINAAN*\n*Pembina: ${data.pembina||'Muhajir, ST'}*\n*Binaan: ${person.nama}*${person.jenjang?' ('+person.jenjang+')':''}\n*Periode: ${fmt(mulai)} – ${fmt(akhir)}*\n━━━━━━━━━━━━━━━━━━━━\n`;
     mut.agenda.forEach((a,i)=>{const raw=person.values?.[i]??'';const st=mutValueStatus(a,raw);msg+=`${i+1}. ${a.nama}: ${raw===''?'-':raw} ${st==='ok'?'✅':st==='low'?'🟠':'🔴'} (Target ${a.target})\n`;});
     msg+=`\n*Rekap:* ✅ ${stats.ok} · 🟠 ${stats.low} · 🔴 ${stats.empty}\n*Pencapaian target: ${stats.persen}%*\n━━━━━━━━━━━━━━━━━━━━\nDibuat melalui Mutabaah UPA v${APP_VERSION} · by Muhajir,ST`;
-    return {msg,stats,periode:`${fmt(mulai)} – ${fmt(akhir)}`,nama:person.nama};
+    return {msg,stats,persen:stats.persen,ok:stats.ok,low:stats.low,empty:stats.empty,total:stats.total,periode:`${fmt(mulai)} – ${fmt(akhir)}`,nama:person.nama,jenjang:person.jenjang||'',nilaiSnapshot:{...(person.values||{})},agendaSnapshot:mut.agenda.map(a=>({nama:a.nama,target:a.target}))};
   };
   const drawRekap=()=>{const sel=document.getElementById('bsPilih');const box=document.getElementById('bsRekap');if(!sel||!box)return;const person=data.anggota.find(a=>a.id===sel.value);if(!person){box.innerHTML='<p class="sub">Pilih binaan untuk mengisi angka mutabaah dan melihat rekap individual.</p>';return;}if(!person.values)person.values={};const index=data.anggota.findIndex(a=>a.id===person.id);const r=buildReport(person,index);box.innerHTML=`<h3>Input Mutabaah — ${esc(person.nama)}</h3><div class="tbl-wrap"><table><thead><tr><th>Agenda</th><th>Target</th><th>Realisasi</th><th>Status</th></tr></thead><tbody>${mut.agenda.map((a,i)=>`<tr><td>${esc(a.nama)}</td><td>${esc(a.target)}</td><td><input type="number" min="0" step="any" data-bsv="${i}" value="${esc(person.values[i]??'')}" placeholder="angka" style="width:90px"></td><td data-bsvmark="${i}">${mutStatusMark(mutValueStatus(a,person.values[i]??''))}</td></tr>`).join('')}</tbody></table></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0"><div class="stat-card"><b>${r.stats.ok}</b><span>✅ Sesuai target</span></div><div class="stat-card"><b>${r.stats.low}</b><span>🟠 Belum sesuai</span></div><div class="stat-card"><b>${r.stats.empty}</b><span>🔴 Kosong</span></div><div class="stat-card"><b>${r.stats.persen}%</b><span>Pencapaian</span></div></div><pre style="white-space:pre-wrap;background:var(--surface-2);padding:12px;border-radius:10px;font:inherit">${esc(r.msg)}</pre><button class="btn btn-primary" id="bsSimpanLaporan">💾 Simpan Laporan</button> <button class="btn btn-wa" id="bsKirimLaporan">📱 Kirim WhatsApp</button>`;
     box.querySelectorAll('[data-bsv]').forEach(inp=>inp.oninput=()=>{const i=Number(inp.dataset.bsv);person.values[i]=inp.value;const mark=box.querySelector(`[data-bsvmark=\"${i}\"]`);if(mark)mark.innerHTML=mutStatusMark(mutValueStatus(mut.agenda[i],inp.value));saveState();const st=calc(person);const statNodes=box.querySelectorAll('.stat-card b');if(statNodes.length===4){statNodes[0].textContent=st.ok;statNodes[1].textContent=st.low;statNodes[2].textContent=st.empty;statNodes[3].textContent=st.persen+'%';}});
@@ -2243,7 +2257,7 @@ function renderLaporanBinaanSaya(c) {
   document.getElementById('binaanSendWA').onclick=()=>{if(!data.anggota.length){toast('Daftar kosong','Tambahkan binaan terlebih dahulu.');return;}const mulai=document.getElementById('bsMulai').value||start,akhir=document.getElementById('bsAkhir').value||end;let msg=`*🌱 REKAP MUTABAAH BINAAN*\n*Pembina: ${data.pembina||'Muhajir, ST'}*\n*Periode: ${fmt(mulai)} – ${fmt(akhir)}*\n━━━━━━━━━━━━━━━━━━━━\n`;data.anggota.forEach((a,i)=>{const r=buildReport(a,i);msg+=`\n${i+1}. *${a.nama}*${a.jenjang?' ('+a.jenjang+')':''}\n   Pencapaian target: ${r.stats.persen}% · ✅ ${r.stats.ok} · 🟠 ${r.stats.low} · 🔴 ${r.stats.empty}\n`;});openWA(msg);};
   document.getElementById('binaanPrint').onclick=()=>window.print();
   c.querySelectorAll('[data-bs-del]').forEach(el=>el.onclick=()=>{if(confirm('Hapus riwayat laporan ini?')){data.riwayat.splice(+el.dataset.bsDel,1);saveState();renderLaporanBinaanSaya(c);}});
-  c.querySelectorAll('[data-bs-wa]').forEach(el=>el.onclick=()=>openWA(`*🌱 LAPORAN MUTABAAH BINAAN*\n*Pembina: ${data.pembina||'Muhajir, ST'}*\n*Binaan: ${data.riwayat[+el.dataset.bsWa].nama}*\n*Periode: ${data.riwayat[+el.dataset.bsWa].periode}*\nPencapaian target: ${data.riwayat[+el.dataset.bsWa].persen}%`));
+  c.querySelectorAll('[data-bs-wa]').forEach(el=>el.onclick=()=>openWA(`*🌱 LAPORAN MUTABAAH BINAAN*\n*Pembina: ${data.pembina||'Muhajir, ST'}*\n*Binaan: ${data.riwayat[+el.dataset.bsWa].nama}*\n*Periode: ${data.riwayat[+el.dataset.bsWa].periode}*\nPencapaian target: ${Number.isFinite(Number(data.riwayat[+el.dataset.bsWa].persen)) && data.riwayat[+el.dataset.bsWa].persen !== undefined ? Number(data.riwayat[+el.dataset.bsWa].persen) : Number(data.riwayat[+el.dataset.bsWa].stats?.persen ?? 0)}%`));
   drawList(); drawRekap();
 }
 
