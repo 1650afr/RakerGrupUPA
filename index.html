@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>UPA — Online</title>
+<title>RakerGrupUPA — Online</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -259,6 +259,9 @@
 <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalBox"></div></div>
 <div id="printArea"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 /* ============ KONSTANTA ============ */
 const LS_KEY = 'raker_upa_jsonbin_v1';
@@ -2146,6 +2149,15 @@ function renderReminder(c) {
   };
 }
 
+/* ============ INTEGRASI TAUTAN MUTABAAH FIREBASE ============ */
+const MB_FIREBASE_CONFIG = {apiKey:"AIzaSyC8tcfOZ4hl7mBImcfTtrU2OtKq9aWJC9s",authDomain:"mutabaah-upa-test.firebaseapp.com",projectId:"mutabaah-upa-test",storageBucket:"mutabaah-upa-test.firebasestorage.app",messagingSenderId:"154416733757",appId:"1:154416733757:web:dc4e727429df8a3d4f1454"};
+let mbAuth=null, mbDb=null, mbFirebaseReady=false;
+async function mbEnsureFirebase(){ if(!mbFirebaseReady){ if(!firebase.apps.length) firebase.initializeApp(MB_FIREBASE_CONFIG); mbAuth=firebase.auth(); mbDb=firebase.firestore(); mbFirebaseReady=true; } return true; }
+async function mbRequireAdmin(){ await mbEnsureFirebase(); if(!mbAuth.currentUser) throw new Error('Masuk dengan akun admin Firebase terlebih dahulu.'); const snap=await mbDb.collection('upas').doc('UPA_TEST_001').collection('users').doc(mbAuth.currentUser.uid).get(); const u=snap.data()||{}; if(!snap.exists || u.aktif===false || !['admin_upa','admin'].includes(String(u.role||'').toLowerCase())) throw new Error('Akun ini tidak memiliki peran admin_upa aktif.'); }
+function mbRandomToken(){const a=new Uint8Array(32);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}
+window.mbCopyLink=(url)=>{navigator.clipboard.writeText(url).then(()=>toast('Tersalin','Tautan disalin.')).catch(()=>prompt('Salin tautan ini:',url));};
+window.mbImportSubmission=(i)=>{const x=(window.mbSubmissionCache||[])[i];if(!x)return;const person=(state.laporanBinaanSaya.anggota||[]).find(a=>a.id===x.binaanId||a.nama===x.namaBinaan);if(person){if(!person.values)person.values={};(state.mutabaah.agenda||[]).forEach((a,j)=>{if(Object.prototype.hasOwnProperty.call(x.nilai||{},a.nama))person.values[j]=x.nilai[a.nama]===null?'':String(x.nilai[a.nama]);});}state.laporanBinaanSaya.riwayat.unshift({id:uid(),nama:person?.nama||x.namaBinaan||'Binaan',jenjang:person?.jenjang||'',periode:x.tanggal||new Date().toISOString().slice(0,10),tanggal:new Date().toISOString(),pembina:state.laporanBinaanSaya.pembina,catatan:x.catatan||'',ringkasan:x.ringkasan||'',nilaiSnapshot:x.nilai||{},agendaSnapshot:(state.mutabaah.agenda||[]).map(a=>({nama:a.nama,target:a.target})),sumber:'tautan-publik',firebaseId:x.id,persen:0,stats:{persen:0}});saveState();toast('Kiriman dicatat',person?'Nilai yang cocok diperbarui dan kiriman ditambahkan ke riwayat.':'Kiriman ditambahkan ke riwayat; nama binaan belum cocok dengan daftar lokal.');};
+
 /* ============ LAPORAN BINAAN SAYA ============ */
 function renderLaporanBinaanSaya(c) {
   const data = state.laporanBinaanSaya;
@@ -2167,6 +2179,12 @@ function renderLaporanBinaanSaya(c) {
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" id="bsTambah">➕ Tambah Binaan</button><button class="btn btn-outline" id="bsSinkron">🔄 Ambil otomatis dari Data Binaan</button></div>
       <div class="tbl-wrap" style="margin-top:14px"><table><thead><tr><th>No</th><th>Nama Binaan</th><th>Jenjang</th><th>Aksi</th></tr></thead><tbody id="bsDaftar"></tbody></table></div>
       <p class="sub">Sinkronisasi mengikuti jenjang: Muntashib/Muntandhim memakai Naqib/Pembimbing; Muayyid/Tamhidi/Muhib memakai Pembina. Nama dan gelar dicocokkan secara fleksibel. Nilai mutabaah yang sudah ada tetap dipertahankan.</p>
+    </div>
+    <div class="card"><div class="card-head"><span class="ico">🔗</span><h2>Tautan Mutabaah Pribadi</h2></div>
+      <p class="sub" style="margin-bottom:12px">Terhubung ke Firebase mutabaah-upa-test. Data utama dan sinkronisasi JSONBin tidak diubah. Masuk dengan akun admin Firebase untuk membuat atau memperbarui tautan tiap binaan.</p>
+      <div class="form-row cols-2"><div class="form-group"><label>Email admin Firebase</label><input id="mbFirebaseEmail" type="text" autocomplete="username" placeholder="Email akun admin"></div><div class="form-group"><label>Kata sandi</label><input id="mbFirebasePassword" type="password" autocomplete="current-password" placeholder="Kata sandi Firebase"></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><button class="btn btn-primary" id="mbFirebaseLogin">🔐 Masuk Firebase</button><button class="btn btn-outline" id="mbFirebaseLogout">Keluar</button><button class="btn btn-primary" id="mbCreateLinks">🔗 Buat / Perbarui Tautan</button><button class="btn btn-outline" id="mbLoadSubmissions">📥 Ambil Kiriman Santri</button></div>
+      <div id="mbFirebaseStatus" class="sub">Status: belum terhubung.</div><div id="mbLinksList" style="margin-top:12px"></div><div id="mbSubmissionsList" style="margin-top:12px"></div>
     </div>
     <div class="card"><div class="card-head"><span class="ico">📊</span><h2>Rekap Mutabaah Binaan</h2></div>
       <p>Rekap ini memakai indikator dan data angka pada tabel Mutabaah Yaumiah saat ini. Pilih binaan untuk membuat laporan individual.</p>
@@ -2258,8 +2276,12 @@ function renderLaporanBinaanSaya(c) {
   document.getElementById('binaanPrint').onclick=()=>window.print();
   c.querySelectorAll('[data-bs-del]').forEach(el=>el.onclick=()=>{if(confirm('Hapus riwayat laporan ini?')){data.riwayat.splice(+el.dataset.bsDel,1);saveState();renderLaporanBinaanSaya(c);}});
   c.querySelectorAll('[data-bs-wa]').forEach(el=>el.onclick=()=>openWA(`*🌱 LAPORAN MUTABAAH BINAAN*\n*Pembina: ${data.pembina||'Muhajir, ST'}*\n*Binaan: ${data.riwayat[+el.dataset.bsWa].nama}*\n*Periode: ${data.riwayat[+el.dataset.bsWa].periode}*\nPencapaian target: ${Number.isFinite(Number(data.riwayat[+el.dataset.bsWa].persen)) && data.riwayat[+el.dataset.bsWa].persen !== undefined ? Number(data.riwayat[+el.dataset.bsWa].persen) : Number(data.riwayat[+el.dataset.bsWa].stats?.persen ?? 0)}%`));
+  document.getElementById('mbFirebaseLogin').onclick = async () => { try { await mbEnsureFirebase(); await mbAuth.signInWithEmailAndPassword(document.getElementById('mbFirebaseEmail').value.trim(),document.getElementById('mbFirebasePassword').value); document.getElementById('mbFirebaseStatus').textContent='Status: masuk sebagai '+mbAuth.currentUser.email; toast('Firebase terhubung','Berhasil masuk.'); } catch(e) { document.getElementById('mbFirebaseStatus').textContent='Gagal: '+(e.message||e); toast('Login Firebase gagal',e.message||String(e),'danger'); } };
+  document.getElementById('mbFirebaseLogout').onclick = async () => { try { if(mbAuth) await mbAuth.signOut(); document.getElementById('mbFirebaseStatus').textContent='Status: keluar dari Firebase.'; } catch(e) { toast('Gagal keluar',e.message,'danger'); } };
+  document.getElementById('mbCreateLinks').onclick = async () => { try { await mbRequireAdmin(); const base=location.href.split('?')[0].split('#')[0].replace(/index\.html$/i,''); const linkPage=base+'Mutabaah-Binaan.html'; const db=mbDb; let made=0; const out=[]; for(const a of data.anggota){ if(!a.nama) continue; const token=mbRandomToken(); const ref=db.collection('upas').doc('UPA_TEST_001').collection('linkTokens').doc(token); await ref.set({token,binaanId:a.id,nama:a.nama,jenjang:a.jenjang||'',pembina:data.pembina||'Muhajir, ST',agenda:mut.agenda.map(q=>({nama:q.nama,target:q.target})),aktif:true,diperbaruiPada:firebase.firestore.FieldValue.serverTimestamp(),dibuatOleh:mbAuth.currentUser.uid}); made++; out.push({id:a.id,nama:a.nama,url:linkPage+'?token='+encodeURIComponent(token)}); } document.getElementById('mbLinksList').innerHTML='<h3 style="margin-bottom:8px">Tautan binaan ('+made+')</h3>'+out.map(x=>'<div class="rem-item"><div class="rem-body"><b>'+esc(x.nama)+'</b><div class="sub" style="word-break:break-all">'+esc(x.url)+'</div></div><button class="btn btn-outline btn-sm" onclick="mbCopyLink('+JSON.stringify(x.url).replace(/</g,'\\u003c')+')">Salin</button></div>').join(''); document.querySelectorAll('[data-mb-copy]').forEach(b=>b.onclick=()=>mbCopyLink(b.dataset.mbCopy)); document.getElementById('mbFirebaseStatus').textContent='Tautan disimpan ke Firebase. Pastikan file Mutabaah-Binaan.html ikut diunggah ke GitHub Pages.'; toast('Tautan dibuat',made+' tautan diproses.'); } catch(e) { document.getElementById('mbFirebaseStatus').textContent='Gagal membuat tautan: '+(e.message||e); toast('Gagal membuat tautan',e.message||String(e),'danger'); } };
+  document.getElementById('mbLoadSubmissions').onclick = async () => { try { await mbRequireAdmin(); const snap=await mbDb.collection('upas').doc('UPA_TEST_001').collection('mutabaah').get(); const rows=[]; snap.forEach(d=>{const x=d.data(); if(x.sumber==='tautan-publik') rows.push({id:d.id,...x});}); rows.sort((a,b)=>String(b.tanggal||'').localeCompare(String(a.tanggal||''))); window.mbSubmissionCache=rows; document.getElementById('mbSubmissionsList').innerHTML='<h3>Kiriman dari tautan ('+rows.length+')</h3>'+(rows.length?'<div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Binaan</th><th>Catatan</th><th>Aksi</th></tr></thead><tbody>'+rows.map((x,i)=>'<tr><td>'+esc(x.tanggal||'-')+'</td><td>'+esc(x.namaBinaan||x.binaanId||'-')+'</td><td>'+esc(x.ringkasan||x.catatan||'-')+'</td><td><button class="btn btn-primary btn-sm" onclick="mbImportSubmission('+i+')">Masukkan ke Riwayat</button></td></tr>').join('')+'</tbody></table></div>':'<p class="sub">Belum ada kiriman yang ditemukan.</p>'); } catch(e) { toast('Gagal mengambil kiriman',e.message||String(e),'danger'); } };
   drawList(); drawRekap();
-}
+} 
 
 /* ============ LAPORAN UPA ============ */
 function renderLaporanUPA(c) {
